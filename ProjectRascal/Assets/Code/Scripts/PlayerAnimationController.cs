@@ -15,15 +15,15 @@ public class NewBehaviourScript : MonoBehaviour
     }
 
     private void Update() {
-        animator.SetBool(IS_RUNNING, playerController.PlayerState == PlayerController.MovableState.Move || playerController.PlayerState == PlayerController.MovableState.Charge);
-        animator.SetBool(IS_ATTACKING_ONE_HANDED, playerController.PlayerState == PlayerController.MovableState.Attack);
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        var animation = stateInfo.IsName("Base Layer.YourAnimationName") ? "YourAnimationName" : "";
+        // animator.SetBool(IS_RUNNING, playerController.PlayerStateProp == PlayerController.PlayerState.Move || playerController.PlayerStateProp == PlayerController.PlayerState.Charge);
+        // animator.SetBool(IS_ATTACKING_ONE_HANDED, playerController.PlayerStateProp == PlayerController.PlayerState.Attack);
+        // var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        // var animation = stateInfo.IsName("Base Layer.YourAnimationName") ? "YourAnimationName" : "";
 
-        Debug.Log(animation);
+        // Debug.Log(animation);
     }
 
     public void OnOneHandedMeleeAttackEnd() {
-        playerController.StopAttack();
+        // playerController.StopAttack();
     }
 }

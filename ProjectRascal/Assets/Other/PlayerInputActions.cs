@@ -51,7 +51,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""0f928fff-8730-40b3-809d-f831b06dc77b"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press,Tap"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LeftClick"",

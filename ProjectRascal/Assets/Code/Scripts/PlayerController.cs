@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,21 +7,19 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private GameInput gameInput;
     [SerializeField] private float attackingDistance = 1f;
     [SerializeField] private float stoppingDistance = 0.5f;
+    [SerializeField] private VfxWizard vfxWizard;
 
     // * * * * * * PRIVATE * * * * * *
     private NavMeshAgent navMeshAgent;
-    // private bool isMoving = false; 
-    // private bool isAttacking = false; 
-    // private bool isCharging = false;
-    private MovableState playerState = MovableState.Idle;
+    private PlayerState playerState = PlayerState.Idle;
+    private PlayerAnimator playerAnimator;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        playerAnimator = GetComponent<PlayerAnimator>();
     }
 
     private void Update() {
-        // MoveByMouse();
-        // HandleAttack();
         HandleMovement();
         HandleStop();
     }
@@ -33,66 +28,72 @@ public class PlayerController : MonoBehaviour {
         if(gameInput.GetLeftClick()) {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit; 
+
             if(Physics.Raycast(ray, out hit)) {
                 if(hit.collider.CompareTag("Enemy")) {
-                    // Clicked for attack
-                    navMeshAgent.destination = hit.collider.transform.position;
-                    navMeshAgent.stoppingDistance = attackingDistance;
-                    if(canMove()) {
-                        playerState = MovableState.Charge;
-                    } else {
-                        playerState = MovableState.Attack;
+                    var enemyPosition = hit.collider.transform.position;
+
+                    if(CanMoveTo(enemyPosition)) {
+                        ChargeTo(enemyPosition);
+                    } else if (playerState != PlayerState.Attack) {
+                        Attack();
                     }
                 } else {
-                    // Clicked for movement
-                    navMeshAgent.destination = hit.point;
-                    navMeshAgent.stoppingDistance = stoppingDistance;
-                    playerState = MovableState.Move;
+                    var clickPosition = hit.point;
+                    MoveTo(clickPosition);
+                    vfxWizard.SummonGroundClickEffect(clickPosition);
                 }
             }            
         }
     }
 
+    public void ChargeTo(Vector3 enemyPosition) {
+        navMeshAgent.destination = enemyPosition;
+        navMeshAgent.stoppingDistance = attackingDistance;
+        playerState = PlayerState.Charge; 
+    }
+
+    public void Idle() {
+        playerState = PlayerState.Idle;
+    }
+    public void MoveTo(Vector3 clickPosition) {
+        navMeshAgent.destination = clickPosition;
+        navMeshAgent.stoppingDistance = stoppingDistance;
+        playerState = PlayerState.Move;
+    }
+    public void Attack() {
+        playerState = PlayerState.Attack;
+        playerAnimator.AnimateAttack();
+    }
     private void HandleStop() {
-        if (playerState == MovableState.Charge || playerState == MovableState.Move) {
-            if (!canMove()) {
-                if (playerState == MovableState.Charge) {
-                    playerState = MovableState.Attack;
+        if (playerState == PlayerState.Charge || playerState == PlayerState.Move) {
+            if (!CanMoveTo(navMeshAgent.destination)) {
+                if (playerState == PlayerState.Charge) {
+                    Attack();
                 } else {
-                    playerState = MovableState.Idle;
+                    Idle();
                 }
             }
         }
     }
 
     public void StopAttack() {
-        if(playerState == MovableState.Attack) {
-            playerState = MovableState.Idle;
+        if(playerState == PlayerState.Attack) {
+            playerState = PlayerState.Idle;
         }
     }
 
-    private bool canMove() {
-        var distToDestination = Vector3.Distance(transform.position, navMeshAgent.destination);
+    private bool CanMoveTo(Vector3 destination) {
+        var distToDestination = Vector3.Distance(transform.position, destination);
         return distToDestination > navMeshAgent.stoppingDistance;
     }
 
-    // public bool IsMoving
-    // {
-    //     get { return isMoving; }
-    // }
-
-    // public bool IsAttacking
-    // {
-    //     get { return isAttacking; }
-    //     set { isAttacking = value; }
-    // }
-
-    public MovableState PlayerState {
+    public PlayerState PlayerStateProp {
         get { return playerState; }
         set { playerState = value; }
     }
 
-    public enum MovableState
+    public enum PlayerState
     {
         Idle, Charge, Move, Attack
     }
