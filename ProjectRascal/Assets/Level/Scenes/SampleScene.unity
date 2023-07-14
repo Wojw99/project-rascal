@@ -671,7 +671,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.5736972, y: 0.000000044566566, z: -0.000000031215635, w: 0.8190675}
-  m_LocalPosition: {x: -0.00000037189406, y: 10.918935, z: -3.4174304}
+  m_LocalPosition: {x: 8.799999, y: 10.918935, z: 1.7525699}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1349,7 +1349,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 700473922}
   m_LocalRotation: {x: 0.5736972, y: 0.000000044566566, z: -0.000000031215635, w: 0.8190675}
-  m_LocalPosition: {x: -0.00000037189406, y: 10.918935, z: -3.4174304}
+  m_LocalPosition: {x: 8.799999, y: 10.918935, z: 1.7525699}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3594,12 +3594,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a36305b79dc1964eb0ce00a67a55cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 300
-  minDistanceToMove: 0.5
   mainCamera: {fileID: 330585545}
   gameInput: {fileID: 1095311562}
-  attackingDistance: 2
-  stoppingDistance: 0.5
+  attackingDistance: 2.5
+  stoppingDistance: 1
 --- !u!4 &1667778998
 Transform:
   m_ObjectHideFlags: 0
@@ -3608,7 +3606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667778996}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4789996, z: 0}
+  m_LocalPosition: {x: 8.8, y: -0.4789996, z: 5.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
