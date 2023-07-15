@@ -33,7 +33,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void UpdateAttack() {
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.normalizedTime >= 0.8f) {
+        if (stateInfo.normalizedTime >= 1f) {
             playerController.StopAttack();
         }
     }

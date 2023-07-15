@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TestWizard : MonoBehaviour
 {
-    [SerializeField] private static GameObject testingSphere;
+    [SerializeField] private GameObject testingSphere;
 
-    public static void SummonTestingSphere(Vector3 position) {
+    public void SummonTestingSphere(Vector3 position) {
         GameObject.Instantiate(testingSphere, position, Quaternion.identity);
     }
 }

@@ -2,17 +2,17 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour {
-    // * * * * * * SERIALIZED * * * * * *
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private float attackingDistance = 1f;
     [SerializeField] private float stoppingDistance = 0.5f;
     [SerializeField] private VfxWizard vfxWizard;
+    [SerializeField] private TestWizard testWizard;
 
-    // * * * * * * PRIVATE * * * * * *
     private NavMeshAgent navMeshAgent;
     private PlayerState playerState = PlayerState.Idle;
     private PlayerAnimator playerAnimator;
+    private Collider chargedCollider;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -24,52 +24,73 @@ public class PlayerController : MonoBehaviour {
         HandleStop();
     }
 
+    private float enemyHitPauseTime = 0.15f;
+    private bool enemyHitEnabled = true;
+
     private void HandleMovement() {
         if(gameInput.GetLeftClick()) {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit; 
 
             if(Physics.Raycast(ray, out hit)) {
-                if(hit.collider.CompareTag("Enemy")) {
+                if(TagWizard.IsEnemy(hit.collider) && enemyHitEnabled) {
                     var enemyPosition = hit.collider.transform.position;
 
                     if(CanMoveTo(enemyPosition)) {
-                        ChargeTo(enemyPosition);
-                    } else if (playerState != PlayerState.Attack) {
-                        Attack();
+                        ChargeTo(hit.collider);
+                    } else {
+                        Attack(hit.collider);
                     }
                 } else {
                     var clickPosition = hit.point;
                     MoveTo(clickPosition);
-                    vfxWizard.SummonGroundClickEffect(clickPosition);
                 }
             }            
         }
     }
 
-    public void ChargeTo(Vector3 enemyPosition) {
-        navMeshAgent.destination = enemyPosition;
+    private void DisableEnemyHit() {
+        enemyHitEnabled = false;
+        Invoke("EnableEnemyHit", enemyHitPauseTime);
+    }
+
+    private void EnableEnemyHit() => enemyHitEnabled = true;
+
+    public void ChargeTo(Collider collider) {
+        chargedCollider = collider;
+        navMeshAgent.destination = collider.transform.position;
         navMeshAgent.stoppingDistance = attackingDistance;
         playerState = PlayerState.Charge; 
+        Debug.Log("change state to charge");
     }
 
     public void Idle() {
         playerState = PlayerState.Idle;
+        Debug.Log("change state to idle");
     }
+
     public void MoveTo(Vector3 clickPosition) {
         navMeshAgent.destination = clickPosition;
         navMeshAgent.stoppingDistance = stoppingDistance;
         playerState = PlayerState.Move;
+        Debug.Log("change state to move");
     }
-    public void Attack() {
-        playerState = PlayerState.Attack;
-        playerAnimator.AnimateAttack();
+
+    public void Attack(Collider collider) {
+        if(playerState != PlayerState.Attack) {
+            playerState = PlayerState.Attack;
+            Debug.Log("change state to attack");
+            playerAnimator.AnimateAttack();
+            var enemyController = collider.GetComponent<EnemyController>();
+            enemyController.TakeDamage(transform.position);
+        }
     }
+
     private void HandleStop() {
         if (playerState == PlayerState.Charge || playerState == PlayerState.Move) {
             if (!CanMoveTo(navMeshAgent.destination)) {
                 if (playerState == PlayerState.Charge) {
-                    Attack();
+                    FinalizeCharge();
                 } else {
                     Idle();
                 }
@@ -77,9 +98,17 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    private void FinalizeCharge() {
+        if(chargedCollider != null) {
+            Attack(chargedCollider);
+            chargedCollider = null;
+        }
+    }
+
     public void StopAttack() {
         if(playerState == PlayerState.Attack) {
             playerState = PlayerState.Idle;
+            Debug.Log("change state to idle");
         }
     }
 
