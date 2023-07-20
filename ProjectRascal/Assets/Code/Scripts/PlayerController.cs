@@ -24,16 +24,13 @@ public class PlayerController : MonoBehaviour {
         HandleStop();
     }
 
-    private float enemyHitPauseTime = 0.15f;
-    private bool enemyHitEnabled = true;
-
     private void HandleMovement() {
         if(gameInput.GetLeftClick()) {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit; 
 
             if(Physics.Raycast(ray, out hit)) {
-                if(TagWizard.IsEnemy(hit.collider) && enemyHitEnabled) {
+                if(TagWizard.IsEnemy(hit.collider)) {
                     var enemyPosition = hit.collider.transform.position;
 
                     if(CanMoveTo(enemyPosition)) {
@@ -48,13 +45,6 @@ public class PlayerController : MonoBehaviour {
             }            
         }
     }
-
-    private void DisableEnemyHit() {
-        enemyHitEnabled = false;
-        Invoke("EnableEnemyHit", enemyHitPauseTime);
-    }
-
-    private void EnableEnemyHit() => enemyHitEnabled = true;
 
     public void ChargeTo(Collider collider) {
         chargedCollider = collider;

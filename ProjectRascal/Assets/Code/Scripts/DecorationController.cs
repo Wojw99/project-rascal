@@ -17,13 +17,14 @@ public class DecorationController : MonoBehaviour
 
     private void OnLeftClickPerformed(InputAction.CallbackContext context)
     {
+        Debug.Log("LCP");
         if (!groundClickEffectEnabled) return;
         var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit; 
-        if(Physics.Raycast(ray, out hit)) {
+        if(Physics.Raycast(ray, out RaycastHit hit)) {
             if(TagWizard.IsGround(hit.collider)) {
                 var clickPosition = hit.point;
                 PerformGroundClickEffect(clickPosition);
+                Debug.Log("Perform ground click");
             }
         }
     }

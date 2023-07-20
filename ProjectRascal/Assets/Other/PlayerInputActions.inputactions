@@ -29,7 +29,7 @@
                     "name": "",
                     "id": "0f928fff-8730-40b3-809d-f831b06dc77b",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "Press,Tap",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "LeftClick",
