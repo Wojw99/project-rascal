@@ -13,28 +13,27 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
         UpdateSpeed();
-        UpdateAttack();
     }
 
-    public void AnimateAttack() {
+    public void AnimateMeleeAttack() {
         animator.SetTrigger("Attack");
+    }
+
+    public void AnimateRunning() {
+        animator.SetFloat("Speed", 1f, .1f, Time.deltaTime);
+    }
+
+    public void AnimateIdle() {
+        animator.SetFloat("Speed", 0f, .1f, Time.deltaTime);
     }
 
     private void UpdateSpeed() {
         var speedPercent = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
         animator.SetFloat("Speed", speedPercent, .1f, Time.deltaTime);
-    }
-
-    public void UpdateAttack() {
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.normalizedTime >= 1f) {
-            playerController.StopAttack();
-        }
     }
 }

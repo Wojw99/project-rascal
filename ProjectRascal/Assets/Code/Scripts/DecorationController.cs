@@ -12,7 +12,7 @@ public class DecorationController : MonoBehaviour
     private bool groundClickEffectEnabled = true;
 
     private void Awake() {
-        gameInput.leftClickPerformed += OnLeftClickPerformed;
+        // gameInput.leftClickPerformed += OnLeftClickPerformed;
     }
 
     private void OnLeftClickPerformed(InputAction.CallbackContext context)
