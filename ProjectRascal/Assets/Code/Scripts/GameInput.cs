@@ -24,4 +24,8 @@ public class GameInput : MonoBehaviour
     public bool IsRightClickJustPressed() {
         return Input.GetMouseButtonDown(1);
     }
+
+    public bool IsLeftClickJustPressed() {
+        return Input.GetMouseButtonDown(0);
+    }
 }
