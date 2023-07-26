@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private VfxWizard vfxWizard;
     [SerializeField] private TestWizard testWizard;
 
+    private GameCharacter gameCharacter;
+    private CharacterCanvas characterCanvas;
     private NavMeshAgent navMeshAgent;
     private PlayerState playerState = PlayerState.Idle;
     private HumanAnimator humanAnimator;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour {
         humanAnimator = GetComponent<HumanAnimator>();
         lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
         meleeAttackCollider = GetComponent<CapsuleCollider>();
+        gameCharacter = GetComponent<GameCharacter>();
+        characterCanvas = GetComponentInChildren<CharacterCanvas>();
         DisableMeleeAttackCollider();
     }
 
@@ -88,6 +92,18 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public void VisualizeDamage(Vector3 hitPosition, bool bloodSpill = true){
+        if(bloodSpill) {
+            var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+            vfxWizard.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitPosition));
+        }
+        if (gameCharacter.IsDead()) {
+            characterCanvas.DisableHealthBar();
+        } else {
+            characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);
+        }
+    }
+
     private void EnforceDamage()
     {
         meleeAttackCollider.enabled = true;
@@ -105,9 +121,13 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if(other.CompareTag("Enemy")) {
+            var enemyCharacter = other.GetComponent<GameCharacter>();
             var enemyController = other.GetComponent<EnemyController>();
+            if(enemyCharacter != null) {
+                enemyCharacter.TakeDamage(5f);
+            }
             if(enemyController != null) {
-                enemyController.TakeDamage(transform.position);
+                enemyController.VisualizeDamage(transform.position);
             }
         }
     }
@@ -117,8 +137,7 @@ public class PlayerController : MonoBehaviour {
         set { playerState = value; }
     }
 
-    public enum PlayerState
-    {
+    public enum PlayerState {
         Idle, Running, Casting
     }
 }

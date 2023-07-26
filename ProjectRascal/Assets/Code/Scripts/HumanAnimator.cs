@@ -17,18 +17,6 @@ public class HumanAnimator : MonoBehaviour
     private void Update()
     {
         // UpdateSpeed();
-        StayAtLastFrameOnDeath();
-    }
-
-    private void StayAtLastFrameOnDeath() {
-        var state = animator.GetCurrentAnimatorStateInfo(0);
-        // if (state.IsName("Death") && state.normalizedTime >= 0.99f) {
-        //     Debug.Log("is last death frame");
-        //     var layer = -1;
-        //     var normalizedTime = 1f;
-        //     animator.Play(state.shortNameHash, layer, normalizedTime);
-        //     animator.speed = 0f; 
-        // }
     }
 
     public void AnimateDeath() {
