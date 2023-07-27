@@ -28,6 +28,7 @@ public class HumanAnimator : MonoBehaviour
     }
 
     public void AnimateMeleeAttack() {
+        animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Attack");
     }
 

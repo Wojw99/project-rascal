@@ -1,11 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int meleeAttackCastDuration = 52;
-    [SerializeField] private int meleeAttackDamageTime = 26;
-
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private VfxWizard vfxWizard;
@@ -14,20 +12,19 @@ public class PlayerController : MonoBehaviour {
     private GameCharacter gameCharacter;
     private CharacterCanvas characterCanvas;
     private NavMeshAgent navMeshAgent;
-    private PlayerState playerState = PlayerState.Idle;
+    private CharacterState playerState = CharacterState.Idle;
     private HumanAnimator humanAnimator;
+    private DamagableWeapon damagableWeapon;
     private Vector3 lookDirection;
-    private Collider meleeAttackCollider;
     private float minDistanceForRunning = 1.1f;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         humanAnimator = GetComponent<HumanAnimator>();
         lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
-        meleeAttackCollider = GetComponent<CapsuleCollider>();
         gameCharacter = GetComponent<GameCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
-        DisableMeleeAttackCollider();
+        damagableWeapon = GetComponentInChildren<DamagableWeapon>();
     }
 
     private void Update() {
@@ -61,34 +58,31 @@ public class PlayerController : MonoBehaviour {
 
     private void HandleRunning() {
         if(gameInput.IsRightClickPressed() 
-        && playerState != PlayerState.Casting 
+        && playerState != CharacterState.Casting 
         && CountDistanceToMouse() > minDistanceForRunning) { 
             var movement = lookDirection.normalized * moveSpeed * Time.deltaTime;
             transform.position += movement;
-            playerState = PlayerState.Running;
+            playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
         } 
     }
 
     private void HandleIdle() {
         if((!gameInput.IsRightClickPressed() 
-        && playerState != PlayerState.Casting)
+        && playerState != CharacterState.Casting)
         || CountDistanceToMouse() <= minDistanceForRunning) { 
-            playerState = PlayerState.Idle;
+            playerState = CharacterState.Idle;
             humanAnimator.AnimateIdle();
         } 
     }
 
     private void HandleMeleeAttack() {
-        if(gameInput.IsLeftClickJustPressed() && playerState != PlayerState.Casting) {
-            playerState = PlayerState.Casting;
+        if(gameInput.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
             humanAnimator.AnimateMeleeAttack();
             float t1 = meleeAttackCastDuration / 60f;
-            float t2 = meleeAttackDamageTime / 60f;
-            Debug.Log(t1);
-            Debug.Log(t2);
             Invoke("ResetToIdle", t1);
-            Invoke("EnforceDamage", t2);
+            damagableWeapon.TakeDamage(gameCharacter.Attack);
         }
     }
 
@@ -104,40 +98,17 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void EnforceDamage()
-    {
-        meleeAttackCollider.enabled = true;
-        Invoke("DisableMeleeAttackCollider", 0.05f);
-    }
-
-    private void DisableMeleeAttackCollider() {
-        meleeAttackCollider.enabled = false;
-    }
-
     private void ResetToIdle() {
-        playerState = PlayerState.Idle;
+        playerState = CharacterState.Idle;
         humanAnimator.AnimateIdle();
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Enemy")) {
-            var enemyCharacter = other.GetComponent<GameCharacter>();
-            var enemyController = other.GetComponent<EnemyController>();
-            if(enemyCharacter != null) {
-                enemyCharacter.TakeDamage(5f);
-            }
-            if(enemyController != null) {
-                enemyController.VisualizeDamage(transform.position);
-            }
-        }
-    }
-
-    public PlayerState PlayerStateProp {
+    public CharacterState PlayerState {
         get { return playerState; }
         set { playerState = value; }
     }
 
-    public enum PlayerState {
+    public enum CharacterState {
         Idle, Running, Casting
     }
 }
