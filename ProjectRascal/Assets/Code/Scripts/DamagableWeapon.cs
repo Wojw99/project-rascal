@@ -6,7 +6,6 @@ public class DamagableWeapon : MonoBehaviour
 {
     [SerializeField] private float damageAmount = 0f;
     [SerializeField] private bool isBloodSpillVisible = true;
-    [SerializeField] private string damageObjectTag;
     private Collider damageAreaCollider;
     private float finalDamage = 0f;
     private List<GameObject> damagedGameObjects;
@@ -27,7 +26,7 @@ public class DamagableWeapon : MonoBehaviour
     private void DisableDamage() => damageAreaCollider.enabled = false;
 
     private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag(damageObjectTag) && !damagedGameObjects.Contains(other.gameObject)) {
+        if(!damagedGameObjects.Contains(other.gameObject)) {
             var character = other.GetComponent<GameCharacter>();
             var controller = other.GetComponent<IDamagaController>();
 

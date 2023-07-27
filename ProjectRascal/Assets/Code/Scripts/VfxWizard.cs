@@ -5,11 +5,25 @@ using UnityEngine.VFX;
 
 public class VfxWizard : MonoBehaviour
 {
-    [SerializeField] private VisualEffect groundClickEffect;
-    [SerializeField] private VisualEffect bloodSpillEffect;
+    #region Singleton
 
-    public void SummonGroundClickEffect(Vector3 position) {
-        GameObject.Instantiate(groundClickEffect, position, Quaternion.identity);
+    public static VfxWizard instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
+    private VfxWizard() {
+
+    }
+
+    #endregion
+
+    [SerializeField] private GameObject fancyCircleEffect;
+    [SerializeField] private GameObject bloodSpillEffect;
+
+    public void SummonFancyCircleEffect(Vector3 position) {
+        GameObject.Instantiate(fancyCircleEffect, position, Quaternion.identity);
     }
 
     public void SummonBloodSpillEffect(Vector3 position, Quaternion rotation) {

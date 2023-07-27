@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour, IDamagaController
 {
-    [SerializeField] private VfxWizard vfxWizard;
     [SerializeField] private float detectionDistance;
     [SerializeField] private float attackDistance;
     private CharacterCanvas characterCanvas;
@@ -37,6 +36,10 @@ public class EnemyController : MonoBehaviour, IDamagaController
         if(gameCharacter.IsDead()) {
             characterState = CharacterState.Death;
             humanAnimator.AnimateDeath();
+            if(TryGetComponent<BoxCollider>(out BoxCollider boxCollider)) {
+                boxCollider.enabled = false;
+            }
+            navMeshAgent.enabled = false;
             return true;
         }
         return false;
@@ -96,13 +99,15 @@ public class EnemyController : MonoBehaviour, IDamagaController
     }
 
     public void VisualizeDamage(Vector3 hitDirection, bool bloodSpill = true){
-        var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-        vfxWizard.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitDirection));
+        if(bloodSpill) {
+            var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
+            VfxWizard.instance.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitDirection));
+        }
         if (gameCharacter.IsDead()) {
             humanAnimator.AnimateDeath();
             characterCanvas.DisableHealthBar();
         } else {
-            humanAnimator.AnimateGetHit();
+            // humanAnimator.AnimateGetHit();
             characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);
         }
     }

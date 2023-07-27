@@ -3,11 +3,9 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private int meleeAttackCastDuration = 52;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private GameInput gameInput;
-    [SerializeField] private VfxWizard vfxWizard;
-    [SerializeField] private TestWizard testWizard;
 
     private GameCharacter gameCharacter;
     private CharacterCanvas characterCanvas;
@@ -32,6 +30,21 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         HandleRunning();
         HandleMeleeAttack();
         HandleIdle();
+        HandleInteractions();
+    }
+
+    private void HandleInteractions() {
+        if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
+            if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
+                Debug.Log("Hit something!");
+                if(raycastHit.transform.TryGetComponent(out Potion potion)) {
+                    Debug.Log("It's Potion!");
+                    if(InputWizard.instance.IsInteractionKeyPressed()) {
+                        potion.Interact(transform.gameObject);
+                    }
+                }
+            }
+        }
     }
 
     private void HandleRotation() {
@@ -57,7 +70,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleRunning() {
-        if(gameInput.IsRightClickPressed() 
+        if(InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting 
         && CountDistanceToMouse() > minDistanceForRunning) { 
             var movement = lookDirection.normalized * moveSpeed * Time.deltaTime;
@@ -68,7 +81,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleIdle() {
-        if((!gameInput.IsRightClickPressed() 
+        if((!InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting)
         || CountDistanceToMouse() <= minDistanceForRunning) { 
             playerState = CharacterState.Idle;
@@ -77,7 +90,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleMeleeAttack() {
-        if(gameInput.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
+        if(InputWizard.instance.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateMeleeAttack();
             float t1 = meleeAttackCastDuration / 60f;
@@ -89,7 +102,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     public void VisualizeDamage(Vector3 hitPosition, bool bloodSpill = true){
         if(bloodSpill) {
             var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
-            vfxWizard.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitPosition));
+            VfxWizard.instance.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitPosition));
         }
         if (gameCharacter.IsDead()) {
             characterCanvas.DisableHealthBar();
@@ -101,6 +114,12 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private void ResetToIdle() {
         playerState = CharacterState.Idle;
         humanAnimator.AnimateIdle();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * interactionDistance);
     }
 
     public CharacterState PlayerState {

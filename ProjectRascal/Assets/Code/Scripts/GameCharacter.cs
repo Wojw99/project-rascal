@@ -15,6 +15,17 @@ public class GameCharacter : MonoBehaviour
 
     public bool IsDead() => currentHealth <= 0;
 
+    public void Heal(float healthPoints) {
+        currentHealth += healthPoints;
+        if(currentHealth > maxHealth) {
+            currentHealth = maxHealth;
+        }
+        var canvas = transform.gameObject.GetComponentInChildren<CharacterCanvas>();
+        if(canvas != null) {
+            canvas.UpdateHealthBar(currentHealth, maxHealth);
+        }
+    }
+
     public float CurrentHealth
     {
         get { return currentHealth; }

@@ -4,14 +4,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 
-public class GameInput : MonoBehaviour
+public class InputWizard : MonoBehaviour
 {
-    private PlayerInputActions playerInputActions;
+    #region Singleton
+
+    public static InputWizard instance;
 
     private void Awake() {
+        instance = this;
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
     }
+
+    private InputWizard() {
+        
+    }
+
+    #endregion
+
+    private PlayerInputActions playerInputActions;
 
     public bool IsLeftClickPressed() {
         return playerInputActions.Player.LeftClick.IsPressed();
@@ -27,5 +38,9 @@ public class GameInput : MonoBehaviour
 
     public bool IsLeftClickJustPressed() {
         return Input.GetMouseButtonDown(0);
+    }
+
+    public bool IsInteractionKeyPressed() {
+        return Input.GetKeyDown(KeyCode.E);
     }
 }
