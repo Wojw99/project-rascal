@@ -32,8 +32,8 @@ public class VfxWizard : MonoBehaviour
         GameObject.Instantiate(bloodSpillEffect, position, rotation);
     }
 
-    public void SummonHealEffect(Vector3 position) {
-        GameObject.Instantiate(healEffect, position, Quaternion.identity);
+    public void SummonHealEffect(Vector3 position, Transform parent) {
+        GameObject.Instantiate(healEffect, position, Quaternion.identity, parent);
     }
 
     public void SummonThunderstruck(Vector3 position, Quaternion rotation) {
