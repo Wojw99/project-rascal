@@ -31,19 +31,54 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         HandleMeleeAttack();
         HandleIdle();
         HandleInteractions();
+        HandleThunderstruck();
     }
+
+    private void HandleThunderstruck() {
+        if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
+            humanAnimator.AnimateBuff();
+
+            float t1 = meleeAttackCastDuration / 60f;
+            Invoke("ResetToIdle", t1);
+            Invoke("SpawnThunderstruck", t1 / 2);
+        }
+    }
+
+    private void SpawnThunderstruck() {
+        var mousePosition = Input.mousePosition;
+        var mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, mainCamera.transform.position.y - transform.position.y));
+        var pos = new Vector3(mouseWorldPosition.x, transform.position.y, mouseWorldPosition.z);
+        VfxWizard.instance.SummonThunderstruck(pos, Quaternion.identity);
+    }
+
+    private Potion targetInteractible;
 
     private void HandleInteractions() {
         if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
             if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
                 Debug.Log("Hit something!");
                 if(raycastHit.transform.TryGetComponent(out Potion potion)) {
+                    turnOffTargetInteractibleVision();
+                    targetInteractible = potion;
+                    potion.OnVisionStart();
                     Debug.Log("It's Potion!");
                     if(InputWizard.instance.IsInteractionKeyPressed()) {
                         potion.Interact(transform.gameObject);
                     }
+                } else {
+                    turnOffTargetInteractibleVision();
                 }
+            } else {
+                turnOffTargetInteractibleVision();
             }
+        }
+    }
+
+    private void turnOffTargetInteractibleVision() {
+        if(targetInteractible != null) {
+            targetInteractible.OnVisionEnd();
+            targetInteractible = null;
         }
     }
 
@@ -105,7 +140,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             VfxWizard.instance.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitPosition));
         }
         if (gameCharacter.IsDead()) {
-            characterCanvas.DisableHealthBar();
+            characterCanvas.DisableHealthBarAndName();
         } else {
             characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);
         }

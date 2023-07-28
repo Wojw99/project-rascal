@@ -105,7 +105,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
         }
         if (gameCharacter.IsDead()) {
             humanAnimator.AnimateDeath();
-            characterCanvas.DisableHealthBar();
+            characterCanvas.DisableHealthBarAndName();
         } else {
             // humanAnimator.AnimateGetHit();
             characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);

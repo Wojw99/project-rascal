@@ -43,4 +43,8 @@ public class InputWizard : MonoBehaviour
     public bool IsInteractionKeyPressed() {
         return Input.GetKeyDown(KeyCode.E);
     }
+
+    public bool IsKey1Pressed() {
+        return Input.GetKeyDown(KeyCode.Alpha1);
+    }
 }

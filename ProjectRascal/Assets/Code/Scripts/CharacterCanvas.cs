@@ -2,33 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class CharacterCanvas : MonoBehaviour
+public class CharacterCanvas : GeneralCanvas
 {
+    [SerializeField] private string nameText;
     [SerializeField] private Image healthBarSprite;
     [SerializeField] private Image healthBarBackgroundSprite;
-    private Camera mainCamera;
+    [SerializeField] private TextMeshProUGUI nameTextMesh;
+    // private Camera mainCamera;
 
     private void Start() {
-        mainCamera = Camera.main;
+        // mainCamera = Camera.main;
+        GeneralStart();
         healthBarSprite.fillAmount = 1;
+        nameTextMesh.text = nameText;
     }
 
     private void Update() {
         UpdateRotation();
     }
 
-    private void UpdateRotation() {
-        var rotation = Quaternion.LookRotation(transform.position - mainCamera.transform.position);
-        transform.rotation = Quaternion.Euler(rotation.eulerAngles.x, 0f, 0f);
-    }
-
     public void UpdateHealthBar(float current, float max) {
         healthBarSprite.fillAmount = current / max;
     }
 
-    public void DisableHealthBar() {
+    public void DisableHealthBarAndName() {
         healthBarSprite.enabled = false;
         healthBarBackgroundSprite.enabled = false;
+        nameTextMesh.enabled = false;
     }
 }

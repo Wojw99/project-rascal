@@ -32,6 +32,11 @@ public class HumanAnimator : MonoBehaviour
         animator.SetTrigger("Attack");
     }
 
+    public void AnimateBuff() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Buff");
+    }
+
     public void AnimateRunning() {
         animator.SetFloat("Speed", 1f, .1f, Time.deltaTime);
     }

@@ -21,6 +21,8 @@ public class VfxWizard : MonoBehaviour
 
     [SerializeField] private GameObject fancyCircleEffect;
     [SerializeField] private GameObject bloodSpillEffect;
+    [SerializeField] private GameObject healEffect;
+    [SerializeField] private GameObject thunderstruck;
 
     public void SummonFancyCircleEffect(Vector3 position) {
         GameObject.Instantiate(fancyCircleEffect, position, Quaternion.identity);
@@ -28,5 +30,13 @@ public class VfxWizard : MonoBehaviour
 
     public void SummonBloodSpillEffect(Vector3 position, Quaternion rotation) {
         GameObject.Instantiate(bloodSpillEffect, position, rotation);
+    }
+
+    public void SummonHealEffect(Vector3 position) {
+        GameObject.Instantiate(healEffect, position, Quaternion.identity);
+    }
+
+    public void SummonThunderstruck(Vector3 position, Quaternion rotation) {
+        GameObject.Instantiate(thunderstruck, position, rotation);
     }
 }
