@@ -13,14 +13,14 @@ public class EnemyController : MonoBehaviour, IDamagaController
     private NavMeshAgent navMeshAgent;
     private CharacterState characterState = CharacterState.Idle;
     private GameObject chasingTarget;
-    private DamagableWeapon damagableWeapon;
+    private WeaponDD weaponDD;
 
     private void Start() {
         humanAnimator = GetComponent<HumanAnimator>();
         gameCharacter = GetComponent<GameCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        damagableWeapon = GetComponentInChildren<DamagableWeapon>();
+        weaponDD = GetComponentInChildren<WeaponDD>();
         Debug.Log(humanAnimator.ToString());
         Debug.Log(gameCharacter.ToString());
         Debug.Log(characterCanvas.ToString());
@@ -86,7 +86,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
     {
         if(characterState != CharacterState.Death) {
             characterState = CharacterState.Idle;
-            damagableWeapon.TakeDamage(gameCharacter.Attack);
+            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: 0.8f);
         }
     }
 

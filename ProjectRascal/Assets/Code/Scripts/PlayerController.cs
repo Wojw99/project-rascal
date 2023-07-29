@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private NavMeshAgent navMeshAgent;
     private CharacterState playerState = CharacterState.Idle;
     private HumanAnimator humanAnimator;
-    private DamagableWeapon damagableWeapon;
+    private WeaponDD weaponDD;
     private Vector3 lookDirection;
     private float minDistanceForRunning = 1.1f;
 
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
         gameCharacter = GetComponent<GameCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
-        damagableWeapon = GetComponentInChildren<DamagableWeapon>();
+        weaponDD = GetComponentInChildren<WeaponDD>();
     }
 
     private void Update() {
@@ -49,7 +49,11 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         var mousePosition = Input.mousePosition;
         var mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, mainCamera.transform.position.y - transform.position.y));
         var pos = new Vector3(mouseWorldPosition.x, transform.position.y, mouseWorldPosition.z);
-        VfxWizard.instance.SummonThunderstruck(pos, Quaternion.identity);
+
+        var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(pos);
+        if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.1f, damageDuration: 0.5f);
+        }
     }
 
     private Potion targetInteractible;
@@ -57,12 +61,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private void HandleInteractions() {
         if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
             if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
-                Debug.Log("Hit something!");
                 if(raycastHit.transform.TryGetComponent(out Potion potion)) {
                     turnOffTargetInteractibleVision();
                     targetInteractible = potion;
                     potion.OnVisionStart();
-                    Debug.Log("It's Potion!");
                     if(InputWizard.instance.IsInteractionKeyPressed()) {
                         potion.Interact(transform.gameObject);
                     }
@@ -130,7 +132,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             humanAnimator.AnimateMeleeAttack();
             float t1 = meleeAttackCastDuration / 60f;
             Invoke("ResetToIdle", t1);
-            damagableWeapon.TakeDamage(gameCharacter.Attack);
+            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: t1);
         }
     }
 
