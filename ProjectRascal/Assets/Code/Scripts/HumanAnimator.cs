@@ -28,7 +28,13 @@ public class HumanAnimator : MonoBehaviour
     }
 
     public void AnimateMeleeAttack() {
+        animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Attack");
+    }
+
+    public void AnimateBuff() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Buff");
     }
 
     public void AnimateRunning() {

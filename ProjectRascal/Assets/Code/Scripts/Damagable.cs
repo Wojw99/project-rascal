@@ -12,15 +12,13 @@ public class Damagable : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Player")) {
-            var character = other.GetComponent<GameCharacter>();
-            var controller = other.GetComponent<PlayerController>();
-            if(character != null) {
-                character.TakeDamage(damageAmount);
-            }
-            if(controller != null) {
-                controller.VisualizeDamage(transform.position, bloodSpill: false);
-            }
+        var character = other.GetComponent<GameCharacter>();
+        var controller = other.GetComponent<IDamagaController>();
+        if(character != null) {
+            character.TakeDamage(damageAmount);
+        }
+        if(controller != null) {
+            controller.VisualizeDamage(transform.position, bloodSpill: false);
         }
     }
 }
