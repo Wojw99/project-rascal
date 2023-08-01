@@ -20,16 +20,23 @@ public class HumanAnimator : MonoBehaviour
     }
 
     public void AnimateDeath() {
+        animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Death");
     }
 
     public void AnimateGetHit() {
+        animator.SetFloat("Speed", 0f);
         animator.SetTrigger("GetHit");
     }
 
     public void AnimateMeleeAttack() {
         animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Attack");
+    }
+
+    public void AnimateGathering() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Gathering");
     }
 
     public void AnimateBuff() {

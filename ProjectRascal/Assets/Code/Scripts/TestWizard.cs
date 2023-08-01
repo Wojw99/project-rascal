@@ -19,8 +19,18 @@ public class TestWizard : MonoBehaviour
     #endregion
 
     [SerializeField] private GameObject testingSphere;
+    [SerializeField] private GameObject testingSphere2;
+    [SerializeField] private GameObject testingSphere3;
 
     public void SummonTestingSphere(Vector3 position) {
         GameObject.Instantiate(testingSphere, position, Quaternion.identity);
+    }
+
+    public void SummonTestingSphere2(Vector3 position) {
+        GameObject.Instantiate(testingSphere2, position, Quaternion.identity);
+    }
+
+    public void SummonTestingSphere3(Vector3 position) {
+        GameObject.Instantiate(testingSphere3, position, Quaternion.identity);
     }
 }

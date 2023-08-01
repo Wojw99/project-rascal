@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -5,7 +6,11 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private int meleeAttackCastDuration = 52;
+    [SerializeField] private int buffCastDuration = 92;
+    [SerializeField] private int gatheringCastDuration = 125;
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private GameObject leftHand;
+    [SerializeField] private GameObject rightHand;
 
     private GameCharacter gameCharacter;
     private CharacterCanvas characterCanvas;
@@ -15,6 +20,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private WeaponDD weaponDD;
     private Vector3 lookDirection;
     private float minDistanceForRunning = 1.1f;
+    private float minDistanceForRotating = 0.3f;
+    private Vector3 mouseGroundPosition;
+    private InteractibleItem targetInteractible;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -26,58 +34,87 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void Update() {
+        mouseGroundPosition = GetMouseGroundPosition();
         HandleRotation();
         HandleRunning();
         HandleMeleeAttack();
         HandleIdle();
         HandleInteractions();
-        HandleThunderstruck();
+        HandleKey1();
+        HandleKey2();
+        HandleUI();
     }
 
-    private void HandleThunderstruck() {
+    private void HandleUI() {
+        if(InputWizard.instance.IsEscPressed()) {
+            UIWizard.instance.HideWriting();
+        }
+    }
+
+    private void HandleKey2() {
+        if(InputWizard.instance.IsKey2Pressed()) {
+            var pos = mouseGroundPosition + Vector3.up * 0.01f;
+            TestWizard.instance.SummonTestingSphere(pos);
+        }
+    }
+
+    private void HandleKey1() {
         if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateBuff();
 
-            float t1 = meleeAttackCastDuration / 60f;
-            Invoke("ResetToIdle", t1);
-            Invoke("SpawnThunderstruck", t1 / 2);
+            float durationNormalized = buffCastDuration / 60f;
+            // Invoke("ResetToIdle", durationNormalized);
+            // Invoke("SpawnThunderstruck", durationNormalized / 2);
+            StartCoroutine(WaitForIdle(durationNormalized));
+            StartCoroutine(WaitForThunderstruck(durationNormalized / 2, mouseGroundPosition));
         }
     }
 
-    private void SpawnThunderstruck() {
-        var mousePosition = Input.mousePosition;
-        var mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, mainCamera.transform.position.y - transform.position.y));
-        var pos = new Vector3(mouseWorldPosition.x, transform.position.y, mouseWorldPosition.z);
+    IEnumerator WaitForIdle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ResetToIdle();
+    }
 
-        var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(pos);
+    IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnThunderstruck(mouseGroundPosition);
+    }
+
+    private void SpawnThunderstruck(Vector3 mouseGroundPosition) {
+        var spawnPosition = mouseGroundPosition + Vector3.up * 0.01f;
+        var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(spawnPosition);
         if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
             damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.1f, damageDuration: 0.5f);
         }
     }
 
-    private Potion targetInteractible;
-
     private void HandleInteractions() {
         if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
             if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
-                if(raycastHit.transform.TryGetComponent(out Potion potion)) {
-                    turnOffTargetInteractibleVision();
-                    targetInteractible = potion;
-                    potion.OnVisionStart();
+                if(raycastHit.transform.TryGetComponent(out InteractibleItem interactibleItem)) {
+                    TurnOffTargetInteractibleVision();
+                    targetInteractible = interactibleItem;
+                    interactibleItem.OnVisionStart();
                     if(InputWizard.instance.IsInteractionKeyPressed()) {
-                        potion.Interact(transform.gameObject);
+                        humanAnimator.AnimateGathering();
+                        playerState = CharacterState.Casting;
+                        interactibleItem.Interact(transform.gameObject);
+                        float delay = gatheringCastDuration / 60f;
+                        Invoke("ResetToIdle", delay);
                     }
                 } else {
-                    turnOffTargetInteractibleVision();
+                    TurnOffTargetInteractibleVision();
                 }
             } else {
-                turnOffTargetInteractibleVision();
+                TurnOffTargetInteractibleVision();
             }
         }
     }
 
-    private void turnOffTargetInteractibleVision() {
+    private void TurnOffTargetInteractibleVision() {
         if(targetInteractible != null) {
             targetInteractible.OnVisionEnd();
             targetInteractible = null;
@@ -85,14 +122,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleRotation() {
-        var mousePosition = Input.mousePosition;
-
-        var mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, mainCamera.transform.position.y - transform.position.y));
-
-        var direction = mouseWorldPosition - transform.position;
+        var direction = mouseGroundPosition - transform.position;
         direction.y = 0f; 
 
-        if(direction != lookDirection) {
+        if(direction != lookDirection && CountDistanceToMouse() > minDistanceForRotating) {
             lookDirection = direction;
             var angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
@@ -100,9 +133,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private float CountDistanceToMouse() {
-        var mousePosition = Input.mousePosition;
-        var mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, mainCamera.transform.position.y));
-        var distance = Vector3.Distance(transform.position, mouseWorldPosition);
+        var distance = Vector3.Distance(transform.position, mouseGroundPosition);
         return distance;
     }
 
@@ -120,7 +151,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private void HandleIdle() {
         if((!InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting)
-        || CountDistanceToMouse() <= minDistanceForRunning) { 
+        || (CountDistanceToMouse() <= minDistanceForRunning 
+        && playerState != CharacterState.Casting)) { 
             playerState = CharacterState.Idle;
             humanAnimator.AnimateIdle();
         } 
@@ -130,12 +162,12 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if(InputWizard.instance.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateMeleeAttack();
-            float t1 = meleeAttackCastDuration / 60f;
-            Invoke("ResetToIdle", t1);
-            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: t1);
+            float durationNormalized = meleeAttackCastDuration / 60f;
+            Invoke("ResetToIdle", durationNormalized);
+            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: durationNormalized);
         }
     }
-
+    
     public void VisualizeDamage(Vector3 hitPosition, bool bloodSpill = true){
         if(bloodSpill) {
             var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
@@ -158,6 +190,18 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * interactionDistance);
     }
+
+    private Vector3 GetMouseGroundPosition() {
+        var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit)) {
+            var groundPosition = -0.5f;
+            var mousePosition = hit.point;
+            mousePosition.y = groundPosition;
+            return mousePosition;
+        }
+        return Input.mousePosition;
+    }
+
 
     public CharacterState PlayerState {
         get { return playerState; }
