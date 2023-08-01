@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Potion : MonoBehaviour
+public class Potion : InteractibleItem
 {
     [SerializeField] private float healthGiven = 0f;
-    private InteractibleCanvas canvas;
 
     private void Start() {
-        canvas = GetComponentInChildren<InteractibleCanvas>();
-        canvas.HideActionText();
+        ParentStart();
     }
 
-    public void Interact(GameObject other) {
+    public override void Interact(GameObject other) {
         if(other.TryGetComponent(out GameCharacter gameCharacter)) {
             gameCharacter.Heal(healthGiven);
             var position = other.transform.position;
@@ -20,13 +18,5 @@ public class Potion : MonoBehaviour
             VfxWizard.instance.SummonHealEffect(effectPosition, other.transform);
             Destroy(transform.gameObject);
         }
-    }
-
-    public void OnVisionStart() {
-        canvas.ShowActionText();
-    }
-
-    public void OnVisionEnd() {
-        canvas.HideActionText();
     }
 }

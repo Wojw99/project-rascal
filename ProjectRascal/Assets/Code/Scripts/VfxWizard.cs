@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class VfxWizard : MonoBehaviour
 {
@@ -22,7 +19,8 @@ public class VfxWizard : MonoBehaviour
     [SerializeField] private GameObject fancyCircleEffect;
     [SerializeField] private GameObject bloodSpillEffect;
     [SerializeField] private GameObject healEffect;
-    [SerializeField] private GameObject thunderstruck;
+    [SerializeField] private GameObject spellLight;
+    [SerializeField] private GameObject slashEffect;
 
     public void SummonFancyCircleEffect(Vector3 position) {
         GameObject.Instantiate(fancyCircleEffect, position, Quaternion.identity);
@@ -36,7 +34,11 @@ public class VfxWizard : MonoBehaviour
         GameObject.Instantiate(healEffect, position, Quaternion.identity, parent);
     }
 
-    public void SummonThunderstruck(Vector3 position, Quaternion rotation) {
-        GameObject.Instantiate(thunderstruck, position, rotation);
+    public void SummonSpelllight(Vector3 position, Quaternion rotation, Transform parent) {
+        GameObject.Instantiate(spellLight, position, rotation, parent);
+    }
+
+    public void SummonSlashEffect(Vector3 position, Transform parent) {
+        GameObject.Instantiate(slashEffect, position, Quaternion.identity, parent);
     }
 }

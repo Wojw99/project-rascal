@@ -6,7 +6,7 @@ public class GeneralCanvas : MonoBehaviour
 {
     private Camera mainCamera;
 
-    public void GeneralStart() {
+    public void ParentStart() {
         mainCamera = Camera.main;
     }
 

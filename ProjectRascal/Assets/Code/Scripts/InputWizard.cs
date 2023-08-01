@@ -47,4 +47,24 @@ public class InputWizard : MonoBehaviour
     public bool IsKey1Pressed() {
         return Input.GetKeyDown(KeyCode.Alpha1);
     }
+
+    public bool IsKey2Pressed() {
+        return Input.GetKeyDown(KeyCode.Alpha2);
+    }
+
+    public bool IsKey3Pressed() {
+        return Input.GetKeyDown(KeyCode.Alpha3);
+    }
+
+    public bool IsKey4Pressed() {
+        return Input.GetKeyDown(KeyCode.Alpha4);
+    }
+
+    public bool IsKey5Pressed() {
+        return Input.GetKeyDown(KeyCode.Alpha5);
+    }
+
+    public bool IsEscPressed() {
+        return Input.GetKeyDown(KeyCode.Escape);
+    }
 }

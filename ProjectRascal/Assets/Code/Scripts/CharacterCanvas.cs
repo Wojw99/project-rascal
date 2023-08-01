@@ -14,7 +14,7 @@ public class CharacterCanvas : GeneralCanvas
 
     private void Start() {
         // mainCamera = Camera.main;
-        GeneralStart();
+        ParentStart();
         healthBarSprite.fillAmount = 1;
         nameTextMesh.text = nameText;
     }
