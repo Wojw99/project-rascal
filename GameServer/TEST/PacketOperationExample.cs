@@ -8,6 +8,9 @@
  *  In "TEST" project I linked that library, so we can use classes from
  *  that project.
  *  
+ *  In "NetworkCore" may occur pottential errors, because I haven't tested these 
+ *  classes well.
+ *  
  */
 
 
