@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CharacterCanvas : GeneralCanvas
+public class CharacterCanvas : MapCanvas
 {
     [SerializeField] private string nameText;
     [SerializeField] private Image healthBarSprite;

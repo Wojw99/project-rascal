@@ -19,8 +19,13 @@ public class DamageDealerWizard : MonoBehaviour
     #endregion
 
     [SerializeField] private GameObject thunderstruck;
+    [SerializeField] private GameObject magicBullet;
 
     public GameObject SummonThunderstruck(Vector3 position) {
         return GameObject.Instantiate(thunderstruck, position, Quaternion.identity);
+    }
+
+    public GameObject SummonMagicBullet(Vector3 position, Quaternion rotation) {
+        return GameObject.Instantiate(magicBullet, position, rotation);
     }
 }

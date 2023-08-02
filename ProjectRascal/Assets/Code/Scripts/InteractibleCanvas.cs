@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class InteractibleCanvas : GeneralCanvas
+public class InteractibleCanvas : MapCanvas
 {
     private void Start() {
         ParentStart();

@@ -5,12 +5,14 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private int meleeAttackCastDuration = 52;
+    [SerializeField] private int meleeAttackCastDuration = 42;
     [SerializeField] private int buffCastDuration = 92;
-    [SerializeField] private int gatheringCastDuration = 125;
+    [SerializeField] private int gatheringCastDuration = 80;
+    [SerializeField] private int spellCast2CastDuration = 60;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
+    [SerializeField] private GameObject bulletSpawnPoint;
 
     private GameCharacter gameCharacter;
     private CharacterCanvas characterCanvas;
@@ -51,23 +53,23 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
     }
 
-    private void HandleKey2() {
-        if(InputWizard.instance.IsKey2Pressed()) {
-            var pos = mouseGroundPosition + Vector3.up * 0.01f;
-            TestWizard.instance.SummonTestingSphere(pos);
-        }
-    }
-
     private void HandleKey1() {
         if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateBuff();
-
             float durationNormalized = buffCastDuration / 60f;
-            // Invoke("ResetToIdle", durationNormalized);
-            // Invoke("SpawnThunderstruck", durationNormalized / 2);
             StartCoroutine(WaitForIdle(durationNormalized));
             StartCoroutine(WaitForThunderstruck(durationNormalized / 2, mouseGroundPosition));
+        }
+    }
+
+    private void HandleKey2() {
+        if(InputWizard.instance.IsKey2Pressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
+            humanAnimator.AnimateSpellCast2();
+            float durationNormalized = spellCast2CastDuration / 60f;
+            StartCoroutine(WaitForIdle(durationNormalized));
+            StartCoroutine(WaitForMagicBullet(durationNormalized / 4, mouseGroundPosition));
         }
     }
 
@@ -83,11 +85,27 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         SpawnThunderstruck(mouseGroundPosition);
     }
 
+    IEnumerator WaitForMagicBullet(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnMagicBullet(mouseGroundPosition);
+    }
+
+    private void SpawnMagicBullet(Vector3 mouseGroundPosition) {
+        var spawnTransform = bulletSpawnPoint.transform;
+        var bullet = DamageDealerWizard.instance.SummonMagicBullet(spawnTransform.position, spawnTransform.rotation);
+        if(bullet.TryGetComponent(out MagicBulletDD damageDealer)) {
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0.1f, damageDuration: 5f);
+            damageDealer.SetLifetime();
+        }
+    }
+
     private void SpawnThunderstruck(Vector3 mouseGroundPosition) {
         var spawnPosition = mouseGroundPosition + Vector3.up * 0.01f;
         var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(spawnPosition);
         if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
             damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.1f, damageDuration: 0.5f);
+            damageDealer.SetLifetime();
         }
     }
 

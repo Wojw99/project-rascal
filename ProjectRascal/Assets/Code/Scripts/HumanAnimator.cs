@@ -39,6 +39,16 @@ public class HumanAnimator : MonoBehaviour
         animator.SetTrigger("Gathering");
     }
 
+    public void AnimateSpellCast2() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("SpellCast2");
+    }
+
+    public void AnimateCastingLoop() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("CastingLoop");
+    }
+
     public void AnimateBuff() {
         animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Buff");

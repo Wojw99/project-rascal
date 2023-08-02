@@ -4886,12 +4886,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   interactionDistance: 3
-  meleeAttackCastDuration: 52
+  meleeAttackCastDuration: 42
   buffCastDuration: 92
-  gatheringCastDuration: 125
+  gatheringCastDuration: 80
+  spellCast2CastDuration: 60
   mainCamera: {fileID: 0}
   leftHand: {fileID: 6883423009910684160}
   rightHand: {fileID: 4552414825557430506}
+  bulletSpawnPoint: {fileID: 0}
 --- !u!114 &4433948872139530325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6321,6 +6323,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1663890034312860019, guid: bcb9eec6305d21b4ca472a2292bd19e0,
         type: 3}
+      propertyPath: damageTarget
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1663890034312860019, guid: bcb9eec6305d21b4ca472a2292bd19e0,
+        type: 3}
       propertyPath: damageObjectTag
       value: Enemy
       objectReference: {fileID: 0}
@@ -6457,7 +6464,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0

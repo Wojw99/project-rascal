@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 0
   isBloodSpillVisible: 0
+  damageTarget: 1
 --- !u!135 &553242505921779416
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ public class TestWizard : MonoBehaviour
 
     #endregion
 
-    [SerializeField] private GameObject testingSphere;
+    [SerializeField] public GameObject testingSphere;
     [SerializeField] private GameObject testingSphere2;
     [SerializeField] private GameObject testingSphere3;
 
