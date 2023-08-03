@@ -23,17 +23,21 @@ public class MagicBulletDD : DamageDealer
     protected override void Prepare()
     {
         base.Prepare();
+        var forwardVector = new Vector3(transform.forward.x, 0f, transform.forward.z) * 0.5f;
+        VfxWizard.instance.SummonMagicBulletStartEffect(transform.position + forwardVector);
     }
 
     protected override void OnDamageEnd()
     {
         base.OnDamageEnd();
         Destroy(transform.gameObject);
+        var forwardVector = new Vector3(transform.forward.x, 0f, transform.forward.z) * 0.8f;
+        VfxWizard.instance.SummonMagicBulletExplosionEffect(transform.position + forwardVector, transform.rotation);
     }
 
     protected override void OnInvalidDamageTarget()
     {
         base.OnDamageEnd();
-        Destroy(transform.gameObject);
+        //Destroy(transform.gameObject);
     }
 }

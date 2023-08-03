@@ -54,6 +54,7 @@ public class DamageDealer : MonoBehaviour
 
             if(IsValidDamageTarget(character)) {
                 injured.Add(other.gameObject);
+                Debug.Log($"Deal damage {finalDamage} to {other}");
                 character.TakeDamage(finalDamage);
 
                 var controller = other.GetComponent<IDamagaController>();

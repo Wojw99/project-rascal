@@ -11,8 +11,8 @@ public class Potion : InteractibleItem
     }
 
     public override void Interact(GameObject other) {
-        if(other.TryGetComponent(out GameCharacter gameCharacter)) {
-            gameCharacter.Heal(healthGiven);
+        if(other.TryGetComponent(out PlayerCharacter playerCharacter)) {
+            playerCharacter.Heal(healthGiven);
             var position = other.transform.position;
             var effectPosition = new Vector3(position.x, position.y - 1f, position.z);
             VfxWizard.instance.SummonHealEffect(effectPosition, other.transform);

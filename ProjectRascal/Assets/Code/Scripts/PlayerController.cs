@@ -57,9 +57,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateBuff();
+            Invoke("SummonHandLight", 0.1f);
             float durationNormalized = buffCastDuration / 60f;
             StartCoroutine(WaitForIdle(durationNormalized));
-            StartCoroutine(WaitForThunderstruck(durationNormalized / 2, mouseGroundPosition));
+            StartCoroutine(WaitForThunderstruck(0f, mouseGroundPosition));
         }
     }
 
@@ -71,6 +72,11 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             StartCoroutine(WaitForIdle(durationNormalized));
             StartCoroutine(WaitForMagicBullet(durationNormalized / 4, mouseGroundPosition));
         }
+    }
+
+    private void SummonHandLight() {
+        VfxWizard.instance.SummonHandLight(leftHand.transform.position, Quaternion.identity, leftHand.transform);
+        VfxWizard.instance.SummonHandLight(rightHand.transform.position, Quaternion.identity, rightHand.transform);
     }
 
     IEnumerator WaitForIdle(float delay)
@@ -95,7 +101,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         var spawnTransform = bulletSpawnPoint.transform;
         var bullet = DamageDealerWizard.instance.SummonMagicBullet(spawnTransform.position, spawnTransform.rotation);
         if(bullet.TryGetComponent(out MagicBulletDD damageDealer)) {
-            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0.1f, damageDuration: 5f);
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0f, damageDuration: 5f);
             damageDealer.SetLifetime();
         }
     }
@@ -104,7 +110,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         var spawnPosition = mouseGroundPosition + Vector3.up * 0.01f;
         var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(spawnPosition);
         if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
-            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.1f, damageDuration: 0.5f);
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.77f, damageDuration: 0.4f);
             damageDealer.SetLifetime();
         }
     }

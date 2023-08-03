@@ -11,9 +11,8 @@ public class Writing : InteractibleItem
     }
 
     public override void Interact(GameObject other) {
-        UIWizard.instance.ShowWriting(text);
-            if(other.TryGetComponent(out PlayerController playerController)) {
-            
+        if(other.TryGetComponent(out PlayerController playerController)) {
+            UIWizard.instance.ShowWriting(text);
         }
     }
 }
