@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.CompilerServices;
+using System.IO;
+using System.Xml.Linq;
 
-namespace NetworkCore
+namespace NetworkCore.NetworkMessage
 {
     public enum PacketType
     {
@@ -13,14 +15,14 @@ namespace NetworkCore
         packet_player_shoot = 13,
         packet_enemy_shoot = 20,
         packet_monster_pos = 30,
+        packet_test_packet = 31,
     }
 
     public class Packet
     {
-        private List<ByteField> _fields;
-        private PacketType _type;
-        private uint _size;
-        //private ByteBuffer _data;
+        public List<ByteField> _fields { get; private set; }
+        public PacketType _type { get; private set; }
+        public uint _size { get; private set; }
 
         public Packet(PacketType type)
         {
@@ -29,10 +31,16 @@ namespace NetworkCore
             _size = sizeof(PacketType);
         }
 
+        public void initFields(List<ByteField> fields)
+        {
+            _fields.Clear();
+            _fields = fields;
+        }
+
         public void WriteShort(string fieldName, short value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += sizeof(short);
         }
@@ -40,7 +48,7 @@ namespace NetworkCore
         public void WriteInt(string fieldName, int value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += sizeof(int);
         }
@@ -48,7 +56,7 @@ namespace NetworkCore
         public void WriteLong(string fieldName, long value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += sizeof(long);
         }
@@ -56,7 +64,7 @@ namespace NetworkCore
         public void WriteFloat(string fieldName, float value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += sizeof(float);
         }
@@ -64,7 +72,7 @@ namespace NetworkCore
         public void WriteString(string fieldName, string value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += (uint)value.Length;
         }
@@ -72,33 +80,31 @@ namespace NetworkCore
         public void WriteDouble(string fieldName, double value)
         {
             ByteField field = new ByteField();
-            field.Init(fieldName, value, _size);
+            field.Init(fieldName, value);
             _fields.Add(field);
             _size += sizeof(float);
         }
 
-        /*public void addField<T>(string fieldName, T value)
+        public void WriteBytes(string fieldName, byte [] data, FieldType type)
         {
-             
-            //ByteField field = new ByteField()
+            ByteField field = new ByteField();
+            field.Init(fieldName, data, type);
+            _fields.Add(field);
+            _size += sizeof(byte);
         }
-
-        public void WriteField<T>(string fieldName, T value)
-        {
-
-        }*/
 
         public T ReadField<T>(string fieldName)
         {
-            foreach(var field in _fields)
+            foreach (var field in _fields)
             {
                 if (field._name == fieldName)
                 {
                     return field.Read<T>();
                 }
             }
-           
+
             throw new Exception("Cannot find specific fieldName in dictionary. ");
         }
     }
 }
+

@@ -91,7 +91,7 @@ namespace NetworkCore
             _buffUpdated = true;
         }
 
-        /*
+        
         public int ReadInt(bool peek = true) 
         {
             if(_buffer.Count > _readPos)
@@ -102,10 +102,10 @@ namespace NetworkCore
                 }
             }
             int ret = BitConverter.ToInt32(_readBuff, _readPos);
-
+            return ret;
         }
 
-        public byte[] ReadBytes(int length, bool peek = true)
+/*        public byte[] ReadBytes(int length, bool peek = true)
         {
 
         }*/

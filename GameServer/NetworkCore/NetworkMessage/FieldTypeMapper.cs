@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NetworkCore
+namespace NetworkCore.NetworkMessage
 {
     public static class FieldTypeMapper
     {
@@ -14,8 +14,9 @@ namespace NetworkCore
             { FieldType.field_long, typeof(long) },
             { FieldType.field_double, typeof(double) },
             { FieldType.field_float, typeof(float) },
-            { FieldType.field_string, typeof(string) }
+            { FieldType.field_string, typeof(string) },
         };
+
         private static readonly Dictionary<Type, FieldType> reverseFieldTypeMap = fieldTypeMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
         public static Type GetFieldType(FieldType fieldType)
