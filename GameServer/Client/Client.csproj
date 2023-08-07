@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="NetworkCore">
-      <HintPath>..\NetworkCore\bin\Debug\netstandard2.1\NetworkCore.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\NetworkCore\NetworkCore.csproj" />
   </ItemGroup>
 
 </Project>

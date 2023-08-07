@@ -1,0 +1,25 @@
+﻿- Wrzucenie ServerConfiguration normalnie do interfejsu serwera [x]
+
+- dodanie wczytania konfiguracji serwera z pliku 
+
+
+- Opracowanie klasy GameServer/GameService w projekcie serwera
+
+- Opracowanie klasy Application, w projekcie serwera, która
+będzie odpalała wszystkie serwery oraz ładowała konfiguracje z plików
+
+- opracowanie klasy Logger
+
+- wymyślenie klasy Communication/lub coś typu ClientPeer, ServerPeer
+- lepsze przemyślenie klasy Packet oraz opracowanie klasy
+PacketHandler (w NetworkCore), abyśmy mogli automatycznie
+rejestrować handlery (w postaci funkcji) do odpowiednich typów otrzymywanych pakietów
+zarówno po stronie serwera jak i po stronie clienta.
+
+klasa PacketHandler może np. przechowywać listę wszystkich handlerów, odpowiednio
+dopasowanych do typów pakietów.
+
+- metoda AddHandler(argument: typ pakietu, argument: funkcja statyczna);. / lub RegisterHandler
+- metoda HandlePacket(argument: Packet packet);
+
+- odpowiednie serwery mogłyby posiadać obiekt PacketHandler

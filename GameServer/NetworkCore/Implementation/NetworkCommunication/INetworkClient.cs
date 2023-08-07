@@ -6,7 +6,9 @@ using System.Text;
 
 namespace NetworkCore.NetworkCommunication
 {
-    internal class Connection
+    public interface INetworkClient
     {
+        //void sendPacket(Packet packet);
+        //void receivePacket(Packet packet);
     }
 }

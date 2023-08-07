@@ -1,4 +1,4 @@
-﻿//using NetworkCore;
+﻿/*//using NetworkCore;
 
 using System.Text;
 using System;
@@ -8,12 +8,11 @@ using System.IO;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Data;
-
-using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkCommunication;
 using System.Net.Sockets;
+using NetworkCore.NetworkMessage;
 
-namespace GameServer
+namespace ServerApplication
 {
     internal class Program
     {
@@ -33,7 +32,8 @@ namespace GameServer
             Packet newPacket = PacketManager.DeserializeByteData(data);
 
             Server server = new Server();
+            
             server.HandlePacket(newPacket);
         }
     }
-}
+}*/

@@ -4,6 +4,7 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using System.IO;
 using System.Xml.Linq;
+using System.Net.Sockets;
 
 namespace NetworkCore.NetworkMessage
 {
@@ -22,13 +23,13 @@ namespace NetworkCore.NetworkMessage
     {
         public List<ByteField> _fields { get; private set; }
         public PacketType _type { get; private set; }
-        public uint _size { get; private set; }
+        //public uint _size { get; private set; }
 
         public Packet(PacketType type)
         {
             _fields = new List<ByteField>();
             _type = type;
-            _size = sizeof(PacketType);
+            //_size = sizeof(PacketType);
         }
 
         public void initFields(List<ByteField> fields)
@@ -42,7 +43,7 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += sizeof(short);
+            //_size += sizeof(short);
         }
 
         public void WriteInt(string fieldName, int value)
@@ -50,7 +51,7 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += sizeof(int);
+            //_size += sizeof(int);
         }
 
         public void WriteLong(string fieldName, long value)
@@ -58,7 +59,7 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += sizeof(long);
+            //_size += sizeof(long);
         }
 
         public void WriteFloat(string fieldName, float value)
@@ -66,7 +67,7 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += sizeof(float);
+            //_size += sizeof(float);
         }
 
         public void WriteString(string fieldName, string value)
@@ -74,7 +75,7 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += (uint)value.Length;
+            //_size += (uint)value.Length;
         }
 
         public void WriteDouble(string fieldName, double value)
@@ -82,15 +83,15 @@ namespace NetworkCore.NetworkMessage
             ByteField field = new ByteField();
             field.Init(fieldName, value);
             _fields.Add(field);
-            _size += sizeof(float);
+            //_size += sizeof(float);
         }
 
-        public void WriteBytes(string fieldName, byte [] data, FieldType type)
+        public void WriteBytes(string fieldName, byte[] data, FieldType type)
         {
             ByteField field = new ByteField();
             field.Init(fieldName, data, type);
             _fields.Add(field);
-            _size += sizeof(byte);
+            //_size += (uint)data.Length;
         }
 
         public T ReadField<T>(string fieldName)

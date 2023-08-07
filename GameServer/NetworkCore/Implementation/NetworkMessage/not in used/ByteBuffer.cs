@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NetworkCore
+namespace NetworkCore.NetworkMessage
 {
 
     /**
