@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Code\Scripts\InputWizard.cs" />
+     <Compile Include="Assets\Code\Scripts\DDInteractible.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
      <Compile Include="Assets\Code\Scripts\MapCanvas.cs" />

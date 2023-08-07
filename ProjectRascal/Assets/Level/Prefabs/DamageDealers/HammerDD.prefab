@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 1663890034312860019}
   - component: {fileID: 1529727359554828252}
   m_Layer: 0
-  m_Name: Weapon
+  m_Name: HammerDD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

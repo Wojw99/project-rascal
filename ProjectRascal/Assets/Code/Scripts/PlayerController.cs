@@ -13,13 +13,13 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
     [SerializeField] private GameObject bulletSpawnPoint;
+    [SerializeField] private GameObject damageDealer;
 
     private GameCharacter gameCharacter;
     private CharacterCanvas characterCanvas;
     private NavMeshAgent navMeshAgent;
     private CharacterState playerState = CharacterState.Idle;
     private HumanAnimator humanAnimator;
-    private WeaponDD weaponDD;
     private Vector3 lookDirection;
     private float minDistanceForRunning = 1.1f;
     private float minDistanceForRotating = 0.3f;
@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
         gameCharacter = GetComponent<GameCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
-        weaponDD = GetComponentInChildren<WeaponDD>();
     }
 
     private void Update() {
@@ -45,6 +44,16 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         HandleKey1();
         HandleKey2();
         HandleUI();
+    }
+
+    public void UpdateWeaponDD(GameObject gameObject) {
+        var position = damageDealer.transform.position;
+        var rotation = damageDealer.transform.rotation;
+        var dd = Instantiate(gameObject, rightHand.transform);
+        dd.transform.position = position;
+        dd.transform.rotation = rotation;
+        Destroy(damageDealer);
+        damageDealer = dd;
     }
 
     private void HandleUI() {
@@ -188,6 +197,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             humanAnimator.AnimateMeleeAttack();
             float durationNormalized = meleeAttackCastDuration / 60f;
             Invoke("ResetToIdle", durationNormalized);
+            var weaponDD = GetComponentInChildren<WeaponDD>();
             weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: durationNormalized);
         }
     }

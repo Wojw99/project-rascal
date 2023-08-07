@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6831177407991622536}
   - component: {fileID: 7764535913663995929}
   m_Layer: 8
-  m_Name: MagicBullet
+  m_Name: MagicBulletDD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

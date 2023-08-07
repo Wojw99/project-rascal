@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5270990320920290487}
   - component: {fileID: 553242505921779416}
   m_Layer: 0
-  m_Name: Thunderstruck
+  m_Name: ThunderstruckDD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
