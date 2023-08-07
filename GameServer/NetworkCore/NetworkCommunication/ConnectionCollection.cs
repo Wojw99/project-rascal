@@ -35,6 +35,11 @@ namespace NetworkCore.NetworkCommunication
             {
                 if (!_Peers.Contains(peer))
                     throw new InvalidOperationException("Cannot disconnect peer, which is not connected. ");
+                
+                var targetPeer = _Peers.Find(p => p == peer);
+
+                targetPeer?.Disconnect();
+
                 _Peers.Remove(peer);
             }
         }

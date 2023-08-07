@@ -39,7 +39,7 @@ namespace NetworkCore.NetworkCommunication
             Console.WriteLine("Otrzymano nowy pakiet: {0}", packet._type);
             _PacketHandlerManager.HandlePacket(ref packet);
         }*/
-        public void StartReceive()
+        public void StartReceive() // al'a "connect"
         {
             NetworkStream stream = _TcpClient.GetStream();
             stream.BeginRead(ReceiveBuffer, 0, ReceiveBuffer.Length, HandleReceivedData, this);
@@ -69,11 +69,14 @@ namespace NetworkCore.NetworkCommunication
                         int remainingDataSize = ReceiveBuffer.Length - packetSize;
                         Buffer.BlockCopy(ReceiveBuffer, packetSize, ReceiveBuffer, 0, remainingDataSize);
 
-                        //HandlePacket(packet);
+                        //HandlePacket(packet); 
+                        // I'm using a reference to PacketHandlerManager object from GameServer class, so it can be done.
                         _PacketHandlerManager.HandlePacket(ref packet);
 
-                        StartReceive();
+                        // Idk if we need it.
                         //Array.Resize(ref ReceiveBuffer, remainingDataSize); // Skrócenie bufora do nowego rozmiaru
+
+                        StartReceive();
                     }
                 }
                 else
