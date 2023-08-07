@@ -8,7 +8,6 @@ namespace NetworkCore.NetworkCommunication
 {
     public interface INetworkClient
     {
-        //void sendPacket(Packet packet);
-        //void receivePacket(Packet packet);
+
     }
 }

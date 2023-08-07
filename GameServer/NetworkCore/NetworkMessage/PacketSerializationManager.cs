@@ -48,7 +48,10 @@ namespace NetworkCore.NetworkMessage
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    int expectedSize = reader.ReadInt32(); // aktualnie nieuzywane
+                    int expectedSize = reader.ReadInt32(); // aktualnie nieuzywane, ale musi zostać
+                    // odczytane aby działała deserializacja.
+                    // Ewentualnie można by pominąć te 4 bajty.
+
                     PacketType packetType = (PacketType)reader.ReadInt32();
 
                     Packet packet = new Packet(packetType);

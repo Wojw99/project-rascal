@@ -29,20 +29,18 @@ namespace Client
                 var random = new Random();
                 int randomInt = random.Next(3);
 
-    
-
                 Thread.Sleep(100);
 
                 switch (randomInt)
                 {
                     case 0:
-                        SendPacket.SendEnemyShootPacket(stream);
+                        PacketFunction.SendEnemyShootPacket(stream);
                         break;
                     case 1:
-                        SendPacket.SendPlayerMovePacket(stream);
+                        PacketFunction.SendPlayerMovePacket(stream);
                         break;
                     case 2:
-                        SendPacket.SendTestPacket(stream);
+                        PacketFunction.SendTestPacket(stream);
                         break;
                 }
             }

@@ -23,7 +23,7 @@ namespace NetworkCore.NetworkMessage
     {
         public List<ByteField> _fields { get; private set; }
         public PacketType _type { get; private set; }
-        //public uint _size { get; private set; }
+        //public uint _size { get; private set; }    // rozmiar pakietu jest obliczany podczas serializacji //
 
         public Packet(PacketType type)
         {

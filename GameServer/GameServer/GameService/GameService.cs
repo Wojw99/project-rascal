@@ -13,7 +13,7 @@ namespace ServerApplication.Game
     {
         static void Main(string[] args)
         {
-            GameServer gameServer = new GameServer(true, 120, "127.0.01",
+            GameServer gameServer = new GameServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 8050, null);
 
             Dictionary<PacketType, PacketHandlerManager.PacketHandler> packetHandlers = 
@@ -27,18 +27,6 @@ namespace ServerApplication.Game
             gameServer.RegisterHandlers(packetHandlers);
             gameServer.Start();
 
-/*            Packet testPacket = new Packet(PacketType.packet_test_packet);
-            // initializing with maximal values of each type
-            testPacket.WriteInt("int", 2147483647);
-            testPacket.WriteShort("short", 32767);
-            testPacket.WriteLong("long", 9223372036854775807);
-            testPacket.WriteDouble("double", 1.7976931348623157E+308);
-            testPacket.WriteFloat("float", (float)3.4028235E+38);
-            testPacket.WriteString("string", "testowanie pakietów");
-
-            byte[] data = PacketSerializationManager.serializePacket(testPacket);
-            Packet newPacket = PacketSerializationManager.DeserializeByteData(data);
-            gameServer._PacketHandlerManager.HandlePacket(ref newPacket);*/
         }
     }
 }

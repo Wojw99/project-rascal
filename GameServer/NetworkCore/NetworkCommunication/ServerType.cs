@@ -9,8 +9,8 @@ namespace NetworkCore.NetworkCommunication
         default_server = 0x1,
         auth_server = 0x2,
         proxy_server = 0x3,
-        world_server = 0x4,
-        area_server = 0x5, // game server
+        world_server = 0x4, // or game server
+        area_server = 0x5, // or game server
         patch_server = 0x6
     }
 }

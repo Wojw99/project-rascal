@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NetworkCore.NetworkMessage
 {
+    // LUB Packet..coś tam...Type
     public enum MessageType
     {
         Request = 0x1,

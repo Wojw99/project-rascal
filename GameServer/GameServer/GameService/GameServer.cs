@@ -84,10 +84,6 @@ namespace ServerApplication.Game
                 _TcpListener = new TcpListener(IPAddress.Any, TcpPort.Value);
                 _TcpListener.Start();
                 _TcpListener.BeginAcceptTcpClient(HandleTcpClientConnection, null);
-                Console.WriteLine("Server started succesfully.");
-                Console.WriteLine($"GUID: {ServerId}, SERVER NAME: {ServerName}, TCP port: {TcpPort}, UDP port: {UdpPort}," +
-                    $"PUBLIC IP: {PublicIpAdress}, AllowPhysicalClients: {AllowPhysicalClients}, MAX clients: {MaxClients}," +
-                    $"ServerType: {_ServerType}");
             }
 
             if (UdpPort.HasValue)
@@ -96,7 +92,12 @@ namespace ServerApplication.Game
                 //_UdpListener.BeginReceive(HandleUdpClientData, null);
             }
 
-            while(IsRunning)
+            Console.WriteLine("Server started succesfully.");
+            Console.WriteLine($"GUID: {ServerId}, SERVER NAME: {ServerName}, TCP port: {TcpPort}, UDP port: {UdpPort}," +
+                $"PUBLIC IP: {PublicIpAdress}, AllowPhysicalClients: {AllowPhysicalClients}, MAX clients: {MaxClients}," +
+                $"ServerType: {_ServerType}");
+
+            while (IsRunning)
             {
                 Console.WriteLine("Nasłuchiwanie..."); 
                 Thread.Sleep(4000);

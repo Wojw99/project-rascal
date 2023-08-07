@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    public static class SendPacket
+    public static class PacketFunction
     {
         private static readonly object Lock = new object();
         public static void SendEnemyShootPacket(NetworkStream stream)

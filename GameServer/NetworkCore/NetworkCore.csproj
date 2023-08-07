@@ -5,9 +5,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\NetworkConfig\" />
-    <Folder Include="Interfaces\NetworkMessage\" />
-  </ItemGroup>
-
 </Project>
