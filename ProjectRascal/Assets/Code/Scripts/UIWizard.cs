@@ -24,15 +24,36 @@ public class UIWizard : MonoBehaviour
     [SerializeField] private Image hpBarBackgroundSprite;
     [SerializeField] private Image mpBarSprite;
     [SerializeField] private Image mpBarBackgroundSprite;
+
     [SerializeField] private TextMeshProUGUI goldTextMesh;
+
     [SerializeField] private TextMeshProUGUI writingTextMesh;
     [SerializeField] private GameObject writingContainer;
+
+    [SerializeField] private TextMeshProUGUI messageTextMesh;
+    [SerializeField] private TextMeshProUGUI nameTextMesh;
+    [SerializeField] private Image faceImage;
+    [SerializeField] private GameObject messageContainer;
 
     private void Start() {
         hpBarSprite.fillAmount = 1;
         mpBarSprite.fillAmount = 1;
         goldTextMesh.text = "0";
         HideWriting();
+        HideMessage();
+    }
+
+    public void ShowMessage(string name, Sprite faceSprite, string text) {
+        nameTextMesh.text = name;
+        messageTextMesh.text = text;
+        faceImage.sprite = faceSprite;
+        messageContainer.SetActive(true);
+    }
+
+    public void HideMessage() {
+        nameTextMesh.text = string.Empty;
+        messageTextMesh.text = string.Empty;
+        messageContainer.SetActive(false);
     }
 
     public void ShowWriting(string text) {

@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private Vector3 mouseGroundPosition;
     private InteractibleItem targetInteractible;
 
+    private bool isTurnedOn = true;
+
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         humanAnimator = GetComponent<HumanAnimator>();
@@ -35,15 +37,25 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void Update() {
-        mouseGroundPosition = GetMouseGroundPosition();
-        HandleRotation();
-        HandleRunning();
-        HandleMeleeAttack();
-        HandleIdle();
-        HandleInteractions();
-        HandleKey1();
-        HandleKey2();
-        HandleUI();
+        if(EventWizard.instance.IsOff()) {
+            mouseGroundPosition = GetMouseGroundPosition();
+            HandleRotation();
+            HandleRunning();
+            HandleMeleeAttack();
+            HandleIdle();
+            HandleInteractions();
+            HandleKey1();
+            HandleKey2();
+            HandleUI();
+        }
+    }
+
+    public void TurnOn() {
+        isTurnedOn = true;
+    }
+
+    public void TurnOff() {
+        isTurnedOn = false;
     }
 
     public void UpdateWeaponDD(GameObject gameObject) {

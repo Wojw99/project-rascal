@@ -67,4 +67,8 @@ public class InputWizard : MonoBehaviour
     public bool IsEscPressed() {
         return Input.GetKeyDown(KeyCode.Escape);
     }
+
+    public bool IsSpacePressed() {
+        return Input.GetKeyDown(KeyCode.Space);
+    }
 }

@@ -62,11 +62,13 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+     <Compile Include="Assets\Code\Scripts\Adventurer.cs" />
      <Compile Include="Assets\Code\Scripts\IDamageCharacter.cs" />
      <Compile Include="Assets\Code\Scripts\DamageDealerWizard.cs" />
      <Compile Include="Assets\Code\Scripts\Door.cs" />
      <Compile Include="Assets\Code\Scripts\EnemyController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Code\Scripts\EventSignalizer.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Code\Scripts\HumanAnimator.cs" />
      <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
@@ -95,6 +97,7 @@
      <Compile Include="Assets\Code\Scripts\EnemyCharacter.cs" />
      <Compile Include="Assets\Code\Scripts\DamagableFire.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+     <Compile Include="Assets\Code\Scripts\EventWizard.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
      <Compile Include="Assets\Code\Scripts\Damagable.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
