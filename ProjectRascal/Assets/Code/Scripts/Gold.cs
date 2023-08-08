@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gold : InteractibleItem
+public class Gold : Interactible
 {
     [SerializeField] private int amount = 0;
 

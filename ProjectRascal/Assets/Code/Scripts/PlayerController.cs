@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private float minDistanceForRunning = 1.1f;
     private float minDistanceForRotating = 0.3f;
     private Vector3 mouseGroundPosition;
-    private InteractibleItem targetInteractible;
+    private Interactible targetInteractible;
 
     private bool isTurnedOn = true;
 
@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private void HandleInteractions() {
         if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
             if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
-                if(raycastHit.transform.TryGetComponent(out InteractibleItem interactibleItem)) {
+                if(raycastHit.transform.TryGetComponent(out Interactible interactibleItem)) {
                     TurnOffTargetInteractibleVision();
                     targetInteractible = interactibleItem;
                     interactibleItem.OnVisionStart();

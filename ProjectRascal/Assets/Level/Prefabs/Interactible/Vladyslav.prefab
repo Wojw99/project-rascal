@@ -2418,7 +2418,7 @@ GameObject:
   - component: {fileID: 9080196139902330535}
   - component: {fileID: 67491017914448193}
   m_Layer: 0
-  m_Name: Adventurer
+  m_Name: Vladyslav
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2478,8 +2478,9 @@ MonoBehaviour:
   actionTextMesh: {fileID: 4470595709254346567}
   nameText: Vladyslav
   actionText: '[E] Rozmawiaj'
-  eventId: 0
   enemySpawned: {fileID: 2561772758235600693, guid: 1620c05b518415e459dfcba8d781834f,
+    type: 3}
+  spawnVFX: {fileID: 2870525650555717438, guid: 0b713fa221264d841b5c7937a31f09f5,
     type: 3}
 --- !u!1 &3510492079522168392
 GameObject:
@@ -5684,7 +5685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2842971841485588950
 Transform:
   m_ObjectHideFlags: 0

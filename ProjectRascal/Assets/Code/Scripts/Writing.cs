@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Writing : InteractibleItem
+public class Writing : Interactible
 {
     [SerializeField] private string text = "hello word!";
 

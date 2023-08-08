@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 
-public class InteractibleItem : MonoBehaviour
+public class Interactible : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI nameTextMesh;
     [SerializeField] private TextMeshProUGUI actionTextMesh;
@@ -24,6 +24,14 @@ public class InteractibleItem : MonoBehaviour
 
     protected virtual void HandleSignal(string signal) {
         Debug.Log("Handle signal from signalizer class.");
+    }
+
+    protected void InstantiateAtLocation(GameObject gameObject) {
+        Instantiate(gameObject, transform.position, transform.rotation);
+    }
+
+    protected void InstantiateAsChild(GameObject gameObject) {
+        Instantiate(gameObject, transform);
     }
 
     public void ShowActionText() {

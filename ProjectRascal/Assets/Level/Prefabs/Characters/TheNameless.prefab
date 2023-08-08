@@ -6091,7 +6091,7 @@ PrefabInstance:
     - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
         type: 3}
       propertyPath: nameText
-      value: Goblin Wojownik Alfa
+      value: Przedwieczny
       objectReference: {fileID: 0}
     - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
         type: 3}

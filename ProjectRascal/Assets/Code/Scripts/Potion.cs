@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Potion : InteractibleItem
+public class Potion : Interactible
 {
     [SerializeField] private float healthGiven = 0f;
 

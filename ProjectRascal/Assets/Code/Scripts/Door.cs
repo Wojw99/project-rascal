@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Door : InteractibleItem
+public class Door : Interactible
 {
     [SerializeField] private SceneLoadWizard.Scene scene;
 

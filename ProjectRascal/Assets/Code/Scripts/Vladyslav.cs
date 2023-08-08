@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Adventurer : InteractibleItem
+public class Vladyslav : Interactible
 {
-    [SerializeField] private int eventId = 0;
     [SerializeField] private GameObject enemySpawned;
+    [SerializeField] private GameObject spawnVFX;
 
     private bool A = false;
 
@@ -16,14 +16,10 @@ public class Adventurer : InteractibleItem
 
     protected override void HandleSignal(string signal) {
         if(signal == "e0") {
-            EventSignalizer.instance.Clear();
-            Debug.Log("summon");
-            VfxWizard.instance.SummonFancyCircleEffect(transform.position);
+            InstantiateAsChild(spawnVFX);
         } 
         if(signal == "e1") {
-            EventSignalizer.instance.Clear();
-            Debug.Log("transform");
-            Instantiate(enemySpawned, transform.position, transform.rotation);
+            InstantiateAtLocation(enemySpawned);
             Destroy(transform.gameObject);
         }
     }
