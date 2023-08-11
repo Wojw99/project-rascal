@@ -98,9 +98,10 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
-     <Compile Include="Assets\Code\Scripts\DamageDealers\MagicBulletDD.cs" />
      <Compile Include="Assets\Code\Scripts\Wizards\InputWizard.cs" />
+     <Compile Include="Assets\Code\Scripts\DamageDealers\MagicBulletDD.cs" />
      <Compile Include="Assets\Code\Scripts\Wizards\EventWizard.cs" />
+     <Compile Include="Assets\Code\Scripts\SkillController.cs" />
      <Compile Include="Assets\Code\Scripts\Interactibles\Vladyslav.cs" />
      <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
      <Compile Include="Assets\Other\PlayerInputActions.cs" />

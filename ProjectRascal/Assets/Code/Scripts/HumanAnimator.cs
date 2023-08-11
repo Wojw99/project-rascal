@@ -19,6 +19,21 @@ public class HumanAnimator : MonoBehaviour
         // UpdateSpeed();
     }
 
+    public void AnimateBuffMagicArmor() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("BuffMagicArmor");
+    }
+
+    public void AnimateSurprise() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Surprise");
+    }
+
+    public void AnimateGesture1() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Gesture1");
+    }
+
     public void AnimateDeath() {
         animator.SetFloat("Speed", 0f);
         animator.SetTrigger("Death");

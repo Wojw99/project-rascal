@@ -46,7 +46,15 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             HandleInteractions();
             HandleKey1();
             HandleKey2();
+            HandleKey3();
             HandleUI();
+            HandleTestAnim();
+        }
+    }
+
+    private void HandleTestAnim() {
+        if(InputWizard.instance.IsSpacePressed()) {
+            humanAnimator.AnimateSurprise();
         }
     }
 
@@ -95,27 +103,53 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
     }
 
+    [SerializeField] private Renderer chestRenderer;
+    // private MaterialPropertyBlock materialPropertyBlock;
+
+    private void HandleKey3() {
+        if(InputWizard.instance.IsKey3Pressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
+            humanAnimator.AnimateBuff();    
+            float durationNormalized = buffCastDuration / 60f;
+            var skillController = GetComponent<SkillController>();
+            skillController.SummonMagicArmor(durationNormalized);
+            StartCoroutine(WaitForIdle(durationNormalized));
+        }
+    }
+
     private void SummonHandLight() {
         VfxWizard.instance.SummonHandLight(leftHand.transform.position, Quaternion.identity, leftHand.transform);
         VfxWizard.instance.SummonHandLight(rightHand.transform.position, Quaternion.identity, rightHand.transform);
     }
 
-    IEnumerator WaitForIdle(float delay)
+    private IEnumerator WaitForIdle(float delay)
     {
         yield return new WaitForSeconds(delay);
         ResetToIdle();
     }
 
-    IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
+    private IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
     {
         yield return new WaitForSeconds(delay);
         SpawnThunderstruck(mouseGroundPosition);
     }
 
-    IEnumerator WaitForMagicBullet(float delay, Vector3 mouseGroundPosition)
+    private IEnumerator WaitForMagicBullet(float delay, Vector3 mouseGroundPosition)
     {
         yield return new WaitForSeconds(delay);
         SpawnMagicBullet(mouseGroundPosition);
+    }
+
+    private IEnumerator WaitForMagicArmor(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnMagicArmor();
+    }
+
+    private void SpawnMagicArmor() {
+        // var material = chestRenderer.material;
+        chestRenderer.material.SetFloat("_Alpha", 1);
+        chestRenderer.material.SetFloat("_Grow", 0);
     }
 
     private void SpawnMagicBullet(Vector3 mouseGroundPosition) {

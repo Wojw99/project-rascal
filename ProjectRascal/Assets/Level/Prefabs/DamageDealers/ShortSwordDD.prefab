@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5383511029765361940}
   - component: {fileID: 1663890034312860019}
-  - component: {fileID: 1529727359554828252}
   - component: {fileID: 3334026951758259583}
   m_Layer: 0
   m_Name: ShortSwordDD
@@ -50,27 +49,6 @@ MonoBehaviour:
   damageAmount: 1
   isBloodSpillVisible: 1
   damageTarget: 1
---- !u!135 &1529727359554828252
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8748542083957579681}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.2
-  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!136 &3334026951758259583
 CapsuleCollider:
   m_ObjectHideFlags: 0
