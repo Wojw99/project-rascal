@@ -68,6 +68,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Code\Scripts\Interactibles\Potion.cs" />
      <Compile Include="Assets\Code\Scripts\HumanAnimator.cs" />
+     <Compile Include="Assets\Code\Scripts\SkillStatesController.cs" />
      <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
      <Compile Include="Assets\Code\Scripts\Wizards\SceneLoadWizard.cs" />
      <Compile Include="Assets\Code\Scripts\Wizards\TestWizard.cs" />

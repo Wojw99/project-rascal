@@ -4,30 +4,57 @@ using UnityEngine;
 
 public class SkillController : MonoBehaviour
 {
-    [SerializeField] private SkinnedMeshRenderer chestRenderer;
+    [SerializeField] private GameObject leftHand;
+    [SerializeField] private GameObject rightHand;
+    [SerializeField] private GameObject bulletSpawnPoint;
 
-    private float refreshRate = 0.025f;
-    private float currentTime = 0f;
+    private GameCharacter gameCharacter;
 
-    public void SummonMagicArmor(float duration = 2f) {
-        StartCoroutine(WaitForSummonMagicArmor(duration));
+    private void Start() {
+        gameCharacter = GetComponent<GameCharacter>();
     }
 
-    public IEnumerator WaitForSummonMagicArmor(float duration = 2f) {
-        var chestMaterials = chestRenderer.materials;
-        if(chestMaterials.Length > 0) {
-            while(currentTime < duration) {
-                currentTime += refreshRate;
-                foreach(var mat in chestMaterials) {
-                    var maxDissolve = 1;
-                    var dissolveAmount = currentTime * maxDissolve / duration;
-                    mat.SetFloat("_DissolveAmount", dissolveAmount);
-                }
-                yield return new WaitForSeconds(refreshRate);
-            }
-            currentTime = 0f;
-        } else {
-            Debug.LogError("No materials in chest!");
+    public IEnumerator WaitForHandLight(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SummonHandLight();
+    }
+
+    public void SummonHandLight() {
+        VfxWizard.instance.SummonHandLight(leftHand.transform.position, Quaternion.identity, leftHand.transform);
+        VfxWizard.instance.SummonHandLight(rightHand.transform.position, Quaternion.identity, rightHand.transform);
+    }
+
+    public IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnThunderstruck(mouseGroundPosition);
+    }
+
+    public IEnumerator WaitForMagicBullet(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnMagicBullet(mouseGroundPosition);
+    }
+
+    public void SpawnMagicBullet(Vector3 mouseGroundPosition) {
+        var spawnTransform = bulletSpawnPoint.transform;
+        var bullet = DamageDealerWizard.instance.SummonMagicBullet(spawnTransform.position, spawnTransform.rotation);
+        if(bullet.TryGetComponent(out MagicBulletDD damageDealer)) {
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0f, damageDuration: 5f);
+            damageDealer.SetLifetime();
+        }
+    }
+
+    public void SpawnThunderstruck(Vector3 mouseGroundPosition) {
+        var handLightDelay = 0.1f;
+        StartCoroutine(WaitForHandLight(handLightDelay));
+
+        var spawnPosition = mouseGroundPosition + Vector3.up * 0.01f;
+        var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(spawnPosition);
+        if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.77f, damageDuration: 0.4f);
+            damageDealer.SetLifetime();
         }
     }
 }

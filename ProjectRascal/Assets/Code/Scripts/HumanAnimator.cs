@@ -5,7 +5,11 @@ using UnityEngine.AI;
 
 public class HumanAnimator : MonoBehaviour
 {
-    // private NavMeshAgent navMeshAgent;
+    [SerializeField] private int meleeAttackCastDuration = 42;
+    [SerializeField] private int buffCastDuration = 92;
+    [SerializeField] private int gatheringCastDuration = 80;
+    [SerializeField] private int spellCast2CastDuration = 60;
+
     private Animator animator;
 
     private void Start()
@@ -81,4 +85,26 @@ public class HumanAnimator : MonoBehaviour
     //     var speedPercent = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
     //     animator.SetFloat("Speed", speedPercent, .1f, Time.deltaTime);
     // }
+
+    public int MeleeAttackCastDuration
+    {
+        get { return meleeAttackCastDuration; }
+    }
+
+    public int BuffCastDuration
+    {
+        get { return buffCastDuration; }
+    }
+
+    public int GatheringCastDuration
+    {
+        get { return gatheringCastDuration; }
+    }
+
+    public int SpellCast2CastDuration
+    {
+        get { return spellCast2CastDuration; }
+    }
+
+    public static float NormalizeDuration(int duration) => duration / 60f;
 }

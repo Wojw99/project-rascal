@@ -1360,6 +1360,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1171646183}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &200349891 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6883423009910684160, guid: f3f0bf5ed6c88f84fa118790429fa7ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8384662758530369478}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &203307668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2244,6 +2250,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7957869517798373898, guid: b47252ef6d1ee2c469c9996f837c4d0c,
     type: 3}
   m_PrefabInstance: {fileID: 308323105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &323751971 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4552414825557430506, guid: f3f0bf5ed6c88f84fa118790429fa7ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8384662758530369478}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &327622008
 PrefabInstance:
@@ -10261,6 +10273,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 790313235}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1310791128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 679501176663387163, guid: f3f0bf5ed6c88f84fa118790429fa7ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 8384662758530369478}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1322852945 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6520811466897093759, guid: 21440698a54c3c044a2c97d5614527a4,
@@ -16857,6 +16875,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7663517873399612277, guid: f3f0bf5ed6c88f84fa118790429fa7ee,
         type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 8384662758530369487}
+    - targetCorrespondingSourceObject: {fileID: 7663517873399612277, guid: f3f0bf5ed6c88f84fa118790429fa7ee,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 8384662758530369480}
   m_SourcePrefab: {fileID: 100100000, guid: f3f0bf5ed6c88f84fa118790429fa7ee, type: 3}
@@ -16879,6 +16901,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chestRenderer: {fileID: 12527446}
+--- !u!114 &8384662758530369487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8384662758530369479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af9feac7f6878d49b03233e8e256ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftHand: {fileID: 200349891}
+  rightHand: {fileID: 323751971}
+  bulletSpawnPoint: {fileID: 1310791128}
 --- !u!1001 &8873648892923058943
 PrefabInstance:
   m_ObjectHideFlags: 0

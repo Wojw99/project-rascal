@@ -5,14 +5,9 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private int meleeAttackCastDuration = 42;
-    [SerializeField] private int buffCastDuration = 92;
-    [SerializeField] private int gatheringCastDuration = 80;
-    [SerializeField] private int spellCast2CastDuration = 60;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
-    [SerializeField] private GameObject bulletSpawnPoint;
     [SerializeField] private GameObject damageDealer;
 
     private GameCharacter gameCharacter;
@@ -25,8 +20,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private float minDistanceForRotating = 0.3f;
     private Vector3 mouseGroundPosition;
     private Interactible targetInteractible;
-
-    private bool isTurnedOn = true;
+    private SkillController skillController;
 
     private void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -34,6 +28,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
         gameCharacter = GetComponent<GameCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
+        skillController = GetComponent<SkillController>();
     }
 
     private void Update() {
@@ -58,14 +53,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
     }
 
-    public void TurnOn() {
-        isTurnedOn = true;
-    }
-
-    public void TurnOff() {
-        isTurnedOn = false;
-    }
-
     public void UpdateWeaponDD(GameObject gameObject) {
         var position = damageDealer.transform.position;
         var rotation = damageDealer.transform.rotation;
@@ -86,10 +73,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateBuff();
-            Invoke("SummonHandLight", 0.1f);
-            float durationNormalized = buffCastDuration / 60f;
-            StartCoroutine(WaitForIdle(durationNormalized));
-            StartCoroutine(WaitForThunderstruck(0f, mouseGroundPosition));
+            
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.BuffCastDuration);
+            StartCoroutine(WaitForIdle(duration));
+            StartCoroutine(skillController.WaitForThunderstruck(0f, mouseGroundPosition));
         }
     }
 
@@ -97,77 +84,29 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if(InputWizard.instance.IsKey2Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateSpellCast2();
-            float durationNormalized = spellCast2CastDuration / 60f;
-            StartCoroutine(WaitForIdle(durationNormalized));
-            StartCoroutine(WaitForMagicBullet(durationNormalized / 4, mouseGroundPosition));
+
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.SpellCast2CastDuration);
+            StartCoroutine(WaitForIdle(duration));
+            StartCoroutine(skillController.WaitForMagicBullet(duration / 4, mouseGroundPosition));
         }
     }
-
-    [SerializeField] private Renderer chestRenderer;
-    // private MaterialPropertyBlock materialPropertyBlock;
 
     private void HandleKey3() {
         if(InputWizard.instance.IsKey3Pressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateBuff();    
-            float durationNormalized = buffCastDuration / 60f;
-            var skillController = GetComponent<SkillController>();
-            skillController.SummonMagicArmor(durationNormalized);
-            StartCoroutine(WaitForIdle(durationNormalized));
-        }
-    }
 
-    private void SummonHandLight() {
-        VfxWizard.instance.SummonHandLight(leftHand.transform.position, Quaternion.identity, leftHand.transform);
-        VfxWizard.instance.SummonHandLight(rightHand.transform.position, Quaternion.identity, rightHand.transform);
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.BuffCastDuration);
+            var skillStatesController = GetComponent<SkillStatesController>();
+            skillStatesController.SummonMagicArmor(duration);
+            StartCoroutine(WaitForIdle(duration));
+        }
     }
 
     private IEnumerator WaitForIdle(float delay)
     {
         yield return new WaitForSeconds(delay);
         ResetToIdle();
-    }
-
-    private IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
-    {
-        yield return new WaitForSeconds(delay);
-        SpawnThunderstruck(mouseGroundPosition);
-    }
-
-    private IEnumerator WaitForMagicBullet(float delay, Vector3 mouseGroundPosition)
-    {
-        yield return new WaitForSeconds(delay);
-        SpawnMagicBullet(mouseGroundPosition);
-    }
-
-    private IEnumerator WaitForMagicArmor(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        SpawnMagicArmor();
-    }
-
-    private void SpawnMagicArmor() {
-        // var material = chestRenderer.material;
-        chestRenderer.material.SetFloat("_Alpha", 1);
-        chestRenderer.material.SetFloat("_Grow", 0);
-    }
-
-    private void SpawnMagicBullet(Vector3 mouseGroundPosition) {
-        var spawnTransform = bulletSpawnPoint.transform;
-        var bullet = DamageDealerWizard.instance.SummonMagicBullet(spawnTransform.position, spawnTransform.rotation);
-        if(bullet.TryGetComponent(out MagicBulletDD damageDealer)) {
-            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0f, damageDuration: 5f);
-            damageDealer.SetLifetime();
-        }
-    }
-
-    private void SpawnThunderstruck(Vector3 mouseGroundPosition) {
-        var spawnPosition = mouseGroundPosition + Vector3.up * 0.01f;
-        var thunderstruck = DamageDealerWizard.instance.SummonThunderstruck(spawnPosition);
-        if(thunderstruck.TryGetComponent(out DamageDealer damageDealer)) {
-            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, damageStartTime: 0.77f, damageDuration: 0.4f);
-            damageDealer.SetLifetime();
-        }
     }
 
     private void HandleInteractions() {
@@ -181,7 +120,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
                         humanAnimator.AnimateGathering();
                         playerState = CharacterState.Casting;
                         interactibleItem.Interact(transform.gameObject);
-                        float delay = gatheringCastDuration / 60f;
+                        var delay = HumanAnimator.NormalizeDuration(humanAnimator.GatheringCastDuration);
                         Invoke("ResetToIdle", delay);
                     }
                 } else {
@@ -241,10 +180,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if(InputWizard.instance.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
             playerState = CharacterState.Casting;
             humanAnimator.AnimateMeleeAttack();
-            float durationNormalized = meleeAttackCastDuration / 60f;
-            Invoke("ResetToIdle", durationNormalized);
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.MeleeAttackCastDuration);
+            Invoke("ResetToIdle", duration);
             var weaponDD = GetComponentInChildren<WeaponDD>();
-            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: durationNormalized);
+            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: duration);
         }
     }
     
@@ -281,7 +220,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
         return Input.mousePosition;
     }
-
 
     public CharacterState PlayerState {
         get { return playerState; }
