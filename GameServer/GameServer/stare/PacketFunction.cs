@@ -30,7 +30,32 @@ namespace ServerApplication.Game
             string test = packet.ReadField<string>("test");
 
             Console.WriteLine($"Packet received: [playerId: {playerId}, posX: {posX}, posY: {posY}, test: {test},]");
+
+            // dodaj do globalnych danych
+
+            
+
             // wykonaj działania / wywołaj funkcje z innego namespace/folderu
+        }
+
+        public static Dictionary<int, (double, double)> GlobalPlayerPositions = new Dictionary<int, (double, double)> { 
+            {1, (12.3, 42.2) },
+            {2, (12.3, 42.2) },
+            {3, (12.5, 32.1) } };
+
+        public static Packet HandleGlobalPlayerPosition()
+        {
+            Packet packet = new Packet(PacketType.packet_global_player_position);
+
+            packet.WriteInt("playerNum", GlobalPlayerPositions.Count);
+            foreach (var playerPos in GlobalPlayerPositions)
+            {
+                packet.WriteInt("playerId", playerPos.Key);
+                packet.WriteDouble("posX", playerPos.Value.Item1);
+                packet.WriteDouble("posY", playerPos.Key);
+            }
+
+            return packet;
         }
 
         public static void HandleTestPacket(Packet packet)

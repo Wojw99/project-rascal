@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -44,8 +44,6 @@ namespace ServerApplication.Game
             _ServerType = ServerType.default_server;
             _PacketHandlerManager = new PacketHandlerManager();
             _ConnectionCollection = new ConnectionCollection();
-            
-            
         }
 
         public GameServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
@@ -124,7 +122,7 @@ namespace ServerApplication.Game
             }
         }
 
-        public void RegisterHandlers(Dictionary<PacketType, PacketHandlerManager.PacketHandler> packetHandlers)
+        public void RegisterHandlers(Dictionary<PacketType, PacketHandler> packetHandlers)
         {
             _PacketHandlerManager.InitHandlers(packetHandlers);
         }
@@ -142,10 +140,12 @@ namespace ServerApplication.Game
                 lock(_lock) // mamy locka w TcpPear.Connect(), więc tutaj albo tam nie będzie potrzeby dodawania nowego locka
                 {
                     Console.WriteLine("Received new connection from ...");
-                    TcpPeer tcpPeer = new TcpPeer(tcpClient, _PacketHandlerManager);
-                    _ConnectionCollection.Connect(tcpPeer);
+                    TcpPeer tcpPeer = new TcpPeer(tcpClient, _PacketHandlerManager, );
+                    _ConnectionCollection.Add(tcpPeer);
+                    
                 }
             }       
         }
     }
 }
+*/

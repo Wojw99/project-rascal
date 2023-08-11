@@ -1,4 +1,7 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*// not in used
+
+
+using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +20,7 @@ namespace NetworkCore.NetworkCommunication
         {
             _Peers = new List<IPeer>();
         }
-        public void Connect(IPeer peer)
+        public void Add(IPeer peer)
         {
             lock (Lock)
             {
@@ -25,11 +28,11 @@ namespace NetworkCore.NetworkCommunication
                     throw new InvalidOperationException("Peer already connected.");
                 _Peers.Add(peer);
 
-                peer.StartReceive();
+                //peer.StartReceive();
             }
         }
 
-        public void Disconnect(IPeer peer)
+        public void Remove(IPeer peer)
         {
             lock (Lock)
             {
@@ -44,7 +47,7 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        /* private void StartReceive(IPeer peer)
+        *//* private void StartReceive(IPeer peer)
          {
              lock(Lock)
              {
@@ -71,7 +74,7 @@ namespace NetworkCore.NetworkCommunication
                      targetPeer.SendPacket(packet);
                  }
              }
-         }*/
+         }*//*
 
         public void Clear()
         {
@@ -79,3 +82,4 @@ namespace NetworkCore.NetworkCommunication
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-﻿// not yet implemented
+﻿/*// not yet implemented
 
 using System;
 using System.Collections.Generic;
@@ -6,8 +6,9 @@ using System.Text;
 
 namespace NetworkCore.NetworkCommunication
 {
-    public interface INetworkClient
+    public interface INetworkClient*//**//*
     {
 
     }
 }
+*/

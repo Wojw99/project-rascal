@@ -17,19 +17,27 @@ namespace NetworkCore.NetworkMessage
         packet_enemy_shoot = 20,
         packet_monster_pos = 30,
         packet_test_packet = 31,
+        packet_global_player_position = 32
     }
+
+    /*public enum PacketDirection
+    {
+        request = 1,
+        response = 2,
+    }*/
 
     public class Packet
     {
         public List<ByteField> _fields { get; private set; }
         public PacketType _type { get; private set; }
+        //public PacketDirection PacketDirection { get; private set; }
         //public uint _size { get; private set; }    // rozmiar pakietu jest obliczany podczas serializacji //
 
         public Packet(PacketType type)
         {
             _fields = new List<ByteField>();
             _type = type;
-            //_size = sizeof(PacketType);
+            //PacketDirection = packetDirection;
         }
 
         public void initFields(List<ByteField> fields)

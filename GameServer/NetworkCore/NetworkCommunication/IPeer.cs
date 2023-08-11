@@ -2,19 +2,31 @@
 using NetworkCore.NetworkConfig;
 using NetworkCore.NetworkMessage;
 using System;
+using System.Collections.Concurrent;
 using System.Net;
+using System.Net.Sockets;
 
 public interface IPeer
 {
-    PacketHandlerManager _PacketHandlerManager { get; }
     bool IsProxy { get; }
+
     bool IsConnected { get; }
-    Guid PeerId { get; }
-    //PeerInfo _PeerInfo { get; }
+
+    Guid Id { get; }
+
+    Owner OwnerType { get; }
+
+    Socket PeerSocket { get; }
+
+    public INetworkBase NetworkRef { get; }
+
+    void ConnectToServer();
+
+    void ConnectToClient();
 
     void Disconnect();
+
     void SendPacket(Packet packet);
-    //void HandlePacket(Packet packet); // now we are handling packets inside main Server/Client class
-    // and in Peer classes we using reference to PacketHandlerManager
-    void StartReceive();
+
+    //void StartReceive();
 }

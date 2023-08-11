@@ -6,26 +6,43 @@ using System.Text;
 using System.Threading.Tasks;
 using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkCommunication;
+using ServerApplication.GameService;
 
 namespace ServerApplication.Game
 {
     public class GameService
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            GameServer gameServer = new GameServer(true, 120, "127.0.0.1",
+            /*GameServer gameServer = new GameServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 8050, null);
 
-            Dictionary<PacketType, PacketHandlerManager.PacketHandler> packetHandlers = 
-                new Dictionary<PacketType, PacketHandlerManager.PacketHandler>()
+            Dictionary<PacketType, PacketHandler> packetHandlers = 
+                new Dictionary<PacketType, PacketHandler>()
             {
-                { PacketType.packet_player_move, PacketFunction.HandlePlayerMovePacket },
-                { PacketType.packet_enemy_shoot, PacketFunction.HandleEnemyShootPacket },
-                { PacketType.packet_test_packet, PacketFunction.HandleTestPacket },
+                { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
+                PacketFunction.HandlePlayerMovePacket, PacketFunction.HandleGlobalPlayerPosition) },
+
+                { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
+                PacketFunction.HandleEnemyShootPacket, PacketFunction.HandleGlobalPlayerPosition) },
+
+                { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet, 
+                PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
             };
-            //gameServer.InitFromFile("GameServerConfig.ini");
+
             gameServer.RegisterHandlers(packetHandlers);
-            gameServer.Start();
+            gameServer.Start();*/
+
+            TestServer server = new TestServer(true, 120, "127.0.0.1",
+            "Game Server", ServerType.world_server, 8051, null);
+
+            await server.Start();
+
+            while(true)
+            {
+                await server.Update(20);
+            }
+
 
         }
     }

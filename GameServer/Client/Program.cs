@@ -9,17 +9,31 @@ namespace Client
 {
     class Client
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            try
+
+            /*ClientBase client = new ClientBase("localhost", 8050);
+            client.Start("localhost", 8050);*/
+            
+            SimpleClient client = new SimpleClient();
+
+            while(true)
             {
-                ClientBase client = new ClientBase();
-                client.Start("localhost", 8050);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                Thread.Sleep(10000);
+                try
+                {
+                    await client.ConnectTcpServer("127.0.0.1", 8051);
+                    await client.Start();
+
+                    while (true)
+                    {
+                        Thread.Sleep(5000);
+                        await Console.Out.WriteLineAsync("Client is running...");
+                    }
+                }
+                catch(Exception ex)
+                {
+                    await Console.Out.WriteLineAsync(ex.Message);
+                }
             }
         }
     }

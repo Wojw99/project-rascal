@@ -13,4 +13,11 @@ namespace NetworkCore.NetworkCommunication
         area_server = 0x5, // or game server
         patch_server = 0x6
     }
+
+    public enum ServerProtocolType
+    {
+        protocol_tcp = 0x1,
+        protocol_udp = 0x2,
+        protocol_bothTcpUdp = 0x3
+    }
 }

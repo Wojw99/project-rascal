@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkConfig;
+﻿/*using NetworkCore.NetworkConfig;
 using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Generic;
@@ -39,3 +39,4 @@ namespace NetworkCore.NetworkCommunication
         }
     }
 }
+*/

@@ -18,6 +18,7 @@ namespace NetworkCore.NetworkMessage
                     // calculating the size of packet
                     int size = 0;
                     size += sizeof(PacketType);
+                    //size += sizeof(PacketDirection);
                     foreach (var field in packet._fields)
                     {
                         size += sizeof(byte) * 2; 
@@ -28,6 +29,7 @@ namespace NetworkCore.NetworkMessage
 
                     writer.Write(size + sizeof(int));
                     writer.Write((int)packet._type);
+                   // writer.Write((int)packet.PacketDirection);
 
                     foreach (var field in packet._fields)
                     {
@@ -53,6 +55,7 @@ namespace NetworkCore.NetworkMessage
                     // Ewentualnie można by pominąć te 4 bajty.
 
                     PacketType packetType = (PacketType)reader.ReadInt32();
+                    //PacketDirection packetDirection = (PacketDirection)reader.ReadInt32();
 
                     Packet packet = new Packet(packetType);
 
