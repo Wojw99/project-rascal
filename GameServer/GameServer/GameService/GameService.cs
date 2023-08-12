@@ -40,7 +40,9 @@ namespace ServerApplication.Game
 
             while(true)
             {
-                await server.Update(20);
+                Thread.Sleep(15000);
+                await Console.Out.WriteLineAsync("Serwer uruchomiony.");
+                //await server.Update(20);
             }
 
 

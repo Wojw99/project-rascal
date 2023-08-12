@@ -3,6 +3,7 @@ using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
@@ -25,7 +26,7 @@ namespace NetworkCore.NetworkCommunication
         public INetworkBase NetworkRef { get; private set; } // storing reference to NetworkServer or NetworkClient
 
         private byte[] ReceiveBuffer = new byte[1024];
-        
+
         public TcpPeer(INetworkBase networkBase, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
@@ -39,8 +40,8 @@ namespace NetworkCore.NetworkCommunication
         {
             if(OwnerType == Owner.client)
             {
-                //_TcpClient.Connect();
-
+                IsConnected = true;
+                Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
         }
 
@@ -48,81 +49,115 @@ namespace NetworkCore.NetworkCommunication
         {
             if(OwnerType == Owner.server)
             {
+                IsConnected = true;
                 Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
         }
 
         public void Disconnect()
         {
+            IsConnected = false;
             //_TcpClient.Close();
         }
 
-        public void SendPacket(Packet packet)
+        public async Task SendPacket(Packet packet)
         {
-            /*NetworkStream stream = _TcpClient.GetStream();
-            byte[] data = PacketSerializationManager.serializePacket(packet);
-            stream.Write(data, 0, data.Length);
-            Console.WriteLine("Wysyłam pakiet zwrotny...");*/
+            byte[] dataToSend = PacketSerializationManager.serializePacket(packet);
+            await PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+            // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
         }
 
         public async Task ReadIncomingData()
         {
-            if(NetworkRef.IsRunning)
+            while (NetworkRef.IsRunning)
             {
-                int bytesRead = PeerSocket.Receive(ReceiveBuffer);
+                byte[] PacketSizeByte = new byte[sizeof(int)];
+                // int bytesRead =
+                int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
 
-                if (bytesRead > 0)
+                if(bytesRead != sizeof(int))
                 {
-                    // first 4 bytes are the serialized packet size
-                    int packetSize = BitConverter.ToInt32(ReceiveBuffer, 0); // 0 -4 bajtów
-
-                    // creating new buffor, according to packet size.
-                    byte[] packetBuffor = new byte[packetSize];
-
-                    if (ReceiveBuffer.Length >= packetSize)
-                    {
-                        // copy 'packetSize' elements from main buffor to buffor, which can be serialized.
-                        Buffer.BlockCopy(ReceiveBuffer, 0, packetBuffor, 0, packetSize);
-
-                        Packet packet = PacketSerializationManager.DeserializeByteData(packetBuffor);
-                        await AddToIncomingPacketQueue(packet);
-
-                        // substraction of processed data
-                        int remainingDataSize = ReceiveBuffer.Length - packetSize;
-                        Buffer.BlockCopy(ReceiveBuffer, packetSize, ReceiveBuffer, 0, remainingDataSize);
-
-                        /* //HandlePacket(packet); 
-                        PacketHandler handler = NetworkRef._PacketHandlerManager.GetHandler(packet._type);
-
-                        handler.HandleRequest(packet);
-
-                        SendPacket(handler.HandleResponse());*/
-
-                        // Idk if we need it.
-                        //Array.Resize(ref ReceiveBuffer, remainingDataSize); // Skrócenie bufora do nowego rozmiaru
-
-                        await ReadIncomingData();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Brak danych do przetworzenia...");
-                    //StartReceive();
+                    await Console.Out.WriteLineAsync("");
+                    continue;
                 }
 
+                int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
+
+                if (packetSize <= 0)
+                {
+                    await Console.Out.WriteLineAsync("Incorrect size of packet");
+                    continue;
+                }
+
+                // disregard PacketSizeByte
+                byte[] packetData = new byte[packetSize - sizeof(int)];
+
+                bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
+
+                if (bytesRead <= 0)
+                {
+                    await Console.Out.WriteLineAsync("");
+                    continue;
+                }
+
+                
+                byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
+
+                Packet packet = PacketSerializationManager.DeserializeByteData(combinedData);
+                await AddToIncomingPacketQueue(packet);
+
+                //await ProcessReceivedData(bytesRead);
             }
         }
 
+        /*private async Task ProcessReceivedData(int bytesRead)
+        {
+            if (bytesRead > 0)
+            {
+                // Assuming the first 4 bytes represent the packet size
+                int packetSize = BitConverter.ToInt32(ReceiveBuffer, 0);
+
+                if (packetSize <= bytesRead)
+                {
+                    byte[] packetBuffer = new byte[packetSize];
+                    Buffer.BlockCopy(ReceiveBuffer, 0, packetBuffer, 0, packetSize);
+
+                    Packet packet = PacketSerializationManager.DeserializeByteData(packetBuffer);
+                    await AddToIncomingPacketQueue(packet);
+
+                    int remainingDataSize = bytesRead - packetSize;
+                    if (remainingDataSize > 0)
+                    {
+                        Buffer.BlockCopy(ReceiveBuffer, packetSize, ReceiveBuffer, 0, remainingDataSize);
+                    }
+
+                    await ProcessReceivedData(remainingDataSize);
+                }
+                else
+                {
+                    // Not enough data received yet, wait for more
+                    await ReadIncomingData();
+                }
+            }
+            else
+            {
+                // Connection closed or error occurred
+                //Console.WriteLine("Connection closed or error occurred.");
+                // Handle disconnection or other actions
+            }
+        }*/
+
         public async Task AddToIncomingPacketQueue(Packet packet)
         {
-            if(OwnerType == Owner.server)
+            NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = this, Packet = packet });
+            
+            /*if(OwnerType == Owner.server)
             {
-                NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = this, Packet = packet });
             }
             else
             {
                 NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = null , Packet = packet });
-            }
+            }*/
         }
 
         /*private void HandleReceivedData(IAsyncResult result)

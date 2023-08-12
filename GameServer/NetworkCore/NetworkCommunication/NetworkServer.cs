@@ -146,8 +146,8 @@ namespace NetworkCore.NetworkCommunication
             IsRunning = true;
 
             Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
-            Task handleWaitForUdpConnection = Task.Run(async () => await WaitForUdpClientConnection());
-            Task handleUpdate = Task.Run(async () => await Update());
+            //Task handleWaitForUdpConnection = Task.Run(async () => await WaitForUdpClientConnection());
+            Task handleUpdate = Task.Run(async () => await Update(1000, TimeSpan.FromMilliseconds(100)));
             /*while (IsRunning)
             {
                 //await WaitForClientConnection();
@@ -166,7 +166,7 @@ namespace NetworkCore.NetworkCommunication
             UdpSocket?.Close();
         }
 
-        public async Task Update(UInt32 maxPacketCount = 100)
+        public async Task Update(UInt32 maxPacketCount = 100, TimeSpan packetProcessInterval = default)
         {
             while(IsRunning)
             {
@@ -174,12 +174,18 @@ namespace NetworkCore.NetworkCommunication
 
                 while(packetCount < maxPacketCount && !qPacketsIn.IsEmpty)
                 {
-                    if(qPacketsIn.TryPeek(out var ownedPacket))
+                    if(qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet));
+                        //Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet));
+                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet);
                         packetCount++;
                     }
 
+                }
+
+                if (packetProcessInterval != default)
+                {
+                    await Task.Delay(packetProcessInterval);
                 }
             }
         }

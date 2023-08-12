@@ -16,6 +16,7 @@ namespace NetworkCore.NetworkMessage
                 using (BinaryWriter writer = new BinaryWriter(stream))
                 {
                     // calculating the size of packet
+
                     int size = 0;
                     size += sizeof(PacketType);
                     //size += sizeof(PacketDirection);
@@ -26,6 +27,8 @@ namespace NetworkCore.NetworkMessage
                         size += sizeof(int);
                         size += field._buffer.Length;
                     }
+
+                    // writing to byte stream
 
                     writer.Write(size + sizeof(int));
                     writer.Write((int)packet._type);

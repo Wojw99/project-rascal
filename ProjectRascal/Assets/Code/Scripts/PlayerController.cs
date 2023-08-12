@@ -1,3 +1,4 @@
+using NetworkCore.NetworkMessage;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -169,7 +170,16 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             transform.position += movement;
             playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
-        } 
+
+            Packet packet = new Packet(PacketType.packet_player_move);
+            packet.WriteInt("playerId", 345435);
+            packet.WriteFloat("posX", transform.position.x);
+            packet.WriteFloat("posY", transform.position.y);
+            packet.WriteFloat("posZ", transform.position.z);
+            packet.WriteString("test", "jakies dodatkowe info");
+
+            Client._instanceNetwork.SendPacketToAllServers(packet);
+        }
     }
 
     private void HandleIdle() {

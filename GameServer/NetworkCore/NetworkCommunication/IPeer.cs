@@ -5,7 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Threading.Tasks;
 public interface IPeer
 {
     bool IsProxy { get; }
@@ -26,7 +26,7 @@ public interface IPeer
 
     void Disconnect();
 
-    void SendPacket(Packet packet);
+    Task SendPacket(Packet packet);
 
     //void StartReceive();
 }

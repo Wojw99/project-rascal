@@ -26,8 +26,10 @@ namespace Client
 
                     while (true)
                     {
-                        Thread.Sleep(5000);
-                        await Console.Out.WriteLineAsync("Client is running...");
+                        Thread.Sleep(200);
+                        //await Console.Out.WriteLineAsync("Client is running...");
+                        Packet packet = PacketFunction.SendTestPacket();
+                        client.SendPacketToAllServers(packet);
                     }
                 }
                 catch(Exception ex)

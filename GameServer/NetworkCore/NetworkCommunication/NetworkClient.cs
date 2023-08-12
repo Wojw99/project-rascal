@@ -43,14 +43,14 @@ namespace NetworkCore.NetworkCommunication
                     {
                         //Task handleConnectToClient = Task.Run(async () => await peer.ConnectToClient());
                         serverPeer.ConnectToServer();
-                        await Console.Out.WriteLineAsync("Connection approved.");
+                        //await Console.Out.WriteLineAsync("Connection approved.");
                     }
 
                     return true;
                 }
                 else
                 {
-                    await Console.Out.WriteLineAsync("Connection denied.");
+                    //await Console.Out.WriteLineAsync("Connection denied.");
                     return false;
                 }
             }
@@ -83,7 +83,7 @@ namespace NetworkCore.NetworkCommunication
 
             //Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
             //Task handleWaitForUdpConnection = Task.Run(async () => await WaitForUdpClientConnection());
-            Task handleUpdate = Task.Run(async () => await Update());
+            Task handleUpdate = Task.Run(async () => await Update(1000, TimeSpan.FromMilliseconds(100)));
         }
 
         public async Task Stop()
@@ -91,7 +91,7 @@ namespace NetworkCore.NetworkCommunication
             IsRunning = false;
         }
 
-        public async Task Update(UInt32 maxPacketCount = 100)
+        public async Task Update(UInt32 maxPacketCount = 100, TimeSpan packetProcessInterval = default)
         {
             while (IsRunning)
             {
@@ -99,11 +99,16 @@ namespace NetworkCore.NetworkCommunication
 
                 while (packetCount < maxPacketCount && !qPacketsIn.IsEmpty)
                 {
-                    if (qPacketsIn.TryPeek(out var ownedPacket))
+                    if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
                         Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet));
                         packetCount++;
                     }
+                }
+
+                if (packetProcessInterval != default)
+                {
+                    await Task.Delay(packetProcessInterval);
                 }
             }
         }

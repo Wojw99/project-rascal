@@ -249,7 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adba188f5ee2812488a91a06c63a29ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxWizard: {fileID: 1101784422}
+  detectionDistance: 0
+  attackDistance: 0
 --- !u!65 &67648209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1685,7 +1686,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adba188f5ee2812488a91a06c63a29ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxWizard: {fileID: 1101784422}
+  detectionDistance: 0
+  attackDistance: 0
 --- !u!1001 &499041737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1801,6 +1803,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testingSphere: {fileID: 2739521040968852607, guid: 45c7c873432d73949a5ce65efa156ab7,
     type: 3}
+  testingSphere2: {fileID: 0}
+  testingSphere3: {fileID: 0}
 --- !u!4 &515028211
 Transform:
   m_ObjectHideFlags: 0
@@ -3227,6 +3231,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &850448412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850448414}
+  - component: {fileID: 850448413}
+  m_Layer: 0
+  m_Name: ClientObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &850448413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850448412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc51bbad4e8f1f347a989e3b2ddada3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &850448414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850448412}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &856904464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1438546959266459337, guid: 60770bdb4dc667c45bea53db0339dc05,
@@ -4099,8 +4147,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47884f32287ea64d842ae6819de45fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundClickEffect: {fileID: 1183238770}
+  fancyCircleEffect: {fileID: 0}
   bloodSpillEffect: {fileID: 692653118}
+  healEffect: {fileID: 0}
+  spellLight: {fileID: 0}
+  handLight: {fileID: 0}
+  slashEffect: {fileID: 0}
+  magicBulletStartEffect: {fileID: 0}
+  magicBulletExplosionEffect: {fileID: 0}
+  thunderstruckStartEffect: {fileID: 0}
 --- !u!4 &1101784423
 Transform:
   m_ObjectHideFlags: 0
@@ -5891,12 +5946,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a36305b79dc1964eb0ce00a67a55cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 5
+  interactionDistance: 3
+  meleeAttackCastDuration: 42
+  buffCastDuration: 92
+  gatheringCastDuration: 80
+  spellCast2CastDuration: 60
   mainCamera: {fileID: 330585545}
-  gameInput: {fileID: 1095311562}
-  attackingDistance: 2.5
-  stoppingDistance: 1
-  vfxWizard: {fileID: 1101784422}
-  testWizard: {fileID: 515028210}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  bulletSpawnPoint: {fileID: 0}
 --- !u!4 &1667778998
 Transform:
   m_ObjectHideFlags: 0

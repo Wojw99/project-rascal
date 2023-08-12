@@ -7,7 +7,7 @@ using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkMessage;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ServerApplication.Game
+namespace ServerApplication.GameService
 {
     public class PacketFunction
     {
@@ -17,7 +17,7 @@ namespace ServerApplication.Game
             int playerId = packet.ReadField<int>("playerId");
             int targetId = packet.ReadField<int>("targetId");
 
-            Console.WriteLine($"Packet received: [playerId: {playerId}, targetId: {targetId}]");
+            //Console.WriteLine($"Packet received: [playerId: {playerId}, targetId: {targetId}]");
             // wykonaj działania / wywołaj funkcje z innego namespace/folderu
 
         }
@@ -25,20 +25,22 @@ namespace ServerApplication.Game
         public static void HandlePlayerMovePacket(Packet packet)
         {
             int playerId = packet.ReadField<int>("playerId");
-            double posX = packet.ReadField<double>("posX");
-            double posY = packet.ReadField<double>("posY");
+            float posX = packet.ReadField<float>("posX");
+            float posY = packet.ReadField<float>("posY");
+            float posZ = packet.ReadField<float>("posZ");
             string test = packet.ReadField<string>("test");
 
-            Console.WriteLine($"Packet received: [playerId: {playerId}, posX: {posX}, posY: {posY}, test: {test},]");
+
+            Console.WriteLine($"[playerId: {playerId}, posX: {posX}, posY: {posY}, posZ: {posZ}, test: {test}]");
 
             // dodaj do globalnych danych
 
-            
+
 
             // wykonaj działania / wywołaj funkcje z innego namespace/folderu
         }
 
-        public static Dictionary<int, (double, double)> GlobalPlayerPositions = new Dictionary<int, (double, double)> { 
+        public static Dictionary<int, (double, double)> GlobalPlayerPositions = new Dictionary<int, (double, double)> {
             {1, (12.3, 42.2) },
             {2, (12.3, 42.2) },
             {3, (12.5, 32.1) } };
@@ -67,7 +69,7 @@ namespace ServerApplication.Game
             float n5 = packet.ReadField<float>("float");
             string n6 = packet.ReadField<string>("string");
 
-            Console.WriteLine($"Packet received: [int: {n1}, short: {n2}, long: {n3}, double: {n4}, float: {n5}, string: {n6}]");
+            //Console.WriteLine($"Packet received: [int: {n1}, short: {n2}, long: {n3}, double: {n4}, float: {n5}, string: {n6}]");
             // wykonaj działania / wywołaj funkcje z innego namespace/folderu       
         }
     }
