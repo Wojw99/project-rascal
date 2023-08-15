@@ -1355,6 +1355,10 @@ MonoBehaviour:
     type: 3}
   thunderstruckStartEffect: {fileID: 8922043150770529895, guid: 973c66d2fb7e1244e95019953ee656df,
     type: 3}
+  magicArmorExtraEffecr: {fileID: 1590287713881878568, guid: e37736c5c0b70d94eb85ad983d777f80,
+    type: 3}
+  magicGranadeEffect: {fileID: 8655484188200345724, guid: f792ec7e2f093d749ae1a3f1f1a5c207,
+    type: 3}
 --- !u!114 &3268265122191546207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1420,6 +1424,10 @@ MonoBehaviour:
   goldTextMesh: {fileID: 6349567468515989015}
   writingTextMesh: {fileID: 5509907246989563422}
   writingContainer: {fileID: 5567814915398900321}
+  messageTextMesh: {fileID: 0}
+  nameTextMesh: {fileID: 0}
+  faceImage: {fileID: 0}
+  messageContainer: {fileID: 0}
 --- !u!1 &8666399476075604248
 GameObject:
   m_ObjectHideFlags: 0

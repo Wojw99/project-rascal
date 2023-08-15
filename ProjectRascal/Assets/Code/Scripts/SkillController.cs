@@ -37,6 +37,16 @@ public class SkillController : MonoBehaviour
         SpawnMagicBullet(mouseGroundPosition);
     }
 
+    public IEnumerator WaitForMagicExplosion(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnMagicExplosion(mouseGroundPosition);
+    }
+
+    public void SpawnMagicExplosion(Vector3 mouseGroundPosition) {
+        VfxWizard.instance.SummonMagicGranadeEffect(mouseGroundPosition);
+    }
+
     public void SpawnMagicBullet(Vector3 mouseGroundPosition) {
         var spawnTransform = bulletSpawnPoint.transform;
         var bullet = DamageDealerWizard.instance.SummonMagicBullet(spawnTransform.position, spawnTransform.rotation);

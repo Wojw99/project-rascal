@@ -7843,7 +7843,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614943}
   m_ExposedName: Scale
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 3
   m_Category: 
   m_Min:
     m_Type:
@@ -8133,7 +8133,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614951}
   m_ExposedName: VelocityScale
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 4
   m_Category: 
   m_Min:
     m_Type:

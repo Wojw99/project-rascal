@@ -101,6 +101,9 @@
         },
         {
             "m_Id": "35e9b14632a54a8f930d2eaa88e3369a"
+        },
+        {
+            "m_Id": "0de784b3bf274c91ba92fd2697bfbb2b"
         }
     ],
     "m_GroupDatas": [],
@@ -422,6 +425,9 @@
             },
             {
                 "m_Id": "7939c81608e641b1a622d0daec66ea74"
+            },
+            {
+                "m_Id": "0de784b3bf274c91ba92fd2697bfbb2b"
             }
         ]
     },
@@ -638,6 +644,40 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Alpha"
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "0de784b3bf274c91ba92fd2697bfbb2b",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.AlphaClipThreshold",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "35f5c491a2b34da98ef5fa1b8f449c54"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.AlphaClipThreshold"
 }
 
 {
@@ -1083,6 +1123,21 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "35f5c491a2b34da98ef5fa1b8f449c54",
+    "m_Id": 0,
+    "m_DisplayName": "Alpha Clip Threshold",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "AlphaClipThreshold",
+    "m_StageCapability": 2,
+    "m_Value": 0.5,
+    "m_DefaultValue": 0.5,
+    "m_Labels": []
 }
 
 {
@@ -1588,7 +1643,7 @@
     "m_Type": "UnityEditor.ShaderGraph.VFXTarget",
     "m_ObjectId": "7cdfe4b4c16040cb8081b86dc521057b",
     "m_Lit": false,
-    "m_AlphaTest": false
+    "m_AlphaTest": true
 }
 
 {

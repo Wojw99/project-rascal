@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             HandleKey1();
             HandleKey2();
             HandleKey3();
+            HandleKey4();
             HandleUI();
             HandleTestAnim();
         }
@@ -100,6 +101,17 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             var skillStatesController = GetComponent<SkillStatesController>();
             skillStatesController.SummonMagicArmor(duration);
             StartCoroutine(WaitForIdle(duration));
+        }
+    }
+
+    private void HandleKey4() {
+        if(InputWizard.instance.IsKey4Pressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
+            humanAnimator.AnimateSpellCast2();    
+
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.SpellCast2CastDuration);
+            StartCoroutine(WaitForIdle(duration));
+            StartCoroutine(skillController.WaitForMagicExplosion(0f, mouseGroundPosition));
         }
     }
 

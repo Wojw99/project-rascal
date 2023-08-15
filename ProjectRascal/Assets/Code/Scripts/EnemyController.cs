@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
                 navMeshAgent.isStopped = true;
                 humanAnimator.AnimateMeleeAttack();
                 var duration = HumanAnimator.NormalizeDuration(humanAnimator.MeleeAttackCastDuration);
-                WaitForEnforceDamage(duration);
+                StartCoroutine(WaitForEnforceDamage(duration));
                 return;
             }
         }
@@ -83,7 +83,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
         chasingTarget = null;
     }
 
-    private IEnumerable WaitForEnforceDamage(float delay) {
+    private IEnumerator WaitForEnforceDamage(float delay) {
         yield return new WaitForSeconds(delay);
         EnforceDamage();
     }

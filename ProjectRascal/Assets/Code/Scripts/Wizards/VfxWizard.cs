@@ -25,6 +25,17 @@ public class VfxWizard : MonoBehaviour
     [SerializeField] private GameObject magicBulletStartEffect;
     [SerializeField] private GameObject magicBulletExplosionEffect;
     [SerializeField] private GameObject thunderstruckStartEffect;
+    [SerializeField] private GameObject magicArmorExtraEffecr;
+    [SerializeField] private GameObject magicGranadeEffect;
+
+    public void SummonMagicGranadeEffect(Vector3 position) {
+        GameObject.Instantiate(magicGranadeEffect, position, Quaternion.identity);
+    }
+
+
+    public void SummonMagicArmorExtraEffect(Vector3 position) {
+        GameObject.Instantiate(magicArmorExtraEffecr, position, Quaternion.identity);
+    }
 
     public void SummonFancyCircleEffect(Vector3 position) {
         GameObject.Instantiate(fancyCircleEffect, position, Quaternion.identity);

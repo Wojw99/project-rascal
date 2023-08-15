@@ -19,12 +19,6 @@
             "m_Id": "9ea350509d1b44778031c032febfcc14"
         },
         {
-            "m_Id": "31d52d77abea4d08a7be4aea2938909a"
-        },
-        {
-            "m_Id": "4bdb904c78e4470f90d6bb73ad3c5f63"
-        },
-        {
             "m_Id": "af0540671cf54ed4ababfde7bd6716b9"
         },
         {
@@ -1457,12 +1451,6 @@
             "m_Id": "9ea350509d1b44778031c032febfcc14"
         },
         {
-            "m_Id": "31d52d77abea4d08a7be4aea2938909a"
-        },
-        {
-            "m_Id": "4bdb904c78e4470f90d6bb73ad3c5f63"
-        },
-        {
             "m_Id": "af0540671cf54ed4ababfde7bd6716b9"
         },
         {
@@ -1623,34 +1611,6 @@
         "y": 0.029999999329447748,
         "z": 0.0,
         "w": 0.0
-    }
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
-    "m_ObjectId": "31d52d77abea4d08a7be4aea2938909a",
-    "m_Guid": {
-        "m_GuidSerialized": "f1299104-1823-48f9-b9fd-5cd5f747eded"
-    },
-    "m_Name": "Alpha",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Alpha",
-    "m_DefaultReferenceName": "_Alpha",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": 1.0,
-    "m_FloatType": 0,
-    "m_RangeValues": {
-        "x": 0.0,
-        "y": 1.0
     }
 }
 
@@ -2121,36 +2081,6 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.AlphaClipThreshold"
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
-    "m_ObjectId": "4bdb904c78e4470f90d6bb73ad3c5f63",
-    "m_Guid": {
-        "m_GuidSerialized": "37bc65b4-763c-441f-81ca-681ef03ddf88"
-    },
-    "m_Name": "DissolveTex",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "DissolveTex",
-    "m_DefaultReferenceName": "_DissolveTex",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
-        "m_Guid": ""
-    },
-    "isMainTexture": false,
-    "useTilingAndOffset": false,
-    "m_Modifiable": true,
-    "m_DefaultType": 0
 }
 
 {
