@@ -1,11 +1,10 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkData;
 using NetworkCore.Packets.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
-
+using NetworkCore.NetworkData.stare;
 
 namespace NetworkCore.Packets
 {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
@@ -12,6 +14,9 @@ namespace Client
 {
     public class SimpleClient : NetworkClient
     {
+        public TcpPeer ServerPeer { get; set; }
+        //ConcurrentDictionary<Guid, TcpPeer> servers = new ConcurrentDictionary<Guid, TcpPeer>();
+
         /*Dictionary<PacketType, PacketHandler> packetHandlers =
                 new Dictionary<PacketType, PacketHandler>()
             {
@@ -29,37 +34,18 @@ namespace Client
 
         public SimpleClient() : base() 
         {
-            //packetHandlerManager.InitHandlers(packetHandlers);
+            
         }
 
         public override async Task OnPacketReceived(IPeer serverPeer, Packet packet)
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {serverPeer.Id}");
-
-            
-
-            /*if(packet.PacketType == PacketType.packet_player_move)
-            {
-                PlayerMovePacket receivedPacket = new PlayerMovePacket(packet);
-                await Console.Out.WriteLineAsync(receivedPacket.ToString());
-            }*/
-
-
-            //PacketHandler pHandler = packetHandlerManager.GetHandler(packet._type);
-
-            //pHandler.HandleRequest(packet);
-
-            //Packet resPacket = pHandler.HandleResponse();
-
-            //await serverPeer.SendPacket(resPacket);
         }
 
-        public override async Task<bool> OnServerConnect(IPeer serverPeer)
+        public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
         {
-            // TESTOWE
-            await Console.Out.WriteLineAsync("Test funkcji");
-
-            return true; // gdy połączenie się uda
+            ServerPeer = new TcpPeer(this, ServerTcpSocket, newConnectionId, ownerType);
+            await ServerPeer.ConnectToServer();
         }
 
         public override async Task OnServerDisconnect(IPeer serverPeer)

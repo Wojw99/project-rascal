@@ -3,6 +3,7 @@ using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NetworkCore.NetworkCommunication
 {
-    public abstract class NetworkServer : INetworkBase
+    public abstract class NetworkServer : NetworkBase
     {
         protected bool AllowPhysicalClients { get; }
 
@@ -29,13 +30,13 @@ namespace NetworkCore.NetworkCommunication
 
         protected Socket? UdpSocket { get; }
 
-        public bool IsRunning { get; private set; }
+        //public bool IsRunning { get; private set; }
 
         //public abstract ConcurrentDictionary<Guid, IPeer> qPeers { get; }
 
-        public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
+        //public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
 
-        public ConcurrentQueue<OwnedPacket> qPacketsOut { get; }
+        //public ConcurrentQueue<OwnedPacket> qPacketsOut { get; }
 
         //public PacketHandlerManager _PacketHandlerManager { get; private set; }
 
@@ -167,64 +168,11 @@ namespace NetworkCore.NetworkCommunication
             UdpSocket?.Close();
         }
 
-        public async Task Update(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval = default)
-        {
-            await Task.Run(async () =>
-            {
-                await ProcessIncomingPackets(maxIncomingPacketCount, packetProcessInterval);
-            });
-
-            await Task.Run(async () =>
-            {
-                await ProcessOutgoingPackets(maxOutgoingPacketCount, packetProcessInterval);
-            });
-        }
-
-        private protected async Task ProcessIncomingPackets(UInt32 maxIncomingPacketCount, TimeSpan packetProcessInterval = default)
-        {
-            while (IsRunning)
-            {
-                UInt32 packetCount = 0;
-
-                while (packetCount < maxIncomingPacketCount && !qPacketsIn.IsEmpty)
-                {
-                    if (qPacketsIn.TryDequeue(out var ownedPacket))
-                    {
-                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
-                        packetCount++;
-                    }
-                }
-
-                if (packetProcessInterval != default)
-                {
-                    await Task.Delay(packetProcessInterval);
-                }
-            }
-        }
-
-        private protected async Task ProcessOutgoingPackets(UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval = default)
-        {
-            while (IsRunning)
-            {
-                while (!qPacketsOut.IsEmpty)
-                {
-                    if (qPacketsOut.TryDequeue(out var outgoingPacket))
-                    {
-                        await SendOutgoingPacket(outgoingPacket); // Przykładowa metoda wysyłająca wychodzące pakiety
-                    }
-                }
-
-                if (packetProcessInterval != default)
-                {
-                    await Task.Delay(packetProcessInterval);
-                }
-            }
-        }
-
-        private protected async Task SendOutgoingPacket(OwnedPacket receiver)
+        public override async Task SendOutgoingPacket(OwnedPacket receiver)
         {
             byte[] dataToSend = receiver.PeerPacket.SerializePacket();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+            await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.PacketType} from peer with Guid: {receiver.Peer.Id}");
         }
 
         private async Task WaitForTcpClientConnection()
@@ -237,9 +185,7 @@ namespace NetworkCore.NetworkCommunication
 
                     await Console.Out.WriteLineAsync($"New TCP connection received, info: {tcpClientSocket.RemoteEndPoint}");
 
-                    Guid newConnectionId = Guid.NewGuid();
-
-                    await OnNewConnection(tcpClientSocket, newConnectionId, Owner.server);
+                    await OnNewConnection(tcpClientSocket, Guid.NewGuid(), Owner.server);
                 }
                 else
                 {
@@ -284,7 +230,7 @@ namespace NetworkCore.NetworkCommunication
 
         protected abstract Task OnClientDisconnect(IPeer clientPeer);
 
-        protected abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
+        public override abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
 
         //protected abstract Task SendPacketToClient(Guid clientId, Packet packet);
         //protected abstract Task SendPacketToAllClients(Packet packet);

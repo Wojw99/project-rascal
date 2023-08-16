@@ -20,6 +20,7 @@ namespace ServerApplication.GameService
         //public ConcurrentDictionary<Guid, PlayerConnection> qPeers { get; }
 
         private int ConnCounter = 0;
+        private int packetReceiveCount = 0;
 
        /* Dictionary<PacketType, PacketHandler> packetHandlers =
                 new Dictionary<PacketType, PacketHandler>()
@@ -42,19 +43,56 @@ namespace ServerApplication.GameService
         {
             //packetHandlerManager.InitHandlers(packetHandlers);
             //qPeers = new ConcurrentDictionary<Guid, PlayerConnection> ();
-            _World = new World(this);
+            _World = new World();
         }
 
-        protected override async Task OnPacketReceived(IPeer peer, Packet packet)
+        public override async Task OnPacketReceived(IPeer peer, Packet packet)
         {
-            if(peer is PlayerConnection playerConnection)
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {peer.Id}");
+            await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
+            if (peer is PlayerConnection playerConnection)
             {
-                if(packet is PlayerMovePacket playerMovePacket)
-                    await PlayerFunction.OnPlayerMove(playerConnection, playerMovePacket);
+                if (packet.PacketType == typeof(PlayerStatePacket) )
+                {
+                    await PlayerFunction.OnPlayerStateChanged(playerConnection, new PlayerStatePacket(packet));
 
-                else if(packet is PlayerStatePacket playerStatePacket)
-                    await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
-            }     
+                    /*if (packet is PlayerStatePacket playerStatePacket)
+                    {
+                        await Console.Out.WriteLineAsync("testawdfasd");
+                        await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
+                        // Obsługa PlayerStatePacket
+                    }*/
+                }
+            }
+
+            
+                // ... Tutaj możesz kontynuować dla innych typów pakietów
+            
+
+            /* packet.PacketType
+
+             if (peer is PlayerConnection playerConnection)
+             {
+                 //await Console.Out.WriteLineAsync("test214");
+                 if (packet is PlayerStatePacket playerStatePacket)
+                 {
+                     await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
+                     // Możesz teraz używać playerStatePacket jako obiektu PlayerStatePacket
+                     // i wywołać na nim odpowiednie metody lub operacje.
+                 }*/
+
+
+            /* if (packet.PacketType == typeof(PlayerMovePacket))
+             {
+                 //PlayerMovePacket playerMovePacket = packet as PlayerMovePacket;
+                 await PlayerFunction.OnPlayerMove(playerConnection, packet as PlayerMovePacket);
+             }
+             else if (packet.PacketType == typeof(PlayerStatePacket))
+             {
+                 PlayerStatePacket playerStatePacket = packet as PlayerStatePacket;
+                 await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
+             }*/
+        
         }
 
         protected override async Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType)

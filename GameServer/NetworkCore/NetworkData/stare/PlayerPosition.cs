@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace NetworkCore.NetworkData
+namespace NetworkCore.NetworkData.stare
 {
-    public struct ObjectPosition
+    public struct PlayerPosition : IPosition
     {
         public int PlayerId { get; set; }
 
@@ -16,7 +18,7 @@ namespace NetworkCore.NetworkData
 
         public float Rotation { get; set; }
 
-        public ObjectPosition(int playerId, float posX, float posY, float posZ, float rotation)
+        public PlayerPosition(int playerId, float posX, float posY, float posZ, float rotation)
         {
             PlayerId = playerId;
             PosX = posX;

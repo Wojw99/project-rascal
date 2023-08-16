@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 
-namespace NetworkCore.NetworkCommunication
+namespace NetworkCore.NetworkCommunication.stare
 {
     public interface INetworkBase
     {
@@ -13,9 +13,9 @@ namespace NetworkCore.NetworkCommunication
 
         //public Socket? UdpSocket { get; }
 
-       // public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
+        // public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
 
-        public ConcurrentQueue<OwnedPacket> qPacketsIn { get; } 
+        public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
 
         public ConcurrentQueue<OwnedPacket> qPacketsOut { get; }
 

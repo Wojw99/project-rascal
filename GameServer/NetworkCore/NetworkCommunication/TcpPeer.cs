@@ -4,6 +4,7 @@ using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -24,11 +25,11 @@ namespace NetworkCore.NetworkCommunication
 
         public Socket PeerSocket { get; private set; }
 
-        public INetworkBase NetworkRef { get; private set; } // storing reference to NetworkServer or NetworkClient
+        public NetworkBase NetworkRef { get; private set; } // storing reference to NetworkServer or NetworkClient
 
         private byte[] ReceiveBuffer = new byte[1024];
 
-        public TcpPeer(INetworkBase networkBase, Socket peerSocket, Guid peerId, 
+        public TcpPeer(NetworkBase networkBase, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
             NetworkRef = networkBase;
@@ -67,12 +68,52 @@ namespace NetworkCore.NetworkCommunication
         {
             if(IsConnected)
             {
-                AddToOutgoingPacketQueue(packet);
+                NetworkRef.Watch.Start();
+                await AddToOutgoingPacketQueue(packet);
             }
             // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
         }
 
         public async Task ReadIncomingData()
+        {
+            while (NetworkRef.IsRunning)
+            {
+                byte[] PacketSizeByte = new byte[sizeof(int)];
+                int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
+
+                if (bytesRead != sizeof(int))
+                {
+                    await Console.Out.WriteLineAsync("Incorrect size of packet size");
+                    continue;
+                }
+
+                int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
+
+                if (packetSize <= sizeof(int))
+                {
+                    await Console.Out.WriteLineAsync("Incorrect size of packet");
+                    continue;
+                }
+
+                byte[] packetData = new byte[packetSize - sizeof(int)];
+
+                bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
+
+                if (bytesRead <= 0)
+                {
+                    await Console.Out.WriteLineAsync("No data received");
+                    continue;
+                }
+
+                byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
+
+                Packet packet = new Packet(combinedData);
+                AddToIncomingPacketQueue(packet);
+            }
+        }
+
+
+        /*public async Task ReadIncomingData()
         {
             while (NetworkRef.IsRunning)
             {
@@ -104,14 +145,25 @@ namespace NetworkCore.NetworkCommunication
                     continue;
                 }
 
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    memoryStream.Write(PacketSizeByte, 0, PacketSizeByte.Length);
+                    memoryStream.Write(packetData, 0, packetData.Length);
+
+                    byte[] combinedData = memoryStream.ToArray();
+                    //Packet packet = new Packet(combinedData);
+                    //AddToIncomingPacketQueue(packet);
+                }
+
+
                 byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
 
-                Packet packet = new Packet(combinedData);
+                 Packet packet = new Packet(combinedData);
                 AddToIncomingPacketQueue(packet);
             }
         }
-
-        private protected void AddToIncomingPacketQueue(Packet packet)
+*/
+        private async Task AddToIncomingPacketQueue(Packet packet)
         {
             lock (this)
             {
@@ -119,12 +171,9 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        private protected void AddToOutgoingPacketQueue(Packet packet)
+        private async Task AddToOutgoingPacketQueue(Packet packet)
         {
-            lock (this)
-            {
-                NetworkRef.qPacketsOut.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
-            }
+            NetworkRef.qPacketsOut.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
         }
     }
 }

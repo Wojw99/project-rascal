@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerApplication.GameService.Base
+namespace NetworkCore.NetworkData
 {
     public class Enemy
     {

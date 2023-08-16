@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Generic;
@@ -46,9 +46,9 @@ namespace Client
                 packet.Write("playerId", 1242325);
                 packet.Write("targetId", 4355321);
 
-                /* byte[] data = PacketSerializationManager.serializePacket(packet);
+                *//* byte[] data = PacketSerializationManager.serializePacket(packet);
                  stream.Write(data, 0, data.Length);
-                 Console.WriteLine($"Send packet: {packet._type}");*/
+                 Console.WriteLine($"Send packet: {packet._type}");*//*
                 return packet;
             }
 
@@ -64,9 +64,9 @@ namespace Client
                 packet.Write("posY", 631.21);
                 packet.Write("test", "jakies dodatkowe info");
 
-                /*byte[] data = PacketSerializationManager.serializePacket(packet);
+                *//*byte[] data = PacketSerializationManager.serializePacket(packet);
                 stream.Write(data, 0, data.Length);
-                Console.WriteLine($"Send packet: {packet._type}");*/
+                Console.WriteLine($"Send packet: {packet._type}");*//*
                 return packet;
             }
 
@@ -84,12 +84,13 @@ namespace Client
                 packet.Write("float", (float)3.4028235E+38);
                 packet.Write("string", "testowanie pakietów");
 
-                /* byte[] data = PacketSerializationManager.serializePacket(packet);
+                *//* byte[] data = PacketSerializationManager.serializePacket(packet);
                  stream.Write(data, 0, data.Length);
-                 Console.WriteLine($"Send packet: {packet._type}");*/
+                 Console.WriteLine($"Send packet: {packet._type}");*//*
                 return packet;
             }
 
         }
     }
 }
+*/

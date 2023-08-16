@@ -21,6 +21,17 @@ namespace NetworkCore.NetworkMessage
             PacketType = packetType;
         }
 
+        public Packet(Packet packet)
+        {
+            PacketType = packet.PacketType;
+            Fields = new List<PacketField>();
+            
+            foreach(PacketField field in packet.Fields)
+            {
+                Fields.Add(field);
+            }
+        }
+
         public Packet(byte[] data)
         {
             using (MemoryStream stream = new MemoryStream(data))
@@ -31,12 +42,16 @@ namespace NetworkCore.NetworkMessage
                 int typeSize = reader.ReadInt32();
                 PacketType = DeserializeType(reader.ReadBytes(typeSize));
 
+                Console.WriteLine("test");
+
                 // each field
                 while (stream.Position < stream.Length)
                 {
                     int fieldLength = reader.ReadInt32();
                     Fields.Add(PacketField.Deserialize(reader.ReadBytes(fieldLength)));
                 }
+
+                Console.WriteLine("test");
             }
             
         }
@@ -53,6 +68,7 @@ namespace NetworkCore.NetworkMessage
 
                     int totalSize = 0;
                     totalSize += serializedTypeLength;
+                    totalSize += sizeof(int) * 2;
 
                     foreach (var field in Fields)
                     {
@@ -76,7 +92,7 @@ namespace NetworkCore.NetworkMessage
             }
         }
 
-        public void Write<T>(string fieldName, T value)
+        private protected void Write<T>(string fieldName, T value)
         {
             byte[] buffer = null;
 
@@ -103,7 +119,7 @@ namespace NetworkCore.NetworkMessage
 
         }
 
-        public T Read<T>(string fieldName)
+        private protected T Read<T>(string fieldName)
         {
             byte[] strBuffer = SerializeString(fieldName);
             // or deserialize field.Name
@@ -116,10 +132,10 @@ namespace NetworkCore.NetworkMessage
                     Console.WriteLine("asfa");
 
                     if (fieldType == typeof(short))
-                        return (T)(object)BitConverter.ToInt32(field.Buffer, 0);
+                        return (T)(object)BitConverter.ToInt16(field.Buffer, 0);
 
                     else if (fieldType == typeof(int))
-                        return (T)(object)BitConverter.ToInt16(field.Buffer, 0);
+                        return (T)(object)BitConverter.ToInt32(field.Buffer, 0);
 
                     else if (fieldType == typeof(long))
                         return (T)(object)BitConverter.ToInt64(field.Buffer, 0);
@@ -139,7 +155,7 @@ namespace NetworkCore.NetworkMessage
             throw new Exception("Cannot find specific fieldName in dictionary.");
         }
 
-        public bool TryRead<T>(string fieldName, out T result)
+        private protected bool TryRead<T>(string fieldName, out T result)
         {
             try
             {
@@ -153,12 +169,17 @@ namespace NetworkCore.NetworkMessage
             }
         }
 
+        public void Clear()
+        {
+            Fields.Clear();
+        }
+
         public virtual string ToString()
         {
             return $"type = {PacketType}, ";
         }
 
-        private byte[] SerializeString(string str)
+        private protected byte[] SerializeString(string str)
         {
             byte[] strBytes = Encoding.UTF8.GetBytes(str);
             byte[] lengthBytes = BitConverter.GetBytes(strBytes.Length);
@@ -169,18 +190,18 @@ namespace NetworkCore.NetworkMessage
             return result;
         }
 
-        private string deserializeString(byte[] buffer)
+        private protected string deserializeString(byte[] buffer)
         {
             int stringLength = BitConverter.ToInt32(buffer, 0);
             return Encoding.UTF8.GetString(buffer, sizeof(int), stringLength);
         }
 
-        private byte[] SerializeType(Type type)
+        private protected byte[] SerializeType(Type type)
         {
             return SerializeString(type.FullName);
         }
 
-        private Type DeserializeType(byte[] buffer)
+        private protected Type DeserializeType(byte[] buffer)
         {
             return Type.GetType(deserializeString(buffer));
         }

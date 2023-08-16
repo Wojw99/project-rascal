@@ -5,8 +5,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
+using NetworkCore.NetworkData;
 using NetworkCore.Packets;
-using ServerApplication.GameService.Base;
 
 namespace ServerApplication.GameService
 {

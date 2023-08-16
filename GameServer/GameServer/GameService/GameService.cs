@@ -39,6 +39,7 @@ namespace ServerApplication.Game
             "Game Server", ServerType.world_server, 8051, null);
 
             await server.Start();
+            await server.Update(100, 100, TimeSpan.FromMilliseconds(50));
 
             while(true)
             {
