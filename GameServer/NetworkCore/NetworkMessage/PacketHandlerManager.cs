@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -24,10 +24,10 @@ namespace NetworkCore.NetworkMessage
             _PacketHandlers = new Dictionary<PacketType, PacketHandler>();
         }
 
-        /*public PacketHandlerManager(Dictionary<PacketType, (RequestHandler, ResponseHandler)> packetHandlers)
+        *//*public PacketHandlerManager(Dictionary<PacketType, (RequestHandler, ResponseHandler)> packetHandlers)
         {
             PacketHandlers = packetHandlers;
-        }*/
+        }*//*
 
         public PacketHandlerManager(Dictionary<PacketType, PacketHandler> packetHandlers)
         {
@@ -77,7 +77,7 @@ namespace NetworkCore.NetworkMessage
             _PacketHandlers.Clear();
         }
 
-       /* public void HandleRequest(Packet packet)
+       *//* public void HandleRequest(Packet packet)
         {
             if (PacketHandlers.TryGetValue(packet._type, out var handlers))
             {
@@ -118,6 +118,7 @@ namespace NetworkCore.NetworkMessage
             }
 
             return default;
-        }*/
+        }*//*
     }
 }
+*/

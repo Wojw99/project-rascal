@@ -13,7 +13,7 @@ namespace NetworkCore.NetworkCommunication
 
         //public Socket? UdpSocket { get; }
 
-        public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
+       // public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
 
         public ConcurrentQueue<OwnedPacket> qPacketsIn { get; } 
 

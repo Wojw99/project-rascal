@@ -1,6 +1,7 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text;
+using NetworkCore.NetworkMessage.old;
 
 namespace NetworkCore.NetworkMessage
 {
@@ -22,7 +23,7 @@ namespace NetworkCore.NetworkMessage
 
         public void HandleRequest(Packet packet)
         {
-            if (_PacketType == packet._type)
+            if (_PacketType == packet.PacketType)
             {
                 RequestPacketHandler.Invoke(packet);
             }
@@ -38,3 +39,4 @@ namespace NetworkCore.NetworkMessage
         }
     }
 }
+*/

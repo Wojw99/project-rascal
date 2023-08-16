@@ -1,5 +1,6 @@
 ﻿using Client;
 using NetworkCore.NetworkMessage;
+using NetworkCore.Packets;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -28,7 +29,9 @@ namespace Client
                     {
                         Thread.Sleep(200);
                         //await Console.Out.WriteLineAsync("Client is running...");
-                        Packet packet = PacketFunction.SendTestPacket();
+                        //Packet packet = PacketFunction.SendTestPacket();
+                        PlayerMovePacket packet = new PlayerMovePacket((float)45645.234, float.MaxValue, (float)23523.2);
+
                         client.SendPacketToAllServers(packet);
                     }
                 }

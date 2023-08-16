@@ -1,11 +1,11 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace NetworkCore.NetworkMessage
+namespace NetworkCore.NetworkMessage.old
 {
     public static class PacketSerializationManager
     {
@@ -22,7 +22,7 @@ namespace NetworkCore.NetworkMessage
                     //size += sizeof(PacketDirection);
                     foreach (var field in packet._fields)
                     {
-                        size += sizeof(byte) * 2; 
+                        size += sizeof(byte) * 2;
                         size += Encoding.UTF8.GetByteCount(field._name);
                         size += sizeof(int);
                         size += field._buffer.Length;
@@ -32,7 +32,7 @@ namespace NetworkCore.NetworkMessage
 
                     writer.Write(size + sizeof(int));
                     writer.Write((int)packet._type);
-                   // writer.Write((int)packet.PacketDirection);
+                    // writer.Write((int)packet.PacketDirection);
 
                     foreach (var field in packet._fields)
                     {
@@ -62,7 +62,8 @@ namespace NetworkCore.NetworkMessage
 
                     Packet packet = new Packet(packetType);
 
-                    while (stream.Position < stream.Length) { 
+                    while (stream.Position < stream.Length)
+                    {
                         FieldType fieldType = (FieldType)reader.ReadByte();
                         string fieldName = reader.ReadString();
                         int bufferSize = reader.ReadInt32();
@@ -75,3 +76,4 @@ namespace NetworkCore.NetworkMessage
         }
     }
 }
+*/

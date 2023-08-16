@@ -1,10 +1,10 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
 
-namespace NetworkCore.NetworkMessage
+namespace NetworkCore.NetworkMessage.old
 {
     public class ByteField
     {
@@ -134,3 +134,4 @@ namespace NetworkCore.NetworkMessage
     }
 }
 
+*/

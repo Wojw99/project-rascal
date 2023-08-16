@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NetworkCore.NetworkMessage
+namespace NetworkCore.NetworkMessage.old
 {
     public enum FieldType
     {

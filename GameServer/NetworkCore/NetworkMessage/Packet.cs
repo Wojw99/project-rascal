@@ -1,101 +1,188 @@
-﻿using System;
+﻿using NetworkCore.NetworkMessage.old;
+using NetworkCore.Packets;
+using NetworkCore.Packets.Attributes;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.CompilerServices;
+using System.Data;
 using System.IO;
-using System.Xml.Linq;
+using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 
 namespace NetworkCore.NetworkMessage
 {
     public class Packet
     {
-        public List<ByteField> _fields { get; private set; }
-        public PacketType _type { get; private set; }
-        //public PacketDirection PacketDirection { get; private set; }
-        //public uint _size { get; private set; }    // rozmiar pakietu jest obliczany podczas serializacji //
+        public Type PacketType { get; }
+        private List<PacketField> Fields = new List<PacketField>();
 
-        public Packet(PacketType type)
+        public Packet(Type packetType)
         {
-            _fields = new List<ByteField>();
-            _type = type;
-            //PacketDirection = packetDirection;
+            PacketType = packetType;
         }
 
-        public void initFields(List<ByteField> fields)
+        public Packet(byte[] data)
         {
-            _fields.Clear();
-            _fields = fields;
-        }
-
-        public void WriteShort(string fieldName, short value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += sizeof(short);
-        }
-
-        public void WriteInt(string fieldName, int value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += sizeof(int);
-        }
-
-        public void WriteLong(string fieldName, long value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += sizeof(long);
-        }
-
-        public void WriteFloat(string fieldName, float value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += sizeof(float);
-        }
-
-        public void WriteString(string fieldName, string value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += (uint)value.Length;
-        }
-
-        public void WriteDouble(string fieldName, double value)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, value);
-            _fields.Add(field);
-            //_size += sizeof(float);
-        }
-
-        public void WriteBytes(string fieldName, byte[] data, FieldType type)
-        {
-            ByteField field = new ByteField();
-            field.Init(fieldName, data, type);
-            _fields.Add(field);
-            //_size += (uint)data.Length;
-        }
-
-        public T ReadField<T>(string fieldName)
-        {
-            foreach (var field in _fields)
+            using (MemoryStream stream = new MemoryStream(data))
+            using (BinaryReader reader = new BinaryReader(stream))
             {
-                if (field._name == fieldName)
+                int totalSize = reader.ReadInt32();
+
+                int typeSize = reader.ReadInt32();
+                PacketType = DeserializeType(reader.ReadBytes(typeSize));
+
+                // each field
+                while (stream.Position < stream.Length)
                 {
-                    return field.Read<T>();
+                    int fieldLength = reader.ReadInt32();
+                    Fields.Add(PacketField.Deserialize(reader.ReadBytes(fieldLength)));
+                }
+            }
+            
+        }
+
+        public byte[] SerializePacket()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    byte[] serializedType = SerializeType(PacketType);
+                    int serializedTypeLength = serializedType.Length;
+
+
+                    int totalSize = 0;
+                    totalSize += serializedTypeLength;
+
+                    foreach (var field in Fields)
+                    {
+                        totalSize += sizeof(int); 
+                        totalSize += field.CalculateTotalSize();
+                    }
+
+                    writer.Write(totalSize);
+                 
+                    writer.Write(serializedType.Length);
+                    writer.Write(serializedType);
+
+                    foreach (var field in Fields)
+                    {
+                        writer.Write(field.CalculateTotalSize()); // int
+                        writer.Write(field.Serialize());
+                    }
+
+                    return stream.ToArray();
+                }
+            }
+        }
+
+        public void Write<T>(string fieldName, T value)
+        {
+            byte[] buffer = null;
+
+            if (typeof(T) == typeof(short))
+                buffer = BitConverter.GetBytes(Convert.ToInt16(value));
+
+            else if (typeof(T) == typeof(int))
+                buffer = BitConverter.GetBytes(Convert.ToInt32(value));
+
+            else if (typeof(T) == typeof(long))
+                buffer = BitConverter.GetBytes(Convert.ToInt64(value));
+
+            else if (typeof(T) == typeof(float))
+                buffer = BitConverter.GetBytes(Convert.ToSingle(value));
+
+            else if (typeof(T) == typeof(double))
+                buffer = BitConverter.GetBytes(Convert.ToDouble(value));
+
+            else if (typeof(T) == typeof(string))
+                buffer = SerializeString(Convert.ToString(value));
+
+            if (buffer != null)
+                Fields.Add(new PacketField (SerializeType(typeof(T)), SerializeString(fieldName), buffer ));
+
+        }
+
+        public T Read<T>(string fieldName)
+        {
+            byte[] strBuffer = SerializeString(fieldName);
+            // or deserialize field.Name
+
+            foreach (var field in Fields)
+            {
+                if (field.Name.SequenceEqual(strBuffer))
+                {
+                    Type fieldType = DeserializeType(field.FieldType);
+                    Console.WriteLine("asfa");
+
+                    if (fieldType == typeof(short))
+                        return (T)(object)BitConverter.ToInt32(field.Buffer, 0);
+
+                    else if (fieldType == typeof(int))
+                        return (T)(object)BitConverter.ToInt16(field.Buffer, 0);
+
+                    else if (fieldType == typeof(long))
+                        return (T)(object)BitConverter.ToInt64(field.Buffer, 0);
+
+                    else if (fieldType == typeof(float))
+                        return (T)(object)BitConverter.ToSingle(field.Buffer, 0);
+
+                    else if (fieldType == typeof(double))
+                        return (T)(object)BitConverter.ToDouble(field.Buffer, 0);
+
+                    else if (fieldType == typeof(string))
+                        return (T)(object)deserializeString(field.Buffer);
+
                 }
             }
 
-            throw new Exception("Cannot find specific fieldName in dictionary. ");
+            throw new Exception("Cannot find specific fieldName in dictionary.");
+        }
+
+        public bool TryRead<T>(string fieldName, out T result)
+        {
+            try
+            {
+                result = Read<T>(fieldName);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default(T);
+                return false;
+            }
+        }
+
+        public virtual string ToString()
+        {
+            return $"type = {PacketType}, ";
+        }
+
+        private byte[] SerializeString(string str)
+        {
+            byte[] strBytes = Encoding.UTF8.GetBytes(str);
+            byte[] lengthBytes = BitConverter.GetBytes(strBytes.Length);
+
+            byte[] result = new byte[lengthBytes.Length + strBytes.Length];
+            lengthBytes.CopyTo(result, 0);
+            strBytes.CopyTo(result, lengthBytes.Length);
+            return result;
+        }
+
+        private string deserializeString(byte[] buffer)
+        {
+            int stringLength = BitConverter.ToInt32(buffer, 0);
+            return Encoding.UTF8.GetString(buffer, sizeof(int), stringLength);
+        }
+
+        private byte[] SerializeType(Type type)
+        {
+            return SerializeString(type.FullName);
+        }
+
+        private Type DeserializeType(byte[] buffer)
+        {
+            return Type.GetType(deserializeString(buffer));
         }
     }
 }
-

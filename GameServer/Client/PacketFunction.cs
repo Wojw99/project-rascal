@@ -1,4 +1,5 @@
 ﻿using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,13 +21,13 @@ namespace Client
         {
             //Packet packet = new Packet(PacketType.packet_global_player_position);
 
-            int playerNum = packet.ReadField<int>("playerNum");
+            int playerNum = packet.Read<int>("playerNum");
 
             for (int i = 0; i < playerNum; i++)
             {
-                int playerId = packet.ReadField<int>("playerId");
-                double posX = packet.ReadField<double>("posX");
-                double posY = packet.ReadField<double>("posY");
+                int playerId = packet.Read<int>("playerId");
+                double posX = packet.Read<double>("posX");
+                double posY = packet.Read<double>("posY");
 
                 GlobalPlayerPositions.Add(playerId, (posX, posY));
             }
@@ -42,8 +43,8 @@ namespace Client
             Packet packet = new Packet(PacketType.packet_enemy_shoot);
             lock (Lock)
             {
-                packet.WriteInt("playerId", 1242325);
-                packet.WriteInt("targetId", 4355321);
+                packet.Write("playerId", 1242325);
+                packet.Write("targetId", 4355321);
 
                 /* byte[] data = PacketSerializationManager.serializePacket(packet);
                  stream.Write(data, 0, data.Length);
@@ -58,10 +59,10 @@ namespace Client
             lock (Lock)
             {
                 Packet packet = new Packet(PacketType.packet_player_move);
-                packet.WriteInt("playerId", 456546);
-                packet.WriteDouble("posX", 456.345);
-                packet.WriteDouble("posY", 631.21);
-                packet.WriteString("test", "jakies dodatkowe info");
+                packet.Write("playerId", 456546);
+                packet.Write("posX", 456.345);
+                packet.Write("posY", 631.21);
+                packet.Write("test", "jakies dodatkowe info");
 
                 /*byte[] data = PacketSerializationManager.serializePacket(packet);
                 stream.Write(data, 0, data.Length);
@@ -76,12 +77,12 @@ namespace Client
             lock (Lock)
             {
                 Packet packet = new Packet(PacketType.packet_test_packet);
-                packet.WriteInt("int", 2147483647);
-                packet.WriteShort("short", 32767);
-                packet.WriteLong("long", 9223372036854775807);
-                packet.WriteDouble("double", 1.7976931348623157E+308);
-                packet.WriteFloat("float", (float)3.4028235E+38);
-                packet.WriteString("string", "testowanie pakietów");
+                packet.Write("int", 2147483647);
+                packet.Write("short", 32767);
+                packet.Write("long", 9223372036854775807);
+                packet.Write("double", 1.7976931348623157E+308);
+                packet.Write("float", (float)3.4028235E+38);
+                packet.Write("string", "testowanie pakietów");
 
                 /* byte[] data = PacketSerializationManager.serializePacket(packet);
                  stream.Write(data, 0, data.Length);

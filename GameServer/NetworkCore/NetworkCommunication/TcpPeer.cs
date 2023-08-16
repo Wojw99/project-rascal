@@ -1,5 +1,6 @@
 ﻿using NetworkCore.NetworkConfig;
 using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -36,34 +37,38 @@ namespace NetworkCore.NetworkCommunication
             OwnerType = ownerType;
         }
 
-        public void ConnectToServer()
+        public async Task ConnectToServer()
         {
             if(OwnerType == Owner.client)
             {
                 IsConnected = true;
+                await Console.Out.WriteLineAsync("Connection approved.");
                 Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
         }
 
-        public void ConnectToClient()
+        public async Task ConnectToClient()
         {
             if(OwnerType == Owner.server)
             {
                 IsConnected = true;
+                await Console.Out.WriteLineAsync("Connection approved.");
                 Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
         }
 
-        public void Disconnect()
+        public async Task Disconnect()
         {
             IsConnected = false;
-            //_TcpClient.Close();
+            await Console.Out.WriteLineAsync("Connection closed.");
         }
 
         public async Task SendPacket(Packet packet)
         {
-            byte[] dataToSend = PacketSerializationManager.serializePacket(packet);
-            await PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+            if(IsConnected)
+            {
+                AddToOutgoingPacketQueue(packet);
+            }
             // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
         }
 
@@ -72,7 +77,6 @@ namespace NetworkCore.NetworkCommunication
             while (NetworkRef.IsRunning)
             {
                 byte[] PacketSizeByte = new byte[sizeof(int)];
-                // int bytesRead =
                 int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
 
                 if(bytesRead != sizeof(int))
@@ -90,7 +94,7 @@ namespace NetworkCore.NetworkCommunication
                 }
 
                 // disregard PacketSizeByte
-                byte[] packetData = new byte[packetSize - sizeof(int)];
+                byte[] packetData = new byte[packetSize];
 
                 bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
 
@@ -100,112 +104,27 @@ namespace NetworkCore.NetworkCommunication
                     continue;
                 }
 
-                
                 byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
 
-                Packet packet = PacketSerializationManager.DeserializeByteData(combinedData);
-                await AddToIncomingPacketQueue(packet);
-
-                //await ProcessReceivedData(bytesRead);
+                Packet packet = new Packet(combinedData);
+                AddToIncomingPacketQueue(packet);
             }
         }
 
-        /*private async Task ProcessReceivedData(int bytesRead)
+        private protected void AddToIncomingPacketQueue(Packet packet)
         {
-            if (bytesRead > 0)
+            lock (this)
             {
-                // Assuming the first 4 bytes represent the packet size
-                int packetSize = BitConverter.ToInt32(ReceiveBuffer, 0);
-
-                if (packetSize <= bytesRead)
-                {
-                    byte[] packetBuffer = new byte[packetSize];
-                    Buffer.BlockCopy(ReceiveBuffer, 0, packetBuffer, 0, packetSize);
-
-                    Packet packet = PacketSerializationManager.DeserializeByteData(packetBuffer);
-                    await AddToIncomingPacketQueue(packet);
-
-                    int remainingDataSize = bytesRead - packetSize;
-                    if (remainingDataSize > 0)
-                    {
-                        Buffer.BlockCopy(ReceiveBuffer, packetSize, ReceiveBuffer, 0, remainingDataSize);
-                    }
-
-                    await ProcessReceivedData(remainingDataSize);
-                }
-                else
-                {
-                    // Not enough data received yet, wait for more
-                    await ReadIncomingData();
-                }
+                NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
             }
-            else
-            {
-                // Connection closed or error occurred
-                //Console.WriteLine("Connection closed or error occurred.");
-                // Handle disconnection or other actions
-            }
-        }*/
-
-        public async Task AddToIncomingPacketQueue(Packet packet)
-        {
-            NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = this, Packet = packet });
-            
-            /*if(OwnerType == Owner.server)
-            {
-            }
-            else
-            {
-                NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = null , Packet = packet });
-            }*/
         }
 
-        /*private void HandleReceivedData(IAsyncResult result)
+        private protected void AddToOutgoingPacketQueue(Packet packet)
         {
-            if (_TcpClient.Connected)
+            lock (this)
             {
-                int bytesRead = _TcpClient.GetStream().EndRead(result);
-
-                if(bytesRead > 0)
-                {
-                    // first 4 bytes are the serialized packet size
-                    int packetSize = BitConverter.ToInt32(ReceiveBuffer, 0); // 0 -4 bajtów
-
-                    // creating new buffor, according to packet size.
-                    byte[] packetBuffor = new byte[packetSize];
-
-                    if (ReceiveBuffer.Length >= packetSize)
-                    {
-                        // copy 'packetSize' elements from main buffor to buffor, which can be serialized.
-                        Buffer.BlockCopy(ReceiveBuffer, 0, packetBuffor, 0, packetSize);
-                        Packet packet = PacketSerializationManager.DeserializeByteData(packetBuffor);
-                        
-                        // substraction of processed data
-                        int remainingDataSize = ReceiveBuffer.Length - packetSize;
-                        Buffer.BlockCopy(ReceiveBuffer, packetSize, ReceiveBuffer, 0, remainingDataSize);
-
-                        //HandlePacket(packet); 
-                        // I'm using a reference to PacketHandlerManager object from GameServer class, so it can be done.
-                        PacketHandler handler = _PacketHandlerManager.GetHandler(packet._type);
-
-                        handler.HandleRequest(packet);
- 
-                        SendPacket(handler.HandleResponse());
-
-                        // Idk if we need it.
-                        //Array.Resize(ref ReceiveBuffer, remainingDataSize); // Skrócenie bufora do nowego rozmiaru
-
-                        StartReceive();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Połączenie zamkniete. Brak danych do przetworzenia...");
-                    //StartReceive();
-                }
-                
-
+                NetworkRef.qPacketsOut.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
             }
-        }*/
+        }
     }
 }

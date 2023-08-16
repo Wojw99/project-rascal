@@ -1,4 +1,5 @@
 ﻿using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -101,7 +102,7 @@ namespace NetworkCore.NetworkCommunication
                 {
                     if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet));
+                        Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket));
                         packetCount++;
                     }
                 }

@@ -1,16 +1,27 @@
 ﻿using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkMessage;
+using ServerApplication.GameService.Base;
+
+using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Collections.Concurrent;
 
 namespace ServerApplication.GameService
 {
     public class TestServer : NetworkServer
     {
-        Dictionary<PacketType, PacketHandler> packetHandlers =
+        // public World world { get; set; }
+        public World _World;
+        //public ConcurrentDictionary<Guid, PlayerConnection> qPeers { get; }
+
+        private int ConnCounter = 0;
+
+       /* Dictionary<PacketType, PacketHandler> packetHandlers =
                 new Dictionary<PacketType, PacketHandler>()
             {
                 { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
@@ -21,40 +32,41 @@ namespace ServerApplication.GameService
 
                 { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet,
                 PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
-            };
+            };*/
 
-        PacketHandlerManager packetHandlerManager = new PacketHandlerManager();
+        //PacketHandlerManager packetHandlerManager = new PacketHandlerManager();
 
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType, int? tcpPort = null, int? udpPort = null) 
             : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, tcpPort, udpPort)
         {
-            packetHandlerManager.InitHandlers(packetHandlers);
+            //packetHandlerManager.InitHandlers(packetHandlers);
+            //qPeers = new ConcurrentDictionary<Guid, PlayerConnection> ();
+            _World = new World(this);
         }
 
-        public override async Task OnPacketReceived(IPeer peer, Packet packet)
+        protected override async Task OnPacketReceived(IPeer peer, Packet packet)
         {
-            //LOGGER: await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet._type} from peer with Guid: {peer.Id}");
+            if(peer is PlayerConnection playerConnection)
+            {
+                if(packet is PlayerMovePacket playerMovePacket)
+                    await PlayerFunction.OnPlayerMove(playerConnection, playerMovePacket);
 
-            PacketHandler pHandler = packetHandlerManager.GetHandler(packet._type);
-
-            pHandler.HandleRequest(packet);
-
-            Packet resPacket = pHandler.HandleResponse();
-
-            await peer.SendPacket(resPacket);
+                else if(packet is PlayerStatePacket playerStatePacket)
+                    await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
+            }     
         }
 
-        public override async Task<bool> OnClientConnect(IPeer peer)
+        protected override async Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType)
         {
-            // 1. loading world data for player.
-            await Console.Out.WriteLineAsync( "Test funkcji");
-            return true; //
+            PlayerConnection playerConn = new PlayerConnection(this, clientSocket, connId, ownerType, ConnCounter++);
+            await _World.AddNewPlayer(playerConn);
         }
 
-        public override async Task OnClientDisconnect(IPeer peer)
+        protected override async Task OnClientDisconnect(IPeer peer)
         {
-
+            if (peer is PlayerConnection playerConnection)
+                await _World.RemovePlayer(playerConnection);
         }
     }
 }

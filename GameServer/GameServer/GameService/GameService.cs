@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkCommunication;
 using ServerApplication.GameService;
+using NetworkCore.Packets;
+using NetworkCore.Packets.Attributes;
 
 namespace ServerApplication.Game
 {
@@ -33,6 +34,7 @@ namespace ServerApplication.Game
             gameServer.RegisterHandlers(packetHandlers);
             gameServer.Start();*/
 
+
             TestServer server = new TestServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 8051, null);
 
@@ -40,9 +42,8 @@ namespace ServerApplication.Game
 
             while(true)
             {
-                Thread.Sleep(15000);
-                await Console.Out.WriteLineAsync("Serwer uruchomiony.");
-                //await server.Update(20);
+                Thread.Sleep(200);
+
             }
 
 

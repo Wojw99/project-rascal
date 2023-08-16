@@ -1,4 +1,5 @@
 ﻿using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,25 +13,25 @@ namespace NetworkCore.NetworkCommunication
 {
     public abstract class NetworkServer : INetworkBase
     {
-        public bool AllowPhysicalClients { get; }
+        protected bool AllowPhysicalClients { get; }
 
-        public int MaxClients { get; }
+        protected int MaxClients { get; }
 
-        public Guid? ServerId { get; }
+        protected Guid? ServerId { get; }
 
-        public ServerType _ServerType { get; }
+        protected ServerType _ServerType { get; }
 
-        public ServerProtocolType _ServerProtocolType { get; }
+        protected ServerProtocolType _ServerProtocolType { get; }
 
-        public string ServerName { get; }
+        protected string ServerName { get; }
 
-        public Socket? TcpSocket { get; }
+        protected Socket? TcpSocket { get; }
 
-        public Socket? UdpSocket { get; }
+        protected Socket? UdpSocket { get; }
 
         public bool IsRunning { get; private set; }
 
-        public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
+        //public abstract ConcurrentDictionary<Guid, IPeer> qPeers { get; }
 
         public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
 
@@ -66,7 +67,7 @@ namespace NetworkCore.NetworkCommunication
             if (tcpPort.HasValue && udpPort.HasValue)
                 _ServerProtocolType = ServerProtocolType.protocol_bothTcpUdp;
 
-            qPeers = new ConcurrentDictionary<Guid, IPeer>();
+            //qPeers = new ConcurrentDictionary<Guid, IPeer>();
             qPacketsIn = new ConcurrentQueue<OwnedPacket>();
             qPacketsOut = new ConcurrentQueue<OwnedPacket>();
 
@@ -82,7 +83,7 @@ namespace NetworkCore.NetworkCommunication
             // read from file and initialize attributes.
         }
 
-        public void SendPacketToAllClients(Packet packet)
+        /*public void SendPacketToAllClients(Packet packet)
         {
             foreach(var peer in qPeers)
             {
@@ -118,7 +119,7 @@ namespace NetworkCore.NetworkCommunication
                     }
                 }
             } 
-        }
+        }*/
 
         public async Task Start()
         {
@@ -147,7 +148,7 @@ namespace NetworkCore.NetworkCommunication
 
             Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
             //Task handleWaitForUdpConnection = Task.Run(async () => await WaitForUdpClientConnection());
-            Task handleUpdate = Task.Run(async () => await Update(1000, TimeSpan.FromMilliseconds(100)));
+            //Task handleUpdate = Task.Run(async () => await Update(100, TimeSpan.FromMilliseconds(100)));
             /*while (IsRunning)
             {
                 //await WaitForClientConnection();
@@ -166,21 +167,32 @@ namespace NetworkCore.NetworkCommunication
             UdpSocket?.Close();
         }
 
-        public async Task Update(UInt32 maxPacketCount = 100, TimeSpan packetProcessInterval = default)
+        public async Task Update(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval = default)
         {
-            while(IsRunning)
+            await Task.Run(async () =>
+            {
+                await ProcessIncomingPackets(maxIncomingPacketCount, packetProcessInterval);
+            });
+
+            await Task.Run(async () =>
+            {
+                await ProcessOutgoingPackets(maxOutgoingPacketCount, packetProcessInterval);
+            });
+        }
+
+        private protected async Task ProcessIncomingPackets(UInt32 maxIncomingPacketCount, TimeSpan packetProcessInterval = default)
+        {
+            while (IsRunning)
             {
                 UInt32 packetCount = 0;
 
-                while(packetCount < maxPacketCount && !qPacketsIn.IsEmpty)
+                while (packetCount < maxIncomingPacketCount && !qPacketsIn.IsEmpty)
                 {
-                    if(qPacketsIn.TryDequeue(out var ownedPacket))
+                    if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        //Task handleOnPacketReceived = Task.Run(async () => await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet));
-                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.Packet);
+                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
                         packetCount++;
                     }
-
                 }
 
                 if (packetProcessInterval != default)
@@ -188,6 +200,31 @@ namespace NetworkCore.NetworkCommunication
                     await Task.Delay(packetProcessInterval);
                 }
             }
+        }
+
+        private protected async Task ProcessOutgoingPackets(UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval = default)
+        {
+            while (IsRunning)
+            {
+                while (!qPacketsOut.IsEmpty)
+                {
+                    if (qPacketsOut.TryDequeue(out var outgoingPacket))
+                    {
+                        await SendOutgoingPacket(outgoingPacket); // Przykładowa metoda wysyłająca wychodzące pakiety
+                    }
+                }
+
+                if (packetProcessInterval != default)
+                {
+                    await Task.Delay(packetProcessInterval);
+                }
+            }
+        }
+
+        private protected async Task SendOutgoingPacket(OwnedPacket receiver)
+        {
+            byte[] dataToSend = receiver.PeerPacket.SerializePacket();
+            await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
         }
 
         private async Task WaitForTcpClientConnection()
@@ -202,25 +239,7 @@ namespace NetworkCore.NetworkCommunication
 
                     Guid newConnectionId = Guid.NewGuid();
 
-                    /// ref Socket TcpListenerReference = ref TcpListenerSocket;
-                    //Socket TempTcpListenerSocket = TcpListenerSocket;
-                    //ConcurrentQueue<OwnedPacket> TempPacketsIn = qPacketsIn;
-                    
-                    TcpPeer peer = new TcpPeer(this, tcpClientSocket, newConnectionId, Owner.server);
-
-                    if (await OnClientConnect(peer))
-                    {
-                        if (qPeers.TryAdd(newConnectionId, peer))
-                        {
-                            //Task handleConnectToClient = Task.Run(async () => await peer.ConnectToClient());
-                            peer.ConnectToClient();
-                            await Console.Out.WriteLineAsync("Connection approved.");
-                        }
-                    }
-                    else
-                    {
-                        await Console.Out.WriteLineAsync("Connection denied.");
-                    }
+                    await OnNewConnection(tcpClientSocket, newConnectionId, Owner.server);
                 }
                 else
                 {
@@ -260,8 +279,14 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        public abstract Task <bool>OnClientConnect(IPeer clientPeer);
-        public abstract Task OnClientDisconnect(IPeer clientPeer);
-        public abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
+
+        protected abstract Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType);
+
+        protected abstract Task OnClientDisconnect(IPeer clientPeer);
+
+        protected abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
+
+        //protected abstract Task SendPacketToClient(Guid clientId, Packet packet);
+        //protected abstract Task SendPacketToAllClients(Packet packet);
     }
 }

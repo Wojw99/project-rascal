@@ -18,13 +18,13 @@ public interface IPeer
 
     Socket PeerSocket { get; }
 
-    public INetworkBase NetworkRef { get; }
+    INetworkBase NetworkRef { get; }
 
-    void ConnectToServer();
+    Task ConnectToServer();
 
-    void ConnectToClient();
+    Task ConnectToClient();
 
-    void Disconnect();
+    Task Disconnect();
 
     Task SendPacket(Packet packet);
 
