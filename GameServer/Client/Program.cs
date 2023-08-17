@@ -16,15 +16,15 @@ namespace Client
         static bool BrakeThatHellLoop = false;
         static async Task Main(string[] args)
         {     
-            SimpleClient client = new SimpleClient();
+            SimpleClient client = new SimpleClient(50, 50, TimeSpan.FromMilliseconds(50));
 
             while (true)
             {
                 try
                 {
-                    await client.ConnectTcpServer("127.0.0.1", 8051);
+                    await client.ConnectTcpServer("192.168.5.2", 8051);
                     await client.Start();
-                    await client.Update(100, 100, TimeSpan.FromMilliseconds(50));
+                    await client.RunPacketProcessingInBackground();
 
 
 
@@ -96,7 +96,7 @@ namespace Client
 
                                 while (!BrakeThatHellLoop)
                                 {
-                                    await client.ServerPeer.SendPacket(packet);
+                                    await client.GetServerPeer.SendPacket(packet);
                                     packetSendCount++;
                                     await Task.Delay(100);
                                 }
@@ -106,7 +106,7 @@ namespace Client
 
                             if(packetChoice != 4)
                             {
-                                await client.ServerPeer.SendPacket(packet);
+                                await client.GetServerPeer.SendPacket(packet);
                                 await Console.Out.WriteLineAsync($"Sended Packets = {packetSendCount++}");
                             }
 

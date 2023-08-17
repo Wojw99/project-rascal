@@ -15,13 +15,16 @@ namespace NetworkCore.NetworkCommunication
 
         //public ConcurrentDictionary<Guid, IPeer> qPeers { get; }
 
-       // public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
+        // public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
 
         //public ConcurrentQueue<OwnedPacket> qPacketsOut { get; }
 
         //public bool IsRunning { get; private set; }
 
-        public NetworkClient () { }
+        public NetworkClient() : base() { }
+
+        public NetworkClient (UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
+        : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) { }
 
         public async Task ConnectTcpServer(string serverIpAddress, int serverTcpPort)
         {

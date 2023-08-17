@@ -38,8 +38,11 @@ namespace ServerApplication.GameService
         //PacketHandlerManager packetHandlerManager = new PacketHandlerManager();
 
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
-            string serverName, ServerType serverType, int? tcpPort = null, int? udpPort = null) 
-            : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, tcpPort, udpPort)
+            string serverName, ServerType serverType,
+            UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
+            int? tcpPort = null, int? udpPort = null) 
+            : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, 
+                  maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval, tcpPort, udpPort)
         {
             //packetHandlerManager.InitHandlers(packetHandlers);
             //qPeers = new ConcurrentDictionary<Guid, PlayerConnection> ();

@@ -41,13 +41,18 @@ namespace NetworkCore.NetworkCommunication
         //public PacketHandlerManager _PacketHandlerManager { get; private set; }
 
         protected NetworkServer (bool allowPhysicalClients, int maxClients, string publicIpAdress,
-            string serverName, ServerType serverType, int? tcpPort = null, int? udpPort = null)
+            string serverName, ServerType serverType,
+            UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
+            int? tcpPort = null, int? udpPort = null)
+            : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval)
         {
             AllowPhysicalClients = allowPhysicalClients;
             MaxClients = maxClients;
             ServerId = Guid.NewGuid();
             ServerName = serverName;
             _ServerType = serverType;
+
+            
 
             //_PacketHandlerManager = new PacketHandlerManager();
 

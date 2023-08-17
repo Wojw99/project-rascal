@@ -14,7 +14,19 @@ namespace Client
 {
     public class SimpleClient : NetworkClient
     {
-        public TcpPeer ServerPeer { get; set; }
+        private TcpPeer? ServerPeer ;
+        public TcpPeer? GetServerPeer
+        {
+            get
+            {
+                if (ServerPeer == null)
+                {
+                    throw new InvalidOperationException("ServerPeer must be initialized before accessing it.");
+                }
+                return ServerPeer;
+            }
+        }
+
         //ConcurrentDictionary<Guid, TcpPeer> servers = new ConcurrentDictionary<Guid, TcpPeer>();
 
         /*Dictionary<PacketType, PacketHandler> packetHandlers =
@@ -32,9 +44,15 @@ namespace Client
 
         PacketHandlerManager packetHandlerManager = new PacketHandlerManager();*/
 
-        public SimpleClient() : base() 
+        public SimpleClient() : base()
         {
-            
+            ServerPeer = null;
+        }
+
+        public SimpleClient(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
+            : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) 
+        {
+            ServerPeer = null;
         }
 
         public override async Task OnPacketReceived(IPeer serverPeer, Packet packet)
