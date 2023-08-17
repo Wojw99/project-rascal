@@ -21,6 +21,11 @@ namespace Client
             VisiblePlayers = new ConcurrentDictionary<int, Player>();
         }
 
+        public int PlayerCount()
+        {
+            return VisiblePlayers.Count;
+        }
+
         // a'la AddPlayer
         public async Task OnPlayerStateReceived(PlayerStatePacket packet)
         {

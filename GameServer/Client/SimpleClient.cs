@@ -117,10 +117,10 @@ namespace Client
 
         public async Task TestingOperationsTask() // run it in main program in while loop
         {
-            Console.WriteLine("---------------------------------------------");
-            Console.WriteLine("TWOJA POSTAC: ");
+            await Console.Out.WriteLineAsync("---------------------------------------------");
+            await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
             await ClientPlayer.Show();
-            Console.WriteLine("---------------------------------------------");
+            await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync("ZMIEN STAN SWOJEGO GRACZA");
             await Console.Out.WriteLineAsync("[1] Ustaw imie");
             await Console.Out.WriteLineAsync("[2] dodaj + 20 healtha");
@@ -130,7 +130,9 @@ namespace Client
             await Console.Out.WriteLineAsync("[6] IDŹ W DÓŁ");
             await Console.Out.WriteLineAsync("[7] IDŹ W LEWO");
             //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
-            Console.WriteLine("--wybierz: ----------------------------------");
+            await Console.Out.WriteLineAsync("---------------------------------------------");
+            await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {PlayersCollection.PlayerCount()}");
+            await Console.Out.WriteLineAsync("--wybierz: ----------------------------------");
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             int packetChoice = int.Parse(keyInfo.KeyChar.ToString());
 
