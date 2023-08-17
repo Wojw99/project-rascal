@@ -18,8 +18,15 @@ namespace ServerApplication.GameService
         public PlayerConnection(TestServer serverRef, Socket peerSocket, Guid peerId,
             Owner ownerType, int connCounter) : base(serverRef, peerSocket, peerId, ownerType)
         {
-            _Player = new Player(connCounter);
+            _Player = new Player();
             ServerRef = serverRef;
+        }
+        public void LoadPlayerFromDatabase(string username)
+        {
+            // load player attributes from database by "username"
+
+            // set player
+            _Player = new Player(1, "test", 10, 10, 15, 15, 15, 15);
         }
     }
 }

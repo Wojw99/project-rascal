@@ -135,54 +135,23 @@ namespace NetworkCore.Packets
             Write("PositionY", player.pPositionY);
             Write("PositionZ", player.pPositionZ);
             Write("Rotation", player.pRotation);
-        }
+        } 
 
-        public List<PlayerAttribute> PlayerAttributes { 
-            get 
-            {
-                List<PlayerAttribute> attributes = new List<PlayerAttribute>();
-
-              
-                if(TryRead("PositionX", out float posX))
-                    attributes.Add(new PositionX(posX));
-
-                if (TryRead("PositionY", out float posY))
-                    attributes.Add(new PositionY(posY));
-
-                if (TryRead("PositionZ", out float posZ))
-                    attributes.Add(new PositionZ(posZ));
-
-                if (TryRead("Rotation", out float rot))
-                    attributes.Add(new Rotation(rot));
-
-                return attributes;
-            
-            } 
-        }
-
-        public PlayerStatePacket() : base (typeof(PlayerStatePacket))
+        public PlayerStatePacket(int playerId) : base (typeof(PlayerStatePacket))
         {
-            
-           /* foreach(var attr in attributes)
-            {
-                if (attr is PositionX posX)
-                {
-                    Write("PositionY", (posX).Value);
-                    //Write("PositionX", (attr as PositionX).Value);
-                }
-                else if (attr is PositionY posY)
-                {
-                    Write("PositionY", (posY).Value);
-                }
-                else if (attr is PositionZ posZ)
-                {
-                    Write("PositionY", (posZ).Value);
-                }
-                else if (attr is Rotation rot)
-                {
-                    Write("PositionY", (rot).Value);
-                }
-            }*/
+            Write ("Id", playerId);
+        }
+
+        public PlayerStatePacket(Player player) : base(typeof(PlayerStatePacket))
+        {
+            Write("Id", player.pId);
+            Write("Name", player.pName);
+            Write("Health", player.pHealth);
+            Write("Mana", player.pMana);
+            Write("PositionX", player.pPositionX);
+            Write("PositionY", player.pPositionY);
+            Write("PositionZ", player.pPositionZ);
+            Write("Rotation", player.pRotation);
         }
 
         public PlayerStatePacket(Packet packet) : base(packet) { }

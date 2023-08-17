@@ -6,15 +6,26 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
+using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkMessage.old;
 using NetworkCore.Packets;
+
+// authorization
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Client
 {
     public class SimpleClient : NetworkClient
     {
-        private TcpPeer? ServerPeer ;
+        string TestAuthToken = "gracz"; // in the future we have to create authorization service 
+        // we have to store also other information in Token, like username, and by username we can receive data from Database to that client
+
+        private VisiblePlayersCollection PlayersCollection;
+        private Player ClientPlayer;
+        private TcpPeer? ServerPeer;
         public TcpPeer? GetServerPeer
         {
             get
@@ -46,28 +57,135 @@ namespace Client
 
         public SimpleClient() : base()
         {
+            PlayersCollection = new VisiblePlayersCollection();
             ServerPeer = null;
+            ClientPlayer = new Player();
         }
 
         public SimpleClient(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
             : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) 
         {
+            PlayersCollection = new VisiblePlayersCollection();
             ServerPeer = null;
+            ClientPlayer = new Player();
         }
 
         public override async Task OnPacketReceived(IPeer serverPeer, Packet packet)
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {serverPeer.Id}");
+
+            if(packet.PacketType == typeof(PlayerLoadResponsePacket))
+            {
+                PlayerLoadResponsePacket response = new PlayerLoadResponsePacket(packet);
+
+                if(response.Succes == true)
+                {
+                    // set over ClientPlayer - Player class object
+                    ClientPlayer = response.PlayerObj;
+
+                    // if all goes okey, then send Succes packet with 'true' parameter
+                    await serverPeer.SendPacket(new PlayerLoadSuccesPacket(true));
+
+                }
+                else
+                {
+                    await serverPeer.Disconnect();
+                }
+            }
+
+
+            if (packet.PacketType == typeof(PlayerStatePacket))
+            {
+                await PlayersCollection.OnPlayerStateReceived(new PlayerStatePacket(packet));
+            }
         }
 
         public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
         {
+            await Console.Out.WriteLineAsync($"[NEW SERVER CONNECTION] received, with info: {ServerTcpSocket.RemoteEndPoint} ");
             ServerPeer = new TcpPeer(this, ServerTcpSocket, newConnectionId, ownerType);
+
             await ServerPeer.ConnectToServer();
+
+            await ServerPeer.SendPacket(new PlayerLoadRequestPacket(TestAuthToken));
         }
 
         public override async Task OnServerDisconnect(IPeer serverPeer)
         {
+            await Console.Out.WriteLineAsync($"[SERVER CONNECTION CLOSED], with info: {serverPeer.PeerSocket.RemoteEndPoint}. ");
+        }
+
+        public async Task TestingOperationsTask() // run it in main program in while loop
+        {
+            Console.WriteLine("---------------------------------------------");
+            Console.WriteLine("TWOJA POSTAC: ");
+            await ClientPlayer.Show();
+            Console.WriteLine("---------------------------------------------");
+            await Console.Out.WriteLineAsync("ZMIEN STAN SWOJEGO GRACZA");
+            await Console.Out.WriteLineAsync("[1] Ustaw imie");
+            await Console.Out.WriteLineAsync("[2] dodaj + 20 healtha");
+            await Console.Out.WriteLineAsync("[3] dodaj + 20 many");
+            await Console.Out.WriteLineAsync("[4] IDŹ DO GÓRY");
+            await Console.Out.WriteLineAsync("[5] IDŹ W PRAWO");
+            await Console.Out.WriteLineAsync("[6] IDŹ W DÓŁ");
+            await Console.Out.WriteLineAsync("[7] IDŹ W LEWO");
+            //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
+            Console.WriteLine("--wybierz: ----------------------------------");
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            int packetChoice = int.Parse(keyInfo.KeyChar.ToString());
+
+            switch (packetChoice)
+            {
+                case 1:
+                    {
+                        await Console.Out.WriteLineAsync("Podaj nowe imię: ");
+                        string newName = await Task.Run(() => Console.ReadLine());
+                        ClientPlayer.pName = newName;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 2:
+                    {
+                        ClientPlayer.pHealth += 20;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 3:
+                    {
+                        ClientPlayer.pMana += 20;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 4:
+                    {
+                        ClientPlayer.pPositionY += 1;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 5:
+                    {
+                        ClientPlayer.pPositionX += 1;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 6:
+                    {
+                        ClientPlayer.pPositionY -= 1;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                case 7:
+                    {
+                        ClientPlayer.pPositionX -= 1;
+                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine("Nieznany wybór.");
+                        break;
+                    }
+            }
 
         }
     }

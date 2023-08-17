@@ -28,6 +28,7 @@ namespace ServerApplication.GameService
             playerConn._Player.pRotation = packet.Rot ?? playerConn._Player.pRotation;
 
             await playerConn._Player.Show();
+            await playerConn.ServerRef._World.SendPlayerState(playerConn);
             
         }
     }

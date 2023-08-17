@@ -29,24 +29,40 @@ namespace ServerApplication.GameService.Base
 
         public async Task SendPlayerState(PlayerConnection senderPeer)
         {
-            PlayerStatePacket packet = new PlayerStatePacket();
-            packet.Init(senderPeer._Player);
+            PlayerStatePacket packet = new PlayerStatePacket(senderPeer._Player);
                 
             foreach (var receiver in ConnectedPlayers)
             {
                 if(receiver.Key != senderPeer.Id)
                 {
-                    await senderPeer.SendPacket(packet);
+                    await receiver.Value.SendPacket(packet);
                 }
             }
-            
+        }
+
+        // this we could use when, not all attributes changes. For example we get an state of player which hp was changed - after that we could
+        // reuse his statePacket which was send from him to server to send that to all other clients.
+        public async Task SendPlayerState(Guid senderPeerId, PlayerStatePacket statePacket)
+        {
+            foreach (var receiver in ConnectedPlayers)
+            {
+                if (receiver.Key != senderPeerId)
+                {
+                    await receiver.Value.SendPacket(statePacket);
+                }
+            }
+
         }
 
         public async Task AddNewPlayer(PlayerConnection playerConn)
         {
             if(ConnectedPlayers.TryAdd(playerConn.Id, playerConn))
             {
-                await playerConn.ConnectToClient();
+
+            }
+            else
+            {
+                await playerConn.Disconnect();
             }
         }
 

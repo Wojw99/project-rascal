@@ -29,10 +29,13 @@ namespace NetworkCore.NetworkCommunication
         public async Task ConnectTcpServer(string serverIpAddress, int serverTcpPort)
         {
             Socket ServerTcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            await Console.Out.WriteLineAsync("Trying to connect to server...");
             await ServerTcpSocket.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIpAddress), (int)serverTcpPort));
 
             if(ServerTcpSocket.Connected)
             {
+                IsRunning = true;
+                await RunPacketProcessingInBackground();
                 await OnNewConnection(ServerTcpSocket, Guid.NewGuid(), Owner.client);
 
                 /*if (await OnServerConnect(serverPeer))
@@ -70,10 +73,10 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        public async Task Start()
+        /*public async Task Start()
         {
             IsRunning = true;
-        }
+        }*/
 
         public async Task Stop()
         {

@@ -53,11 +53,50 @@ namespace ServerApplication.GameService
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {peer.Id}");
             await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
-            if (peer is PlayerConnection playerConnection)
+            if (peer is PlayerConnection playerConn)
             {
+                if(packet.PacketType == typeof(PlayerLoadRequestPacket))
+                {
+                    PlayerLoadRequestPacket request = new PlayerLoadRequestPacket(packet);
+                    
+                    // check is token correct
+                    if (request.AuthToken == "gracz")
+                    {
+                        // load username from token
+                        string username = "some_username_from_token";
+
+                        // load player object by username
+                        playerConn.LoadPlayerFromDatabase(username);
+
+                        // send response with player object
+                        await playerConn.SendPacket(new PlayerLoadResponsePacket(true, playerConn._Player));
+                        
+                    }
+                    else
+                    {
+                        // send response with succes = false
+                        await playerConn.SendPacket(new PlayerLoadResponsePacket(false));
+
+                        //disconnet Connection
+                        await playerConn.Disconnect();
+                    }  
+                }
+
+                // we can add Player to player collection only if client load his player succesfully
+                if(packet.PacketType == typeof(PlayerLoadSuccesPacket))
+                {
+                    PlayerLoadSuccesPacket loadSuccesStatus = new PlayerLoadSuccesPacket(packet);
+
+                    if (loadSuccesStatus.Succes == true)
+                    {
+                        await _World.AddNewPlayer(playerConn);
+                        await _World.SendPlayerState(playerConn);
+                    }
+                }
+
                 if (packet.PacketType == typeof(PlayerStatePacket) )
                 {
-                    await PlayerFunction.OnPlayerStateChanged(playerConnection, new PlayerStatePacket(packet));
+                    await PlayerFunction.OnPlayerStateChanged(playerConn, new PlayerStatePacket(packet));
 
                     /*if (packet is PlayerStatePacket playerStatePacket)
                     {
@@ -68,46 +107,26 @@ namespace ServerApplication.GameService
                 }
             }
 
-            
-                // ... Tutaj możesz kontynuować dla innych typów pakietów
-            
-
-            /* packet.PacketType
-
-             if (peer is PlayerConnection playerConnection)
-             {
-                 //await Console.Out.WriteLineAsync("test214");
-                 if (packet is PlayerStatePacket playerStatePacket)
-                 {
-                     await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
-                     // Możesz teraz używać playerStatePacket jako obiektu PlayerStatePacket
-                     // i wywołać na nim odpowiednie metody lub operacje.
-                 }*/
-
-
-            /* if (packet.PacketType == typeof(PlayerMovePacket))
-             {
-                 //PlayerMovePacket playerMovePacket = packet as PlayerMovePacket;
-                 await PlayerFunction.OnPlayerMove(playerConnection, packet as PlayerMovePacket);
-             }
-             else if (packet.PacketType == typeof(PlayerStatePacket))
-             {
-                 PlayerStatePacket playerStatePacket = packet as PlayerStatePacket;
-                 await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
-             }*/
         
         }
 
+        TaskCompletionSource<bool> PlayerLoadCompletionSource;
+
         protected override async Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType)
         {
+            await Console.Out.WriteLineAsync($"[NEW CLIENT CONNECTION] received, with info: {clientSocket.RemoteEndPoint} ");
+
             PlayerConnection playerConn = new PlayerConnection(this, clientSocket, connId, ownerType, ConnCounter++);
-            await _World.AddNewPlayer(playerConn);
+            await playerConn.ConnectToClient();
+
         }
 
         protected override async Task OnClientDisconnect(IPeer peer)
         {
-            if (peer is PlayerConnection playerConnection)
-                await _World.RemovePlayer(playerConnection);
+            await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {peer.PeerSocket.RemoteEndPoint}. ");
+
+            if (peer is PlayerConnection playerConnection)  // do przemyslenia
+                await _World.RemovePlayer(playerConnection); // do przemyslenia
         }
     }
 }

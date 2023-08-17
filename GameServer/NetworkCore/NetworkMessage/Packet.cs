@@ -42,7 +42,6 @@ namespace NetworkCore.NetworkMessage
                 int typeSize = reader.ReadInt32();
                 PacketType = DeserializeType(reader.ReadBytes(typeSize));
 
-                Console.WriteLine("test");
 
                 // each field
                 while (stream.Position < stream.Length)
@@ -51,7 +50,6 @@ namespace NetworkCore.NetworkMessage
                     Fields.Add(PacketField.Deserialize(reader.ReadBytes(fieldLength)));
                 }
 
-                Console.WriteLine("test");
             }
             
         }
@@ -129,7 +127,6 @@ namespace NetworkCore.NetworkMessage
                 if (field.Name.SequenceEqual(strBuffer))
                 {
                     Type fieldType = DeserializeType(field.FieldType);
-                    Console.WriteLine("asfa");
 
                     if (fieldType == typeof(short))
                         return (T)(object)BitConverter.ToInt16(field.Buffer, 0);
