@@ -56,7 +56,16 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.92158204, y: 0.12743773, z: 0.033104774, w: 1}
+        m_Name: Color1
+        m_Overridden: 0
+      - m_Value: {x: 0.79910296, y: 0.23455065, z: 0.014443844, w: 1}
+        m_Name: Color2
+        m_Overridden: 0
+      - m_Value: {x: 0.1470273, y: 0.015996292, z: 0.3467041, w: 1}
+        m_Name: Color4
+        m_Overridden: 0
     m_Uint:
       m_Array: []
     m_Int:
@@ -141,5 +150,5 @@ Transform:
   m_Children:
   - {fileID: 8446962516278089040}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
