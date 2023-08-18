@@ -18,8 +18,6 @@ public interface IPeer
 
     Socket PeerSocket { get; }
 
-    NetworkBase NetworkRef { get; }
-
     Task ConnectToServer();
 
     Task ConnectToClient();

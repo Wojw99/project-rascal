@@ -26,6 +26,9 @@ namespace Client
         private VisiblePlayersCollection PlayersCollection;
         private Player ClientPlayer;
         private TcpPeer? ServerPeer;
+
+        // only for test purposes - to not start main thread loop before Player object doesnt loaded from server
+        TaskCompletionSource<bool> ClientPlayerObjectSpecified;
         public TcpPeer? GetServerPeer
         {
             get
@@ -60,11 +63,13 @@ namespace Client
             PlayersCollection = new VisiblePlayersCollection();
             ServerPeer = null;
             ClientPlayer = new Player();
+            ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
         }
 
         public SimpleClient(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
             : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) 
         {
+            ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
             PlayersCollection = new VisiblePlayersCollection();
             ServerPeer = null;
             ClientPlayer = new Player();
@@ -82,7 +87,7 @@ namespace Client
                 {
                     // set over ClientPlayer - Player class object
                     ClientPlayer = response.PlayerObj;
-
+                    ClientPlayerObjectSpecified.SetResult(true);
                     // if all goes okey, then send Succes packet with 'true' parameter
                     await serverPeer.SendPacket(new PlayerLoadSuccesPacket(true));
 
@@ -93,7 +98,7 @@ namespace Client
                 }
             }
 
-
+            // Note that this is packet from server, but with state of other player.
             if (packet.PacketType == typeof(PlayerStatePacket))
             {
                 await PlayersCollection.OnPlayerStateReceived(new PlayerStatePacket(packet));
@@ -105,8 +110,10 @@ namespace Client
             await Console.Out.WriteLineAsync($"[NEW SERVER CONNECTION] received, with info: {ServerTcpSocket.RemoteEndPoint} ");
             ServerPeer = new TcpPeer(this, ServerTcpSocket, newConnectionId, ownerType);
 
+            // therefore, wait for the data
             await ServerPeer.ConnectToServer();
 
+            // send request to client Player object with values from database
             await ServerPeer.SendPacket(new PlayerLoadRequestPacket(TestAuthToken));
         }
 
@@ -117,6 +124,11 @@ namespace Client
 
         public async Task TestingOperationsTask() // run it in main program in while loop
         {
+            if(!ClientPlayerObjectSpecified.Task.IsCompleted)
+            {
+                return;
+            }
+
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
             await ClientPlayer.Show();

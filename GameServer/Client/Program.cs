@@ -36,21 +36,5 @@ namespace Client
                 }
             }
         }
-
-        static async Task HandleInputKey()
-        {
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                    if (keyInfo.KeyChar == 'q')
-                    {
-
-                        BrakeThatHellLoop = true;
-                    }
-                }
-            }
-        }
     }
 }

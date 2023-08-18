@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -21,12 +22,15 @@ namespace ServerApplication.GameService
             _Player = new Player();
             ServerRef = serverRef;
         }
-        public void LoadPlayerFromDatabase(string username)
+        // Overload with id, because we dont have database for now, and I want
+        // to have unique id's.
+        public void LoadPlayerFromDatabase(string username, int UniqueId)
         {
             // load player attributes from database by "username"
 
             // set player
-            _Player = new Player(1, "test", 10, 10, 15, 15, 15, 15);
+            _Player = new Player(UniqueId, "nowy gracz", 10, 10, 0, 0, 0, 0);
+
         }
     }
 }

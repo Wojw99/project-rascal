@@ -12,18 +12,15 @@ namespace NetworkCore.Packets
     {
         public bool Succes { get { return Read<int>("Succes") == 1; } } // 1 - true
 
+        // We can store "Player" class object, because in this packet we want to receive all Player data (All Player State).
         public Player PlayerObj { 
             get { 
-                Player player = new Player();
-                player.pId = Read<int>("Id");
-                player.pName = Read<string>("Name");
-                player.pHealth = Read<int>("Health");
-                player.pMana = Read<int>("Mana");
-                player.pPositionX = Read<float>("PositionX");
-                player.pPositionY = Read<float>("PositionY");
-                player.pPositionZ = Read<float>("PositionZ");
-                player.pRotation = Read<float>("Rotation");
-                return player; 
+                if(Succes)
+                {
+                   return new Player(Read<int>("Id"), Read<string>("Name"), Read<int>("Health"), Read<int>("Mana"), Read<float>("PositionX"),
+                        Read<float>("PositionY"), Read<float>("PositionZ"), Read<float>("Rotation"));
+                }
+                throw new ArgumentException("Cannot create PlayerObj in PlayerLoadResponsePacket, while succes status is false. ");
             } }
 
         public PlayerLoadResponsePacket(bool succes) : base(typeof(PlayerLoadResponsePacket))
@@ -34,7 +31,7 @@ namespace NetworkCore.Packets
         public PlayerLoadResponsePacket(bool succes, Player player) : base(typeof(PlayerLoadResponsePacket))
         {
             Write<int>("Succes", succes ? 1 : 0);
-            Write("Id", player.pId);
+            Write("Id", player.pVid);
             Write("Name", player.pName);
             Write("Health", player.pHealth);
             Write("Mana", player.pMana);

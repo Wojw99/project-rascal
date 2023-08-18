@@ -25,7 +25,7 @@ namespace NetworkCore.NetworkCommunication
 
         public Socket PeerSocket { get; private set; }
 
-        public NetworkBase NetworkRef { get; private set; } // storing reference to NetworkServer or NetworkClient
+        private NetworkBase NetworkRef { get; set; } // storing reference to NetworkServer or NetworkClient
 
         private byte[] ReceiveBuffer = new byte[1024];
 
@@ -74,7 +74,7 @@ namespace NetworkCore.NetworkCommunication
             // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
         }
 
-        public async Task ReadIncomingData()
+        private async Task ReadIncomingData()
         {
             while (NetworkRef.IsRunning)
             {
@@ -108,7 +108,7 @@ namespace NetworkCore.NetworkCommunication
                 byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
 
                 Packet packet = new Packet(combinedData);
-                AddToIncomingPacketQueue(packet);
+                await AddToIncomingPacketQueue(packet);
             }
         }
 

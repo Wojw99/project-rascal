@@ -22,18 +22,21 @@ namespace ServerApplication.GameService
         private int ConnCounter = 0;
         private int packetReceiveCount = 0;
 
-       /* Dictionary<PacketType, PacketHandler> packetHandlers =
-                new Dictionary<PacketType, PacketHandler>()
-            {
-                { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
-                PacketFunction.HandlePlayerMovePacket, PacketFunction.HandleGlobalPlayerPosition) },
+        public int VidCounter { get; private set; } = 0; // by now is the way to create unique identifiers
+        // But note that in the future we must load that Vid's from database!
 
-                { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
-                PacketFunction.HandleEnemyShootPacket, PacketFunction.HandleGlobalPlayerPosition) },
+        /* Dictionary<PacketType, PacketHandler> packetHandlers =
+                 new Dictionary<PacketType, PacketHandler>()
+             {
+                 { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
+                 PacketFunction.HandlePlayerMovePacket, PacketFunction.HandleGlobalPlayerPosition) },
 
-                { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet,
-                PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
-            };*/
+                 { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
+                 PacketFunction.HandleEnemyShootPacket, PacketFunction.HandleGlobalPlayerPosition) },
+
+                 { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet,
+                 PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
+             };*/
 
         //PacketHandlerManager packetHandlerManager = new PacketHandlerManager();
 
@@ -53,6 +56,10 @@ namespace ServerApplication.GameService
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {peer.Id}");
             await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
+
+            // Check is received connection registered into PlayerConnection
+            // note that we are registering all incoming connections into that Object
+            // by now (in OnNewConnection method). So by now we dont need that especially.
             if (peer is PlayerConnection playerConn)
             {
                 if(packet.PacketType == typeof(PlayerLoadRequestPacket))
@@ -66,7 +73,7 @@ namespace ServerApplication.GameService
                         string username = "some_username_from_token";
 
                         // load player object by username
-                        playerConn.LoadPlayerFromDatabase(username);
+                        playerConn.LoadPlayerFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
 
                         // send response with player object
                         await playerConn.SendPacket(new PlayerLoadResponsePacket(true, playerConn._Player));
@@ -90,20 +97,32 @@ namespace ServerApplication.GameService
                     if (loadSuccesStatus.Succes == true)
                     {
                         await _World.AddNewPlayer(playerConn);
-                        await _World.SendPlayerState(playerConn);
+                        await _World.SendPlayerStateToConnectedPlayers(playerConn);
                     }
                 }
 
                 if (packet.PacketType == typeof(PlayerStatePacket) )
                 {
+                    // We are run static method for that. We can load other packets in the same way.
+                    // But by now I will write most of packets in OnPacketReceived
                     await PlayerFunction.OnPlayerStateChanged(playerConn, new PlayerStatePacket(packet));
+                }
 
-                    /*if (packet is PlayerStatePacket playerStatePacket)
+                if(packet.PacketType == typeof(ClientDisconnectPacket))
+                {
+                    await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {playerConn.PeerSocket.RemoteEndPoint}. ");
+
+                    ClientDisconnectPacket clientDisconnect = new ClientDisconnectPacket(packet);
+                    
+                    if(clientDisconnect.AuthToken == "gracz") // we need that to check?
                     {
-                        await Console.Out.WriteLineAsync("testawdfasd");
-                        await PlayerFunction.OnPlayerStateChanged(playerConnection, playerStatePacket);
-                        // Obsługa PlayerStatePacket
-                    }*/
+                        // save player state into database
+                    }
+
+                    await _World.RemovePlayer(playerConn); // delete from world
+                    await playerConn.Disconnect(); // disconnect from server
+
+                    
                 }
             }
 
@@ -121,9 +140,10 @@ namespace ServerApplication.GameService
 
         }
 
+        // now we are receiving ClientDisconnectPacket, so I think we dont need that.
         protected override async Task OnClientDisconnect(IPeer peer)
         {
-            await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {peer.PeerSocket.RemoteEndPoint}. ");
+            //await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {peer.PeerSocket.RemoteEndPoint}. ");
 
             if (peer is PlayerConnection playerConnection)  // do przemyslenia
                 await _World.RemovePlayer(playerConnection); // do przemyslenia
