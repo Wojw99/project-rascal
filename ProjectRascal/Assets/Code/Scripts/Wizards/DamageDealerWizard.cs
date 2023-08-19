@@ -20,6 +20,7 @@ public class DamageDealerWizard : MonoBehaviour
 
     [SerializeField] private GameObject thunderstruck;
     [SerializeField] private GameObject magicBullet;
+    [SerializeField] private GameObject necroSlash;
 
     public GameObject SummonThunderstruck(Vector3 position) {
         return GameObject.Instantiate(thunderstruck, position, Quaternion.identity);
@@ -27,5 +28,9 @@ public class DamageDealerWizard : MonoBehaviour
 
     public GameObject SummonMagicBullet(Vector3 position, Quaternion rotation) {
         return GameObject.Instantiate(magicBullet, position, rotation);
+    }
+
+    public GameObject SummonNecroSlash(Vector3 position, Quaternion rotation) {
+        return GameObject.Instantiate(necroSlash, position, rotation);
     }
 }

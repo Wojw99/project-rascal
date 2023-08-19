@@ -7,6 +7,7 @@ public class SkillController : MonoBehaviour
     [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject rightHand;
     [SerializeField] private GameObject bulletSpawnPoint;
+    [SerializeField] private GameObject slashSpawnPoint;
 
     private GameCharacter gameCharacter;
 
@@ -24,6 +25,34 @@ public class SkillController : MonoBehaviour
         VfxWizard.instance.SummonHandLight(leftHand.transform.position, Quaternion.identity, leftHand.transform);
         VfxWizard.instance.SummonHandLight(rightHand.transform.position, Quaternion.identity, rightHand.transform);
     }
+
+    public IEnumerator WaitForNecroSlash(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnNecroSlash(mouseGroundPosition);
+    }
+
+    public IEnumerator WaitForNecroImpact(float delay, Vector3 mouseGroundPosition)
+    {
+        yield return new WaitForSeconds(delay);
+        SpawnNecroImpact(mouseGroundPosition);
+    }
+
+    public void SpawnNecroSlash(Vector3 mouseGroundPosition) {
+        var spawnTransform = slashSpawnPoint.transform;
+        var pos = spawnTransform.position + spawnTransform.forward * 1f * (-1);
+        // pos += spawnTransform.up * 0.2f * -1;
+        var slash = DamageDealerWizard.instance.SummonNecroSlash(pos, spawnTransform.rotation);
+        if(slash.TryGetComponent(out NecroSlashDD damageDealer)) {
+            damageDealer.FeedAndDealDamage(ownerCharacter: gameCharacter, endPoint: mouseGroundPosition, damageStartTime: 0f, damageDuration: 1f);
+            damageDealer.SetLifetime(10f);
+        }
+    }
+
+    public void SpawnNecroImpact(Vector3 mouseGroundPosition) {
+        VfxWizard.instance.SummonNecroImpactEffect(slashSpawnPoint.transform.position);
+    }
+
 
     public IEnumerator WaitForThunderstruck(float delay, Vector3 mouseGroundPosition)
     {

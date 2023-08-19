@@ -9,6 +9,7 @@ public class HumanAnimator : MonoBehaviour
     [SerializeField] private int buffCastDuration = 92;
     [SerializeField] private int gatheringCastDuration = 80;
     [SerializeField] private int spellCast2CastDuration = 60;
+    [SerializeField] private int attack2HandedDuration = 116;
 
     private Animator animator;
 
@@ -21,6 +22,11 @@ public class HumanAnimator : MonoBehaviour
     private void Update()
     {
         // UpdateSpeed();
+    }
+
+    public void AnimateAttack2Handed() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Attack2Handed");
     }
 
     public void AnimateBuffMagicArmor() {
@@ -105,6 +111,12 @@ public class HumanAnimator : MonoBehaviour
     {
         get { return spellCast2CastDuration; }
     }
+
+    public int Attack2HandedDuration
+    {
+        get { return attack2HandedDuration; }
+    }
+
 
     public static float NormalizeDuration(int duration) => duration / 60f;
 }

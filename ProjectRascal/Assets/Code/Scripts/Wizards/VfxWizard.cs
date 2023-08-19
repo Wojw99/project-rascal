@@ -27,11 +27,15 @@ public class VfxWizard : MonoBehaviour
     [SerializeField] private GameObject thunderstruckStartEffect;
     [SerializeField] private GameObject magicArmorExtraEffecr;
     [SerializeField] private GameObject magicGranadeEffect;
+    [SerializeField] private GameObject necroImpactEffect;
+
+    public void SummonNecroImpactEffect(Vector3 position) {
+        GameObject.Instantiate(necroImpactEffect, position, Quaternion.identity);
+    }
 
     public void SummonMagicGranadeEffect(Vector3 position) {
         GameObject.Instantiate(magicGranadeEffect, position, Quaternion.identity);
     }
-
 
     public void SummonMagicArmorExtraEffect(Vector3 position) {
         GameObject.Instantiate(magicArmorExtraEffecr, position, Quaternion.identity);

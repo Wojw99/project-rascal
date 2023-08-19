@@ -106,6 +106,7 @@
      <Compile Include="Assets\Code\Scripts\SkillController.cs" />
      <Compile Include="Assets\Code\Scripts\Interactibles\Vladyslav.cs" />
      <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
+     <Compile Include="Assets\Code\Scripts\DamageDealers\NecroSlashDD.cs" />
      <Compile Include="Assets\Other\PlayerInputActions.cs" />
      <Compile Include="Assets\Code\Scripts\Wizards\VfxWizard.cs" />
      <Compile Include="Assets\Code\Scripts\PlayerCharacter.cs" />

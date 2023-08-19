@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             HandleKey2();
             HandleKey3();
             HandleKey4();
+            HandleKey5();
             HandleUI();
             HandleTestAnim();
         }
@@ -114,6 +115,19 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             StartCoroutine(skillController.WaitForMagicExplosion(0f, mouseGroundPosition));
         }
     }
+
+    private void HandleKey5() {
+        if(InputWizard.instance.IsKey5Pressed() && playerState != CharacterState.Casting) {
+            playerState = CharacterState.Casting;
+            humanAnimator.AnimateAttack2Handed();    
+
+            var duration = HumanAnimator.NormalizeDuration(humanAnimator.Attack2HandedDuration);
+            StartCoroutine(WaitForIdle(duration));
+            StartCoroutine(skillController.WaitForNecroImpact(0.8f, mouseGroundPosition));
+            StartCoroutine(skillController.WaitForNecroSlash(0.8f, mouseGroundPosition));
+        }
+    }
+
 
     private IEnumerator WaitForIdle(float delay)
     {
