@@ -8,16 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
-namespace Client
+namespace Assets.Code.Scripts.NetClient
 {
     // This class is representing other Players connected to server. We can receive
     // other players state, 
-    public class VisiblePlayersCollection
+    public class VisibleCharacterCollection
     {
         //private NetworkClient NetworkRef;
         public ConcurrentDictionary<int, Player> VisiblePlayers { get; private set; }
 
-        public VisiblePlayersCollection()
+        public VisibleCharacterCollection()
         {
             //NetworkRef = networkRef;
             VisiblePlayers = new ConcurrentDictionary<int, Player>();
@@ -29,7 +29,7 @@ namespace Client
         }
 
         // a'la AddPlayer
-        public async Task OnPlayerStateReceived(PlayerStatePacket statePacket)
+        public async Task OnPlayerStateReceived(CharacterStatePacket statePacket)
         {
             int playerVId = statePacket.PlayerVId; // note that statePacket.PlayerVid cannot be null.
 

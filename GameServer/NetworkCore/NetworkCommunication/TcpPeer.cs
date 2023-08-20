@@ -1,9 +1,11 @@
 ﻿using NetworkCore.NetworkConfig;
 using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkMessage.old;
+using NetworkCore.Packets;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -26,8 +28,6 @@ namespace NetworkCore.NetworkCommunication
         public Socket PeerSocket { get; private set; }
 
         private NetworkBase NetworkRef { get; set; } // storing reference to NetworkServer or NetworkClient
-
-        private byte[] ReceiveBuffer = new byte[1024];
 
         public TcpPeer(NetworkBase networkBase, Socket peerSocket, Guid peerId, 
             Owner ownerType)
@@ -68,7 +68,7 @@ namespace NetworkCore.NetworkCommunication
         {
             if(IsConnected)
             {
-                NetworkRef.Watch.Start();
+                //NetworkRef.Watch.Start();
                 await AddToOutgoingPacketQueue(packet);
             }
             // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
@@ -111,58 +111,6 @@ namespace NetworkCore.NetworkCommunication
                 await AddToIncomingPacketQueue(packet);
             }
         }
-
-
-        /*public async Task ReadIncomingData()
-        {
-            while (NetworkRef.IsRunning)
-            {
-                byte[] PacketSizeByte = new byte[sizeof(int)];
-                int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
-
-                if(bytesRead != sizeof(int))
-                {
-                    await Console.Out.WriteLineAsync("");
-                    continue;
-                }
-
-                int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
-
-                if (packetSize <= 0)
-                {
-                    await Console.Out.WriteLineAsync("Incorrect size of packet");
-                    continue;
-                }
-
-                // disregard PacketSizeByte
-                byte[] packetData = new byte[packetSize];
-
-                bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
-
-                if (bytesRead <= 0)
-                {
-                    await Console.Out.WriteLineAsync("");
-                    continue;
-                }
-
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    memoryStream.Write(PacketSizeByte, 0, PacketSizeByte.Length);
-                    memoryStream.Write(packetData, 0, packetData.Length);
-
-                    byte[] combinedData = memoryStream.ToArray();
-                    //Packet packet = new Packet(combinedData);
-                    //AddToIncomingPacketQueue(packet);
-                }
-
-
-                byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
-
-                 Packet packet = new Packet(combinedData);
-                AddToIncomingPacketQueue(packet);
-            }
-        }
-*/
         private async Task AddToIncomingPacketQueue(Packet packet)
         {
             lock (this)

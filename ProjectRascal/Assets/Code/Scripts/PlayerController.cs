@@ -1,4 +1,6 @@
+using Assets.Code.Scripts.NetClient;
 using NetworkCore.NetworkMessage;
+using NetworkCore.Packets;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -162,8 +164,13 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         return distance;
     }
 
+    private float timeSinceLastPacket = 0f;
+    private float packetSendInterval = 0.1f; // Pó³ sekundy
+
     private void HandleRunning() {
-        if(InputWizard.instance.IsRightClickPressed() 
+        timeSinceLastPacket += Time.deltaTime;
+
+        if (InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting 
         && CountDistanceToMouse() > minDistanceForRunning) { 
             var movement = lookDirection.normalized * moveSpeed * Time.deltaTime;
@@ -171,14 +178,17 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
 
-            Packet packet = new Packet(PacketType.packet_player_move);
-            packet.WriteInt("playerId", 345435);
-            packet.WriteFloat("posX", transform.position.x);
-            packet.WriteFloat("posY", transform.position.y);
-            packet.WriteFloat("posZ", transform.position.z);
-            packet.WriteString("test", "jakies dodatkowe info");
+            if(timeSinceLastPacket >= packetSendInterval)
+            {
+                PlayerStatePacket statePacket = new PlayerStatePacket(Client._instanceNetwork.ClientPlayer.pVid);
+                statePacket.SetPositionX(transform.position.x);
+                statePacket.SetPositionY(transform.position.y);
+                statePacket.SetPositionZ(transform.position.z);
+                Client._instanceNetwork.ServerPeer.SendPacket(statePacket);
 
-            Client._instanceNetwork.SendPacketToAllServers(packet);
+                timeSinceLastPacket = 0f;
+            }
+
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,9 +44,9 @@ public static class PacketFunction
             packet.WriteInt("playerId", 1242325);
             packet.WriteInt("targetId", 4355321);
 
-            /* byte[] data = PacketSerializationManager.serializePacket(packet);
+            *//* byte[] data = PacketSerializationManager.serializePacket(packet);
                 stream.Write(data, 0, data.Length);
-                Console.WriteLine($"Send packet: {packet._type}");*/
+                Console.WriteLine($"Send packet: {packet._type}");*//*
             return packet;
         }
 
@@ -62,9 +62,9 @@ public static class PacketFunction
             packet.WriteDouble("posY", 631.21);
             packet.WriteString("test", "jakies dodatkowe info");
 
-            /*byte[] data = PacketSerializationManager.serializePacket(packet);
+            *//*byte[] data = PacketSerializationManager.serializePacket(packet);
             stream.Write(data, 0, data.Length);
-            Console.WriteLine($"Send packet: {packet._type}");*/
+            Console.WriteLine($"Send packet: {packet._type}");*//*
             return packet;
         }
 
@@ -82,12 +82,13 @@ public static class PacketFunction
             packet.WriteFloat("float", (float)3.4028235E+38);
             packet.WriteString("string", "testowanie pakietów");
 
-            /* byte[] data = PacketSerializationManager.serializePacket(packet);
+            *//* byte[] data = PacketSerializationManager.serializePacket(packet);
                 stream.Write(data, 0, data.Length);
-                Console.WriteLine($"Send packet: {packet._type}");*/
+                Console.WriteLine($"Send packet: {packet._type}");*//*
             return packet;
         }
 
     }
 }
 
+*/

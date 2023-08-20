@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
@@ -28,19 +28,9 @@ namespace NetworkCore.NetworkCommunication
 
         protected Socket? TcpSocket { get; }
 
-        protected Socket? UdpSocket { get; }
+        // protected Socket? UdpSocket { get; }
 
-        //public bool IsRunning { get; private set; }
-
-        //public abstract ConcurrentDictionary<Guid, IPeer> qPeers { get; }
-
-        //public ConcurrentQueue<OwnedPacket> qPacketsIn { get; }
-
-        //public ConcurrentQueue<OwnedPacket> qPacketsOut { get; }
-
-        //public PacketHandlerManager _PacketHandlerManager { get; private set; }
-
-        protected NetworkServer (bool allowPhysicalClients, int maxClients, string publicIpAdress,
+        protected NetworkServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType,
             UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
             int? tcpPort = null, int? udpPort = null)
@@ -52,7 +42,7 @@ namespace NetworkCore.NetworkCommunication
             ServerName = serverName;
             _ServerType = serverType;
 
-            
+
 
             //_PacketHandlerManager = new PacketHandlerManager();
 
@@ -89,7 +79,7 @@ namespace NetworkCore.NetworkCommunication
             // read from file and initialize attributes.
         }
 
-        /*public void SendPacketToAllClients(Packet packet)
+        *//*public void SendPacketToAllClients(Packet packet)
         {
             foreach(var peer in qPeers)
             {
@@ -125,7 +115,7 @@ namespace NetworkCore.NetworkCommunication
                     }
                 }
             } 
-        }*/
+        }*//*
 
         public async Task Start()
         {
@@ -135,11 +125,11 @@ namespace NetworkCore.NetworkCommunication
                 UdpSocket.Listen(10);
                 await Console.Out.WriteLineAsync($"Server, with GUID: {ServerId}, Name: {ServerName} started on TCP port, and UDP port.");
             }
-            /*else if (UdpListenerSocket != null && TcpListenerSocket == null)
+            *//*else if (UdpListenerSocket != null && TcpListenerSocket == null)
             {
                 UdpListenerSocket.Listen(10);
                 await Console.Out.WriteLineAsync($"Server, with GUID: {ServerId}, Name: {ServerName} started on UDP port");
-            }*/
+            }*//*
             else if (TcpSocket != null && UdpSocket == null)
             {
                 TcpSocket.Listen(10);
@@ -149,19 +139,19 @@ namespace NetworkCore.NetworkCommunication
             {
                 throw new Exception("Cannot start server.");  // throw exception maybe
             }
-            
+
             IsRunning = true;
 
             Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
             //Task handleWaitForUdpConnection = Task.Run(async () => await WaitForUdpClientConnection());
             //Task handleUpdate = Task.Run(async () => await Update(100, TimeSpan.FromMilliseconds(100)));
-            /*while (IsRunning)
+            *//*while (IsRunning)
             {
                 //await WaitForClientConnection();
                 // main loop on main thread
                 Console.WriteLine("Server running...");
                 Thread.Sleep(10000);
-            }*/
+            }*//*
         }
 
         public async Task Stop()
@@ -182,7 +172,7 @@ namespace NetworkCore.NetworkCommunication
 
         private async Task WaitForTcpClientConnection()
         {
-            while(IsRunning)
+            while (IsRunning)
             {
                 if (TcpSocket != null)
                 {
@@ -201,9 +191,9 @@ namespace NetworkCore.NetworkCommunication
 
         private async Task WaitForUdpClientConnection()
         {
-            while(IsRunning)
+            while (IsRunning)
             {
-                /*if (UdpListenerSocket != null)
+                *//*if (UdpListenerSocket != null)
                 {
                     while (UdpListenerSocket.Connected)
                     {
@@ -226,7 +216,7 @@ namespace NetworkCore.NetworkCommunication
                             await Console.Out.WriteLineAsync("Connection denied.");
                         }
                     }
-                }*/
+                }*//*
             }
         }
 
@@ -241,3 +231,4 @@ namespace NetworkCore.NetworkCommunication
         //protected abstract Task SendPacketToAllClients(Packet packet);
     }
 }
+*/

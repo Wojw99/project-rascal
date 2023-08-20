@@ -18,13 +18,13 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Client
 {
-    public class SimpleClient : NetworkClient
+    public class SimpleClient : TcpNetworkClient
     {
         string TestAuthToken = "gracz"; // in the future we have to create authorization service 
         // we have to store also other information in Token, like username, and by username we can receive data from Database to that client
 
-        private VisiblePlayersCollection PlayersCollection;
-        private Player ClientPlayer;
+        private VisibleCharactersCollection PlayersCollection;
+        private Character ClientPlayer;
         private TcpPeer? ServerPeer;
 
         // only for test purposes - to not start main thread loop before Player object doesnt loaded from server
@@ -60,9 +60,9 @@ namespace Client
 
         public SimpleClient() : base()
         {
-            PlayersCollection = new VisiblePlayersCollection();
+            PlayersCollection = new VisibleCharactersCollection();
             ServerPeer = null;
-            ClientPlayer = new Player();
+            ClientPlayer = new Character();
             ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
         }
 
@@ -70,26 +70,26 @@ namespace Client
             : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) 
         {
             ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
-            PlayersCollection = new VisiblePlayersCollection();
+            PlayersCollection = new VisibleCharactersCollection();
             ServerPeer = null;
-            ClientPlayer = new Player();
+            ClientPlayer = new Character();
         }
 
         public override async Task OnPacketReceived(IPeer serverPeer, Packet packet)
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {serverPeer.Id}");
 
-            if(packet.PacketType == typeof(PlayerLoadResponsePacket))
+            if(packet.PacketType == typeof(CharacterLoadResponsePacket))
             {
-                PlayerLoadResponsePacket response = new PlayerLoadResponsePacket(packet);
+                CharacterLoadResponsePacket response = new CharacterLoadResponsePacket(packet);
 
                 if(response.Succes == true)
                 {
                     // set over ClientPlayer - Player class object
-                    ClientPlayer = response.PlayerObj;
+                    ClientPlayer = response.CharacterObj;
                     ClientPlayerObjectSpecified.SetResult(true);
                     // if all goes okey, then send Succes packet with 'true' parameter
-                    await serverPeer.SendPacket(new PlayerLoadSuccesPacket(true));
+                    await serverPeer.SendPacket(new CharacterLoadSuccesPacket(true));
 
                 }
                 else
@@ -99,9 +99,9 @@ namespace Client
             }
 
             // Note that this is packet from server, but with state of other player.
-            if (packet.PacketType == typeof(PlayerStatePacket))
+            if (packet.PacketType == typeof(CharacterStatePacket))
             {
-                await PlayersCollection.OnPlayerStateReceived(new PlayerStatePacket(packet));
+                await PlayersCollection.OnCharacterStateReceived(new CharacterStatePacket(packet));
             }
         }
 
@@ -114,7 +114,7 @@ namespace Client
             await ServerPeer.ConnectToServer();
 
             // send request to client Player object with values from database
-            await ServerPeer.SendPacket(new PlayerLoadRequestPacket(TestAuthToken));
+            await ServerPeer.SendPacket(new CharacterLoadRequestPacket(TestAuthToken));
         }
 
         public override async Task OnServerDisconnect(IPeer serverPeer)
@@ -144,7 +144,10 @@ namespace Client
             //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {PlayersCollection.PlayerCount()}");
-            await Console.Out.WriteLineAsync("--wybierz: ----------------------------------");
+            await Console.Out.WriteLineAsync("---------------------------------------------");
+            await Console.Out.WriteLineAsync($"WYSLANYCH PAKIETOW = {this.OutPacketCounter}");
+            await Console.Out.WriteLineAsync($"ODEBRANYCH PAKIETOW = {this.InPacketCounter}");
+            await Console.Out.WriteLineAsync("---------------------------------------------");
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             int packetChoice = int.Parse(keyInfo.KeyChar.ToString());
 
@@ -154,44 +157,44 @@ namespace Client
                     {
                         await Console.Out.WriteLineAsync("Podaj nowe imię: ");
                         string newName = await Task.Run(() => Console.ReadLine());
-                        ClientPlayer.pName = newName;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.Name = newName;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 2:
                     {
-                        ClientPlayer.pHealth += 20;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.Health += 20;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 3:
                     {
-                        ClientPlayer.pMana += 20;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.Mana += 20;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 4:
                     {
-                        ClientPlayer.pPositionY += 1;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.PositionY += 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 5:
                     {
-                        ClientPlayer.pPositionX += 1;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.PositionX += 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 6:
                     {
-                        ClientPlayer.pPositionY -= 1;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.PositionY -= 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 7:
                     {
-                        ClientPlayer.pPositionX -= 1;
-                        await ServerPeer.SendPacket(new PlayerStatePacket(ClientPlayer));
+                        ClientPlayer.PositionX -= 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 default:

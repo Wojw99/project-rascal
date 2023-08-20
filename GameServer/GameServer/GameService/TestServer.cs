@@ -13,7 +13,7 @@ using System.Collections.Concurrent;
 
 namespace ServerApplication.GameService
 {
-    public class TestServer : NetworkServer
+    public class TestServer : TcpNetworkServer
     {
         // public World world { get; set; }
         public World _World;
@@ -43,9 +43,9 @@ namespace ServerApplication.GameService
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType,
             UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
-            int? tcpPort = null, int? udpPort = null) 
+            int tcpPort) 
             : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, 
-                  maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval, tcpPort, udpPort)
+                  maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval, tcpPort)
         {
             //packetHandlerManager.InitHandlers(packetHandlers);
             //qPeers = new ConcurrentDictionary<Guid, PlayerConnection> ();
@@ -62,9 +62,9 @@ namespace ServerApplication.GameService
             // by now (in OnNewConnection method). So by now we dont need that especially.
             if (peer is PlayerConnection playerConn)
             {
-                if(packet.PacketType == typeof(PlayerLoadRequestPacket))
+                if(packet.PacketType == typeof(CharacterLoadRequestPacket))
                 {
-                    PlayerLoadRequestPacket request = new PlayerLoadRequestPacket(packet);
+                    CharacterLoadRequestPacket request = new CharacterLoadRequestPacket(packet);
                     
                     // check is token correct
                     if (request.AuthToken == "gracz")
@@ -73,16 +73,16 @@ namespace ServerApplication.GameService
                         string username = "some_username_from_token";
 
                         // load player object by username
-                        playerConn.LoadPlayerFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
+                        playerConn.LoadCharacterFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
 
                         // send response with player object
-                        await playerConn.SendPacket(new PlayerLoadResponsePacket(true, playerConn._Player));
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket(true, playerConn.CharacterObj));
                         
                     }
                     else
                     {
                         // send response with succes = false
-                        await playerConn.SendPacket(new PlayerLoadResponsePacket(false));
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket(false));
 
                         //disconnet Connection
                         await playerConn.Disconnect();
@@ -90,9 +90,9 @@ namespace ServerApplication.GameService
                 }
 
                 // we can add Player to player collection only if client load his player succesfully
-                if(packet.PacketType == typeof(PlayerLoadSuccesPacket))
+                if(packet.PacketType == typeof(CharacterLoadSuccesPacket))
                 {
-                    PlayerLoadSuccesPacket loadSuccesStatus = new PlayerLoadSuccesPacket(packet);
+                    CharacterLoadSuccesPacket loadSuccesStatus = new CharacterLoadSuccesPacket(packet);
 
                     if (loadSuccesStatus.Succes == true)
                     {
@@ -101,11 +101,11 @@ namespace ServerApplication.GameService
                     }
                 }
 
-                if (packet.PacketType == typeof(PlayerStatePacket) )
+                if (packet.PacketType == typeof(CharacterStatePacket) )
                 {
                     // We are run static method for that. We can load other packets in the same way.
                     // But by now I will write most of packets in OnPacketReceived
-                    await PlayerFunction.OnPlayerStateChanged(playerConn, new PlayerStatePacket(packet));
+                    await PlayerFunction.OnCharacterStateChanged(playerConn, new CharacterStatePacket(packet));
                 }
 
                 if(packet.PacketType == typeof(ClientDisconnectPacket))

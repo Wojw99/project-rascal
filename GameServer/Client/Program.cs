@@ -1,7 +1,6 @@
 ﻿using Client;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
-using NetworkCore.Packets.Attributes;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -22,7 +21,7 @@ namespace Client
             {
                 try
                 {
-                    await client.ConnectTcpServer("192.168.5.2", 8051);
+                    await client.ConnectTcpServer("192.168.5.6", 8051);
 
 
                     while (true)

@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.Packets.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -11,9 +10,9 @@ namespace NetworkCore.Packets
 {
     // Values in that packet must be assigned. So we must overload constructor
     // with parameters.
-    public class PlayerMovePacket : Packet
+    public class CharacterMovePacket : Packet
     {
-        public int PlayerVid { get { return Read<int>("PlayerVid"); } }
+        public int CharacterVid { get { return Read<int>("CharacterVId"); } }
         public float PosX { get { return Read<float>("PositionX"); } }
         public float PosY { get { return Read<float>("PositionY"); } }
         public float PosZ { get { return Read<float>("PositionZ"); } }
@@ -21,18 +20,18 @@ namespace NetworkCore.Packets
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.
-        public PlayerMovePacket(Player PlayerObj) : base(typeof(PlayerMovePacket))
+        public CharacterMovePacket(Character PlayerObj) : base(typeof(CharacterMovePacket))
         {
-            Write("PlayerVid", PlayerObj.pVid);
-            Write("PositionX", PlayerObj.pPositionX);
-            Write("PositionY", PlayerObj.pPositionY);
-            Write("PositionZ", PlayerObj.pPositionZ);
-            Write("Rotation", PlayerObj.pRotation);
+            Write("CharacterVId", PlayerObj.Vid);
+            Write("PositionX", PlayerObj.PositionX);
+            Write("PositionY", PlayerObj.PositionY);
+            Write("PositionZ", PlayerObj.PositionZ);
+            Write("Rotation", PlayerObj.Rotation);
         }
 
-        public PlayerMovePacket(Packet packet) : base(packet) {}
+        public CharacterMovePacket(Packet packet) : base(packet) {}
 
-        public PlayerMovePacket(byte[] data ) : base(data) {}
+        public CharacterMovePacket(byte[] data ) : base(data) {}
 
         public override string ToString()
         {

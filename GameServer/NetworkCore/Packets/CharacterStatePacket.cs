@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.Packets.Attributes;
 using NetworkCore.NetworkData;
 using System;
 using System.Collections.Generic;
@@ -10,10 +9,10 @@ namespace NetworkCore.Packets
     // That packet is dynamic in my sense. Values in here can be null, so
     // we can decide which values to store in that packet. This practice
     // can be helpfull if we dont need to send values, that doesn't change.
-    public class PlayerStatePacket : Packet
+    public class CharacterStatePacket : Packet
     {
         // Player VId cannot be null. See the description of this parameter in the Player class.
-        public int PlayerVId { get { return Read<int>("PlayerVid"); } }
+        public int CharacterVId { get { return Read<int>("CharacterVId"); } }
         
         public string? Name
         {
@@ -135,26 +134,26 @@ namespace NetworkCore.Packets
         } */
 
         // Be 100% sure this is the correct unique identificator of player.
-        public PlayerStatePacket(int playerVId) : base (typeof(PlayerStatePacket))
+        public CharacterStatePacket(int playerVId) : base (typeof(CharacterStatePacket))
         {
-            Write("PlayerVid", playerVId);
+            Write("CharacterVId", playerVId);
         }
 
-        public PlayerStatePacket(Player player) : base(typeof(PlayerStatePacket))
+        public CharacterStatePacket(Character player) : base(typeof(CharacterStatePacket))
         {
-            Write("PlayerVid", player.pVid);
-            Write("Name", player.pName);
-            Write("Health", player.pHealth);
-            Write("Mana", player.pMana);
-            Write("PositionX", player.pPositionX);
-            Write("PositionY", player.pPositionY);
-            Write("PositionZ", player.pPositionZ);
-            Write("Rotation", player.pRotation);
+            Write("CharacterVId", player.Vid);
+            Write("Name", player.Name);
+            Write("Health", player.Health);
+            Write("Mana", player.Mana);
+            Write("PositionX", player.PositionX);
+            Write("PositionY", player.PositionY);
+            Write("PositionZ", player.PositionZ);
+            Write("Rotation", player.Rotation);
         }
 
-        public PlayerStatePacket(Packet packet) : base(packet) { }
+        public CharacterStatePacket(Packet packet) : base(packet) { }
 
-        public PlayerStatePacket(byte[] data) : base(data) { }
+        public CharacterStatePacket(byte[] data) : base(data) { }
 
         public override string ToString()
         {

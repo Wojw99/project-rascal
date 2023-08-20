@@ -8,7 +8,6 @@ using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
-using NetworkCore.Packets.Attributes;
 
 namespace ServerApplication.GameService.Base
 {
@@ -20,7 +19,7 @@ namespace ServerApplication.GameService.Base
     {
        // private TestServer ServerRef { get; }
         private ConcurrentDictionary<Guid, PlayerConnection> ConnectedPlayers = new ConcurrentDictionary<Guid, PlayerConnection>();
-        private ConcurrentDictionary<Guid, Enemy> Enemies = new ConcurrentDictionary<Guid, Enemy>();
+        private ConcurrentDictionary<int, Enemy> Enemies = new ConcurrentDictionary<int, Enemy>();
 
         public int IdCounter = 0;
 
@@ -32,7 +31,7 @@ namespace ServerApplication.GameService.Base
         {
             // we overloading PlayerStatePacket with constructor, which initialize
             // values in packet by values in player object.
-            PlayerStatePacket packet = new PlayerStatePacket(senderPeer._Player);
+            CharacterStatePacket packet = new CharacterStatePacket(senderPeer.CharacterObj);
                 
             foreach (var receiver in ConnectedPlayers)
             {

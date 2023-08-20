@@ -5,12 +5,12 @@ using NetworkCore.NetworkMessage;
 
 namespace NetworkCore.Packets
 {
-    public class TokenLoginPacket : Packet
+    public class PlayerLoginPacket : Packet
     {
         public string Username { get { return Read<string>("Username"); } }
         public uint Key { get { return Read<uint>("Key"); } }
 
-        public TokenLoginPacket(string username, uint key) : base(typeof(TokenLoginPacket))
+        public PlayerLoginPacket(string username, uint key) : base(typeof(PlayerLoginPacket))
         {
             Write("Username", username);
             Write("Key", key);
@@ -18,7 +18,7 @@ namespace NetworkCore.Packets
 
         //public TokenLoginPacket(Packet packet) : base(packet) { }
 
-        public TokenLoginPacket(byte[] data) : base(data) { }
+        public PlayerLoginPacket(byte[] data) : base(data) { }
 
         public override string ToString()
         {

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
 using ServerApplication.GameService;
 using NetworkCore.Packets;
-using NetworkCore.Packets.Attributes;
 
 namespace ServerApplication.Game
 {
@@ -35,17 +34,17 @@ namespace ServerApplication.Game
             gameServer.Start();*/
 
 
-            TestServer server = new TestServer(true, 120, "192.168.5.2",
-            "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(50), 8051, null);
+            TestServer server = new TestServer(true, 120, "192.168.5.6",
+            "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(50), 8051);
 
-            await server.Start();
+            await server.StartListen(); 
             await server.RunPacketProcessingInBackground();
 
             while(true)
             {
-                Thread.Sleep(200);
-
+                Thread.Sleep(1000);
             }
+
 
 
         }

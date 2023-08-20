@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace NetworkCore.NetworkCommunication
 {
     public abstract class NetworkBase
     {
-        public Stopwatch Watch { get; } = new Stopwatch(); // testing speed
-
         private readonly object IncomingLock = new object();
 
         private readonly object OutgoingLock = new object();
@@ -28,7 +27,8 @@ namespace NetworkCore.NetworkCommunication
 
         private TimeSpan PacketProcessInterval { get; set; }
 
-        public abstract Task SendOutgoingPacket(OwnedPacket receiver);
+        public UInt32 InPacketCounter { get; private set; } = 0;
+        public UInt32 OutPacketCounter { get; private set; } = 0;
 
         public abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
 
@@ -53,23 +53,18 @@ namespace NetworkCore.NetworkCommunication
 
             // LOGGER : INITIALIZED NetworkBase with default values
         }
+        public async Task SendOutgoingPacket(OwnedPacket receiver)
+        {
+            byte[] dataToSend = receiver.PeerPacket.SerializePacket();
+            await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+            await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.PacketType} from peer with Guid: {receiver.Peer.Id}");
+        }
 
+        // "InBackground" mean that this method run packet processing methods on separate tasks.
         public async Task RunPacketProcessingInBackground()
         {
-            /*Task.Run(async () =>
-            {
-                await ProcessIncomingPackets();
-            });
-
-            Task.Run(async () =>
-            {
-                await ProcessOutgoingPackets();
-            });*/
-
             var processIncomingTask = Task.Run(ProcessIncomingPackets);
             var processOutgoingTask = Task.Run(ProcessOutgoingPackets);
-
-            //await Task.WhenAll(processIncomingTask, processOutgoingTask); 
         }
 
         private protected async Task ProcessIncomingPackets()
@@ -87,6 +82,7 @@ namespace NetworkCore.NetworkCommunication
                         if (qPacketsIn.TryDequeue(out var ownedPacket))
                         {
                             OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
+                            InPacketCounter++;
                             packetCount++;
                         }
                     }
@@ -108,6 +104,7 @@ namespace NetworkCore.NetworkCommunication
                         if (qPacketsOut.TryDequeue(out OwnedPacket outgoingPacket))
                         {
                             SendOutgoingPacket(outgoingPacket); // Przykładowa metoda wysyłająca wychodzące pakiety
+                            OutPacketCounter++;
                         }
                     }
                     

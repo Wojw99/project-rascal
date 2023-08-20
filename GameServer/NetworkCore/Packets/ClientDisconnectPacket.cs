@@ -5,6 +5,7 @@ using System.Text;
 
 namespace NetworkCore.Packets
 {
+    // Simple packet about client disconnect. I dont know if we need AuthToken in here.
     public class ClientDisconnectPacket : Packet
     {
         public string AuthToken { get { return Read<string>("AuthToken"); } }

@@ -1,14 +1,15 @@
 ﻿using NetworkCore.NetworkMessage;
 using System.Threading;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections;
+using Assets.Code.Scripts.NetClient;
+using System;
 
 public class Client : MonoBehaviour
 {
     private static Client _instance;
-    public static ClientNetworkBase _instanceNetwork = new ClientNetworkBase();
+    public static ClientNetwork _instanceNetwork = new ClientNetwork(100, 100, System.TimeSpan.FromMilliseconds(50));
     public static Client Instance
     {
         get
@@ -43,9 +44,8 @@ public class Client : MonoBehaviour
         }
     }
 
-    private IEnumerator Start()
+    private async void Start()
     {
-        yield return _instanceNetwork.ConnectTcpServer("127.0.0.1", 8051);
-        yield return _instanceNetwork.Start();
+        await _instanceNetwork.ConnectTcpServer("192.168.5.2", 8051);
     }
 }
