@@ -1,35 +1,34 @@
-﻿using NetworkCore.NetworkMessage.old;
-using NetworkCore.Packets;
+﻿/*using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace NetworkCore.NetworkMessage
+namespace NetworkCore.NetworkMessage.old
 {
-    public class Packet
+    public class PacketBase
     {
         public Type PacketType { get; }
         private List<PacketField> Fields = new List<PacketField>();
 
-        public Packet(Type packetType)
+        public PacketBase(Type packetType)
         {
             PacketType = packetType;
         }
 
-        public Packet(Packet packet)
+        public PacketBase(PacketBase packet)
         {
             PacketType = packet.PacketType;
             Fields = new List<PacketField>();
-            
-            foreach(PacketField field in packet.Fields)
+
+            foreach (PacketField field in packet.Fields)
             {
                 Fields.Add(field);
             }
         }
 
-        public Packet(byte[] data)
+        public PacketBase(byte[] data)
         {
             using (MemoryStream stream = new MemoryStream(data))
             using (BinaryReader reader = new BinaryReader(stream))
@@ -48,7 +47,7 @@ namespace NetworkCore.NetworkMessage
                 }
 
             }
-            
+
         }
 
         public byte[] SerializePacket()
@@ -67,12 +66,12 @@ namespace NetworkCore.NetworkMessage
 
                     foreach (var field in Fields)
                     {
-                        totalSize += sizeof(int); 
+                        totalSize += sizeof(int);
                         totalSize += field.CalculateTotalSize();
                     }
 
                     writer.Write(totalSize);
-                 
+
                     writer.Write(serializedType.Length);
                     writer.Write(serializedType);
 
@@ -110,7 +109,7 @@ namespace NetworkCore.NetworkMessage
                 buffer = SerializeString(Convert.ToString(value));
 
             if (buffer != null)
-                Fields.Add(new PacketField (SerializeType(typeof(T)), SerializeString(fieldName), buffer ));
+                Fields.Add(new PacketField(SerializeType(typeof(T)), SerializeString(fieldName), buffer));
 
         }
 
@@ -158,7 +157,7 @@ namespace NetworkCore.NetworkMessage
             }
             catch (Exception)
             {
-                result = default(T);
+                result = default;
                 return false;
             }
         }
@@ -201,3 +200,4 @@ namespace NetworkCore.NetworkMessage
         }
     }
 }
+*/

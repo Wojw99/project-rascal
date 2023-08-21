@@ -42,7 +42,7 @@ namespace ServerApplication.GameService.Base
             }
         }
 
-        public async Task SendPacketToConnectedPlayers(Guid senderPeerId, Packet packet)
+        public async Task SendPacketToConnectedPlayers(Guid senderPeerId, PacketBase packet)
         {
             foreach (var receiver in ConnectedPlayers)
             {

@@ -1,11 +1,11 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text;
-using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 
 namespace NetworkCore.Packets
 {
-    public class PingRequestPacket : Packet
+    public class PingRequestPacket : PacketBase
     {
         public PingRequestPacket() : base(typeof(PingRequestPacket)) {}
 
@@ -17,3 +17,4 @@ namespace NetworkCore.Packets
         }
     }
 }
+*/

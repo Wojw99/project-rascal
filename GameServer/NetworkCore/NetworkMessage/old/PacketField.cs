@@ -1,21 +1,20 @@
-﻿using NetworkCore.NetworkMessage.old;
-using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
 
-namespace NetworkCore.NetworkMessage
+namespace NetworkCore.NetworkMessage.old
 {
     public struct PacketField
     {
-        public byte [] FieldType { get; set; }
+        public byte[] FieldType { get; set; }
 
-        public byte [] Name { get; set; }
+        public byte[] Name { get; set; }
 
-        public byte [] Buffer { get; set; }
+        public byte[] Buffer { get; set; }
 
-        public byte FieldTypeLength {  get; set; }
+        public byte FieldTypeLength { get; set; }
 
         public byte NameLength { get; set; }
 
@@ -72,10 +71,11 @@ namespace NetworkCore.NetworkMessage
         public int CalculateTotalSize()
         {
             // Including serialization lengths and sizes of length values (2 * sizeof(byte)), and for buffer length sizeof(int).
-            return FieldType.Length + Name.Length + Buffer.Length + (sizeof(byte) * 2) + sizeof(int);
+            return FieldType.Length + Name.Length + Buffer.Length + sizeof(byte) * 2 + sizeof(int);
         }
 
 
 
     }
 }
+*/

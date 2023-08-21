@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -99,6 +98,6 @@ namespace NetworkCore.NetworkCommunication
 
         protected abstract Task OnClientDisconnect(IPeer clientPeer);
 
-        public override abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
+        public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

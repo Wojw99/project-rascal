@@ -1,7 +1,6 @@
 ﻿using NetworkCore.NetworkCommunication;
-using NetworkCore.NetworkMessage;
 using ServerApplication.GameService.Base;
-
+using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
@@ -52,9 +51,9 @@ namespace ServerApplication.GameService
             _World = new World();
         }
 
-        public override async Task OnPacketReceived(IPeer peer, Packet packet)
+        public override async Task OnPacketReceived(IPeer peer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {peer.Id}");
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
             await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
 
             // Check is received connection registered into PlayerConnection
@@ -62,10 +61,8 @@ namespace ServerApplication.GameService
             // by now (in OnNewConnection method). So by now we dont need that especially.
             if (peer is PlayerConnection playerConn)
             {
-                if(packet.PacketType == typeof(CharacterLoadRequestPacket))
+                if (packet is CharacterLoadRequestPacket request)
                 {
-                    CharacterLoadRequestPacket request = new CharacterLoadRequestPacket(packet);
-                    
                     // check is token correct
                     if (request.AuthToken == "gracz")
                     {
@@ -75,14 +72,16 @@ namespace ServerApplication.GameService
                         // load player object by username
                         playerConn.LoadCharacterFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
 
+                        await playerConn.CharacterObj.Show();
+
                         // send response with player object
-                        await playerConn.SendPacket(new CharacterLoadResponsePacket(true, playerConn.CharacterObj));
+                          await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
                         
                     }
                     else
                     {
-                        // send response with succes = false
-                        await playerConn.SendPacket(new CharacterLoadResponsePacket(false));
+                        // CharacterLoadResponsePacket Succes is false by default.
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket());
 
                         //disconnet Connection
                         await playerConn.Disconnect();
@@ -90,10 +89,8 @@ namespace ServerApplication.GameService
                 }
 
                 // we can add Player to player collection only if client load his player succesfully
-                if(packet.PacketType == typeof(CharacterLoadSuccesPacket))
+                else if (packet is CharacterLoadSuccesPacket loadSuccesStatus)
                 {
-                    CharacterLoadSuccesPacket loadSuccesStatus = new CharacterLoadSuccesPacket(packet);
-
                     if (loadSuccesStatus.Succes == true)
                     {
                         await _World.AddNewPlayer(playerConn);
@@ -101,18 +98,17 @@ namespace ServerApplication.GameService
                     }
                 }
 
-                if (packet.PacketType == typeof(CharacterStatePacket) )
+                else if (packet is CharacterStatePacket statePacket)
                 {
-                    // We are run static method for that. We can load other packets in the same way.
+                    // We run static method for that. We can load other packets in the same way.
                     // But by now I will write most of packets in OnPacketReceived
-                    await PlayerFunction.OnCharacterStateChanged(playerConn, new CharacterStatePacket(packet));
+                    await PlayerFunction.OnCharacterStateChanged(playerConn, statePacket);
                 }
 
-                if(packet.PacketType == typeof(ClientDisconnectPacket))
+                else if (packet is ClientDisconnectPacket clientDisconnect)
                 {
                     await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {playerConn.PeerSocket.RemoteEndPoint}. ");
 
-                    ClientDisconnectPacket clientDisconnect = new ClientDisconnectPacket(packet);
                     
                     if(clientDisconnect.AuthToken == "gracz") // we need that to check?
                     {

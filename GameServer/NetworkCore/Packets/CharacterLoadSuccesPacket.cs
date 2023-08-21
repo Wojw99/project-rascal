@@ -7,16 +7,17 @@ using System.Text;
 namespace NetworkCore.Packets
 {
     // Packet with Succes operation flag of loading character on client-side.
-    public class CharacterLoadSuccesPacket : Packet
+    public class CharacterLoadSuccesPacket : PacketBase
     {
-        public bool Succes { get { return Read<int>("Succes") == 1; } } // 1 - true
+        [Serialization(Type: SerializationType.type_bool)]
+        public bool Succes { get; private set; } 
 
-        public CharacterLoadSuccesPacket(bool succes) : base(typeof(CharacterLoadSuccesPacket))
+        public CharacterLoadSuccesPacket(bool succes) : base(PacketType.CHARACTER_LOAD_SUCCES)
         {
-            Write<int>("Succes", succes ? 1 : 0);
+            Succes = succes;
         }
 
-        public CharacterLoadSuccesPacket(Packet packet) : base(packet) { }
+        //public CharacterLoadSuccesPacket(PacketBase packet) : base(packet) { }
 
         public CharacterLoadSuccesPacket(byte[] data) : base(data) { }
 

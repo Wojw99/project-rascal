@@ -1,11 +1,11 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text;
-using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkMessage.old;
 
 namespace NetworkCore.Packets
 {
-    public class PlayerLoginPacket : Packet
+    public class PlayerLoginPacket : PacketBase
     {
         public string Username { get { return Read<string>("Username"); } }
         public uint Key { get { return Read<uint>("Key"); } }
@@ -27,3 +27,4 @@ namespace NetworkCore.Packets
 
     }
 }
+*/

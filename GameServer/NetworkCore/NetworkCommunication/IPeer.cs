@@ -24,7 +24,7 @@ public interface IPeer
 
     Task Disconnect();
 
-    Task SendPacket(Packet packet);
+    Task SendPacket(PacketBase packet);
 
     //void StartReceive();
 }

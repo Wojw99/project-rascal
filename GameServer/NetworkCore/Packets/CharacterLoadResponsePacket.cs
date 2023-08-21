@@ -1,57 +1,92 @@
-﻿using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkData;
+﻿using NetworkCore.NetworkData;
 
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using NetworkCore.NetworkMessage.old;
+using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkData.stare;
 
 namespace NetworkCore.Packets
 {
     // This is response packet for CharacterLoadRequestPacket. We storing here succes flag of operation,
     // and also Character object, which is the current state of Player.
     // It is important to initialize this packet with data from the database.
-    public class CharacterLoadResponsePacket : Packet
+    // We are setting success flag to false by default
+    public class CharacterLoadResponsePacket : PacketBase
     {
-        public bool Succes { get { return Read<int>("Succes") == 1; } } // 1 - true
+        [Serialization(Type: SerializationType.type_bool)]
+        public bool Success { get; private set; } // 1 - true
 
-        // We can store "Player" class object, because in this packet we want to receive all Player data (All Player State).
-        public Character CharacterObj { 
-            get { 
-                if(Succes)
-                {
-                   return new Character(Read<int>("VId"), Read<string>("Name"), Read<int>("Health"), Read<int>("Mana"), Read<float>("PositionX"),
-                        Read<float>("PositionY"), Read<float>("PositionZ"), Read<float>("Rotation"));
-                }
-                throw new ArgumentException("Cannot create CharacterObj in CharacterLoadResponsePacket, while succes status is false. ");
-            } }
+        [Serialization(Type: SerializationType.type_Int32)]
+        public int CharacterVId { get; private set; }
 
-        public CharacterLoadResponsePacket(bool succes) : base(typeof(CharacterLoadResponsePacket))
+        [Serialization(Type: SerializationType.type_string)]
+        public string Name { get; set; }
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public int Health { get; set; }
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public int Mana { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float PosX { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float PosY { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float PosZ { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float Rot { get; set; }
+
+        public Character GetCharacter()
         {
-            Write<int>("Succes", succes ? 1 : 0);
+            return new Character(CharacterVId, Name, Health, Mana, PosX, PosY, PosZ, Rot);
         }
 
-        public CharacterLoadResponsePacket(bool succes, Character player) : base(typeof(CharacterLoadResponsePacket))
+
+        public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE)
         {
-            Write<int>("Succes", succes ? 1 : 0);
-            Write("VId", player.Vid);
-            Write("Name", player.Name);
-            Write("Health", player.Health);
-            Write("Mana", player.Mana);
-            Write("PositionX", player.PositionX);
-            Write("PositionY", player.PositionY);
-            Write("PositionZ",player.PositionZ);
-            Write("Rotation",player.Rotation);
+            Success = true;
+            CharacterVId = characterObj.Vid;
+            Name = characterObj.Name;
+            Health = characterObj.Health;
+            Mana = characterObj.Mana;
+            PosX = characterObj.PositionX;
+            PosY = characterObj.PositionY;
+            PosZ = characterObj.PositionZ;
+            Rot = characterObj.Rotation;
         }
 
+        public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE)
+        {
+            Success = false;
+            CharacterVId = -1;
+            Name = string.Empty;
+            Health = -1;
+            Mana = -1;
+            PosX = -1;
+            PosY = -1;
+            PosZ = -1;
+            Rot = -1;
+        }
 
-        public CharacterLoadResponsePacket(Packet packet) : base(packet) { }
+        public CharacterLoadResponsePacket(byte[] data) : base(data)
+        {
 
-        public CharacterLoadResponsePacket(byte[] data) : base(data) { }
+        }
 
         public override string ToString()
         {
-            return "";
+            // Include Success field in the ToString() representation.
+            return base.ToString() + $", Success = {Success}";
         }
+
+        // We can store "Player" class object, because in this packet we want to receive all Player data (All Player State).
+
     }
 }

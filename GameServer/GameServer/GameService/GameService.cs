@@ -34,7 +34,7 @@ namespace ServerApplication.Game
             gameServer.Start();*/
 
 
-            TestServer server = new TestServer(true, 120, "192.168.5.6",
+            TestServer server = new TestServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(50), 8051);
 
             await server.StartListen(); 

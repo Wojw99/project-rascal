@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.IO;
+using NetworkCore.NetworkMessage.old;
 
 namespace NetworkCore.NetworkCommunication
 {
@@ -30,7 +32,7 @@ namespace NetworkCore.NetworkCommunication
         public UInt32 InPacketCounter { get; private set; } = 0;
         public UInt32 OutPacketCounter { get; private set; } = 0;
 
-        public abstract Task OnPacketReceived(IPeer clientPeer, Packet packet);
+        public abstract Task OnPacketReceived(IPeer Peer, PacketBase packet);
 
         protected NetworkBase()
         {
@@ -55,9 +57,9 @@ namespace NetworkCore.NetworkCommunication
         }
         public async Task SendOutgoingPacket(OwnedPacket receiver)
         {
-            byte[] dataToSend = receiver.PeerPacket.SerializePacket();
+            byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
-            await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.PacketType} from peer with Guid: {receiver.Peer.Id}");
+            await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }
 
         // "InBackground" mean that this method run packet processing methods on separate tasks.

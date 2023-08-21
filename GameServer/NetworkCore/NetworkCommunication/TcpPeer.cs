@@ -64,7 +64,7 @@ namespace NetworkCore.NetworkCommunication
             await Console.Out.WriteLineAsync("Connection closed.");
         }
 
-        public async Task SendPacket(Packet packet)
+        public async Task SendPacket(PacketBase packet)
         {
             if(IsConnected)
             {
@@ -78,6 +78,9 @@ namespace NetworkCore.NetworkCommunication
         {
             while (NetworkRef.IsRunning)
             {
+                // On first 4 bytes we storing size of all serialized data in packet.
+                // So by first we receive packet size to know what amount of bytes to read,
+                // and transform binary data into correct packet.
                 byte[] PacketSizeByte = new byte[sizeof(int)];
                 int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
 
@@ -107,11 +110,49 @@ namespace NetworkCore.NetworkCommunication
 
                 byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
 
-                Packet packet = new Packet(combinedData);
-                await AddToIncomingPacketQueue(packet);
+                // Packet Type is on 5 field of array (check PacketBase class for serializing)
+                PacketType receivedPacketType = (PacketType)combinedData[4];
+
+                PacketBase recognizedPacket = LoadPacket(receivedPacketType, combinedData);
+                await AddToIncomingPacketQueue(recognizedPacket);
             }
         }
-        private async Task AddToIncomingPacketQueue(Packet packet)
+
+        private PacketBase LoadPacket(PacketType packetType, byte[] receivedData)
+        {
+            switch (packetType)
+            {
+                //case PacketType.LOGIN_REQUEST:
+                //    break;
+
+                //case PacketType.LOGIN_RESPONSE:
+                //    break;
+
+                case PacketType.CHARACTER_LOAD_REQUEST:
+                    return new CharacterLoadRequestPacket(receivedData);
+
+                case PacketType.CHARACTER_LOAD_RESPONSE:
+                    return new CharacterLoadResponsePacket(receivedData);
+
+                case PacketType.CHARACTER_LOAD_SUCCES:
+
+                    return new CharacterLoadSuccesPacket(receivedData);
+
+                case PacketType.CHARACTER_STATE_PACKET:
+                    return new CharacterStatePacket(receivedData);
+
+                case PacketType.CHARACTER_MOVE_PACKET:
+                    return new CharacterMovePacket(receivedData);
+
+                case PacketType.CLIENT_DISCONNECT:
+                    return new ClientDisconnectPacket(receivedData);
+
+                default:
+                    throw new ArgumentException("Uknown packet type");
+            }
+        }
+
+        private async Task AddToIncomingPacketQueue(PacketBase packet)
         {
             lock (this)
             {
@@ -119,7 +160,7 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        private async Task AddToOutgoingPacketQueue(Packet packet)
+        private async Task AddToOutgoingPacketQueue(PacketBase packet)
         {
             NetworkRef.qPacketsOut.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
         }

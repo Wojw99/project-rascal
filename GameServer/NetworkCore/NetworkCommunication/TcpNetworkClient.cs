@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -39,6 +38,6 @@ namespace NetworkCore.NetworkCommunication
         //public override abstract Task<bool> OnServerConnect(IPeer serverPeer);
         public abstract Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType);
         public abstract Task OnServerDisconnect(IPeer serverPeer);
-        public override abstract Task OnPacketReceived(IPeer serverPeer, Packet packet);
+        public override abstract Task OnPacketReceived(IPeer serverPeer, PacketBase packet);
     }
 }

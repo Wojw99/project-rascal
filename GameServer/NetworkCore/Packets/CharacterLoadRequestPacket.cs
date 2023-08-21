@@ -9,7 +9,7 @@ namespace NetworkCore.Packets
     // is player token good. Note that first token set is on auth-server side, so
     // we must check token in game-server. In the future we will sending character
     // id also. (or character slot number, which choose client.)
-    public class CharacterLoadRequestPacket : Packet
+    public class CharacterLoadRequestPacket : PacketBase
     {
         //public int VId { get { return Read<int>("VId"); } }
 
@@ -17,15 +17,15 @@ namespace NetworkCore.Packets
         {
             Write("VId", VId);
         }*/
+        [Serialization(Type: SerializationType.type_string)]
+        public string AuthToken { get; private set; } = string.Empty;
 
-        public string AuthToken { get { return Read<string>("AuthToken"); } }
-
-        public CharacterLoadRequestPacket(string authToken) : base(typeof(CharacterLoadRequestPacket))
+        public CharacterLoadRequestPacket(string authToken) : base(PacketType.CHARACTER_LOAD_REQUEST)
         {
-            Write("AuthToken", authToken);
+            AuthToken = authToken;
         }
 
-        public CharacterLoadRequestPacket(Packet packet) : base(packet) { } // packet is PlayerLoadRequestPacket - trzeba dodac
+        //public CharacterLoadRequestPacket(PacketBase packet) : base(packet) { } // packet is PlayerLoadRequestPacket - trzeba dodac
 
         public CharacterLoadRequestPacket(byte[] data) : base(data) { }
 

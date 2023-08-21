@@ -21,7 +21,7 @@ namespace Client
             {
                 try
                 {
-                    await client.ConnectTcpServer("192.168.5.6", 8051);
+                    await client.ConnectTcpServer("127.0.0.1", 8051);
 
 
                     while (true)

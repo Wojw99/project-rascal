@@ -14,7 +14,7 @@ namespace ServerApplication.GameService
         {
             // Changing only position in the Player Object. Here we are sure that PlayerMovePacket
             // must store non-null values.
-            if(movePacket.CharacterVid == playerConn.CharacterObj.Vid) // always check is Id correct.
+            if(movePacket.CharacterVId == playerConn.CharacterObj.Vid) // always check is Id correct.
             {
                 playerConn.CharacterObj.PositionX = movePacket.PosX;
                 playerConn.CharacterObj.PositionY = movePacket.PosY;

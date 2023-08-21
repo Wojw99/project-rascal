@@ -8,6 +8,6 @@ namespace NetworkCore.NetworkMessage
     public struct OwnedPacket
     {
         public IPeer Peer; // storing the reference to Peer
-        public Packet PeerPacket; 
+        public PacketBase PeerPacket; 
     }
 }

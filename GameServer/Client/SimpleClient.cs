@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkMessage.old;
 using NetworkCore.Packets;
 
 // authorization
@@ -75,18 +74,17 @@ namespace Client
             ClientPlayer = new Character();
         }
 
-        public override async Task OnPacketReceived(IPeer serverPeer, Packet packet)
+        public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.PacketType} from peer with Guid: {serverPeer.Id}");
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
 
-            if(packet.PacketType == typeof(CharacterLoadResponsePacket))
+            
+            if (packet is CharacterLoadResponsePacket response)
             {
-                CharacterLoadResponsePacket response = new CharacterLoadResponsePacket(packet);
-
-                if(response.Succes == true)
+                if (response.Success == true)
                 {
                     // set over ClientPlayer - Player class object
-                    ClientPlayer = response.CharacterObj;
+                    ClientPlayer = response.GetCharacter();
                     ClientPlayerObjectSpecified.SetResult(true);
                     // if all goes okey, then send Succes packet with 'true' parameter
                     await serverPeer.SendPacket(new CharacterLoadSuccesPacket(true));
@@ -97,12 +95,15 @@ namespace Client
                     await serverPeer.Disconnect();
                 }
             }
+            
 
             // Note that this is packet from server, but with state of other player.
-            if (packet.PacketType == typeof(CharacterStatePacket))
+
+            if (packet is CharacterStatePacket statePacket)
             {
-                await PlayersCollection.OnCharacterStateReceived(new CharacterStatePacket(packet));
+                await PlayersCollection.OnCharacterStateReceived(statePacket);
             }
+            
         }
 
         public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
