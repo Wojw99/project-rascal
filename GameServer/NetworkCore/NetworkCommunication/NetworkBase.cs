@@ -14,9 +14,9 @@ namespace NetworkCore.NetworkCommunication
 {
     public abstract class NetworkBase
     {
-        private readonly object IncomingLock = new object();
+        //private readonly object IncomingLock = new object();
 
-        private readonly object OutgoingLock = new object();
+        //private readonly object OutgoingLock = new object();
         public ConcurrentQueue<OwnedPacket> qPacketsIn { get; set; } = new ConcurrentQueue<OwnedPacket>();
 
         public ConcurrentQueue<OwnedPacket> qPacketsOut { get; set; } = new ConcurrentQueue<OwnedPacket>();
@@ -71,7 +71,6 @@ namespace NetworkCore.NetworkCommunication
 
         private protected async Task ProcessIncomingPackets()
         {
-
             while (IsRunning)
             {
                 
@@ -79,16 +78,14 @@ namespace NetworkCore.NetworkCommunication
 
                 while (packetCount < MaxIncomingPacketCount && !qPacketsIn.IsEmpty)
                 {
-                    lock(IncomingLock)
+                    if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        if (qPacketsIn.TryDequeue(out var ownedPacket))
-                        {
-                            OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
-                            InPacketCounter++;
-                            packetCount++;
-                        }
+                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
+                        packetCount++;
                     }
                 }
+
+                InPacketCounter += packetCount;
 
 
                 await Task.Delay(PacketProcessInterval);
@@ -99,18 +96,18 @@ namespace NetworkCore.NetworkCommunication
         {
             while (IsRunning)
             {
-                while (!qPacketsOut.IsEmpty)
+                UInt32 packetCount = 0;
+
+                while (packetCount < MaxOutgoingPacketCount && !qPacketsOut.IsEmpty)
                 {
-                    lock (OutgoingLock)
+                    if (qPacketsOut.TryDequeue(out OwnedPacket outgoingPacket))
                     {
-                        if (qPacketsOut.TryDequeue(out OwnedPacket outgoingPacket))
-                        {
-                            SendOutgoingPacket(outgoingPacket); // Przykładowa metoda wysyłająca wychodzące pakiety
-                            OutPacketCounter++;
-                        }
+                        await SendOutgoingPacket(outgoingPacket);
+                        packetCount++;
                     }
-                    
                 }
+
+                OutPacketCounter += packetCount;
 
                 await Task.Delay(PacketProcessInterval);
                

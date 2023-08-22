@@ -17,8 +17,6 @@ namespace NetworkCore.Packets
             Succes = succes;
         }
 
-        //public CharacterLoadSuccesPacket(PacketBase packet) : base(packet) { }
-
         public CharacterLoadSuccesPacket(byte[] data) : base(data) { }
 
         public override string ToString()

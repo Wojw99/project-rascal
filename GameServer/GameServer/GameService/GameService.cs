@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NetworkCore.NetworkCommunication;
 using ServerApplication.GameService;
 using NetworkCore.Packets;
+using NetworkCore.NetworkUtility;
 
 namespace ServerApplication.Game
 {
@@ -34,19 +35,33 @@ namespace ServerApplication.Game
             gameServer.Start();*/
 
 
-            TestServer server = new TestServer(true, 120, "127.0.0.1",
+            TestServer Server = new TestServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(50), 8051);
 
-            await server.StartListen(); 
-            await server.RunPacketProcessingInBackground();
+            ServerMonitor Monitor = new ServerMonitor(Server);
 
-            while(true)
+            await Server.StartListen(); 
+            await Server.RunPacketProcessingInBackground();
+
+            /*while (Server.IsRunning)
             {
-                Thread.Sleep(1000);
+                var begin = current_time();
+                Server.
+                receive_from_clients(); // poll, accept, receive, decode, validate
+                update(); // AI, simulate
+                send_updates_clients();
+                var elapsed = current_time() - begin;
+                if (elapsed < tick)
+                {
+                    sleep(tick - elapsed);
+                }
+            }*/
+
+
+            while (true)
+            {
+                await Task.Delay(2000);
             }
-
-
-
         }
     }
 }

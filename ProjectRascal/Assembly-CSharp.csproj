@@ -71,6 +71,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Code\Scripts\SceneLoadWizard.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\VisibleCharacterCollection.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Code\Scripts\UIWizard.cs" />
@@ -92,7 +93,6 @@
     <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
     <Compile Include="Assets\Code\Scripts\PacketFunction.cs" />
     <Compile Include="Assets\Code\Scripts\Writing.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\VisibleCharacterCollection.cs" />
     <Compile Include="Assets\Code\Scripts\GameCharacter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
@@ -132,7 +132,6 @@
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\Code\Scripts\NetClient\NetworkCore.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\PolygonNature\Shaders\SyntyStudios_LOD.shader" />
@@ -916,6 +915,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Code\Scripts\NetClient\NetworkCore.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
