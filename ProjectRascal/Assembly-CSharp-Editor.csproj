@@ -324,7 +324,7 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="NetworkCore">
-      <HintPath>Assets\Code\Scripts\NetClient\NetworkCore.dll</HintPath>
+      <HintPath>Assets\Code\Scripts\NetworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>

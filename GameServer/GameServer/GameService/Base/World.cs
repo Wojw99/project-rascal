@@ -37,7 +37,7 @@ namespace ServerApplication.GameService.Base
             {
                 if(receiver.Key != senderPeer.Id)
                 {
-                    await receiver.Value.SendPacket(packet);
+                    receiver.Value.SendPacket(packet);
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace ServerApplication.GameService.Base
             {
                 if (receiver.Key != senderPeerId)
                 {
-                    await receiver.Value.SendPacket(packet);
+                    receiver.Value.SendPacket(packet);
                 }
             }
         }

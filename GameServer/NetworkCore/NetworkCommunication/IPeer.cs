@@ -18,13 +18,11 @@ public interface IPeer
 
     Socket PeerSocket { get; }
 
-    Task ConnectToServer();
+    void Connect();
 
-    Task ConnectToClient();
+    void Disconnect();
 
-    Task Disconnect();
-
-    Task SendPacket(PacketBase packet);
+    void SendPacket(PacketBase packet);
 
     //void StartReceive();
 }

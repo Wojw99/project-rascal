@@ -49,7 +49,7 @@ namespace NetworkCore.Packets
         }
 
 
-        public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE)
+        public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
             Success = true;
             CharacterVId = characterObj.Vid;
@@ -62,7 +62,7 @@ namespace NetworkCore.Packets
             Rot = characterObj.Rotation;
         }
 
-        public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE)
+        public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
             Success = false;
             CharacterVId = -1;

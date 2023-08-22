@@ -10,7 +10,9 @@ namespace NetworkCore.NetworkMessage
     {
         public PacketType TypeId { get; set; }
 
-        public PacketBase(PacketType typeId) { this.TypeId = typeId; }
+        public bool IsResponse { get; set; }
+
+        public PacketBase(PacketType typeId, bool isResponse) { TypeId = typeId; IsResponse = isResponse; }
 
         public PacketBase(byte[] data)
         {
@@ -19,6 +21,7 @@ namespace NetworkCore.NetworkMessage
             {
                 int totalSize = reader.ReadInt32();
                 TypeId = (PacketType)reader.ReadByte();
+                IsResponse = reader.ReadBoolean();
 
                 foreach (var property in GetType().GetProperties())
                 {
@@ -85,6 +88,7 @@ namespace NetworkCore.NetworkMessage
                 {
                     writer.Write(CalculateTotalSize()); // int32
                     writer.Write((byte)TypeId);
+                    writer.Write(IsResponse);
 
                     foreach (var property in GetType().GetProperties())
                     {
@@ -155,6 +159,7 @@ namespace NetworkCore.NetworkMessage
         {
             int totalSize = sizeof(byte); // TypeId
             totalSize += sizeof(int);
+            totalSize += sizeof(bool); // IsResponse
 
             foreach (var property in GetType().GetProperties())
             {

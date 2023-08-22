@@ -38,45 +38,56 @@ namespace NetworkCore.NetworkCommunication
             OwnerType = ownerType;
         }
 
-        public async Task ConnectToServer()
+        public void StartRead()
         {
-            if(OwnerType == Owner.client)
+            if(IsConnected == true)
             {
-                IsConnected = true;
-                await Console.Out.WriteLineAsync("Connection approved.");
                 Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
         }
 
-        public async Task ConnectToClient()
+/*        public async Task ConnectToClient()
         {
-            if(OwnerType == Owner.server)
+            if(IsConnected == false)
+            {
+                if(OwnerType == Owner.server)
+                {
+                    IsConnected = true;
+                    await Console.Out.WriteLineAsync("Connection approved.");
+                    Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
+                }
+            }
+        }*/
+
+        public void Connect()
+        {
+            if(!IsConnected)
             {
                 IsConnected = true;
-                await Console.Out.WriteLineAsync("Connection approved.");
-                Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
             }
+            //await Console.Out.WriteLineAsync("Connection open.");
         }
 
-        public async Task Disconnect()
-        {
-            IsConnected = false;
-            await Console.Out.WriteLineAsync("Connection closed.");
-        }
-
-        public async Task SendPacket(PacketBase packet)
+        public void Disconnect()
         {
             if(IsConnected)
             {
-                //NetworkRef.Watch.Start();
-                await AddToOutgoingPacketQueue(packet);
+                IsConnected = false;
             }
-            // LOGGER: Console.WriteLine($"[SEND] Packet with type: {packet._type} was sent to peer with Guid: {this.Id}");
+            //await Console.Out.WriteLineAsync("Connection closed.");
+        }
+
+        public void SendPacket(PacketBase packet)
+        {
+            if(IsConnected)
+            {
+                NetworkRef.AddToOutgoingPacketQueue(this, packet);
+            }
         }
 
         private async Task ReadIncomingData()
         {
-            while (NetworkRef.IsRunning)
+            while (IsConnected)
             {
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
@@ -121,7 +132,7 @@ namespace NetworkCore.NetworkCommunication
                     PacketBase recognizedPacket = LoadPacket(receivedPacketType, combinedData);
 
                     // Assign complete packet to queue (complete mean to create derivative from base).
-                    await AddToIncomingPacketQueue(recognizedPacket);
+                    NetworkRef.AddToIncomingPacketQueue(this, recognizedPacket);
                 }
             }
         }
@@ -210,19 +221,6 @@ namespace NetworkCore.NetworkCommunication
                 default:
                     throw new ArgumentException("Uknown packet type");
             }
-        }
-
-        private async Task AddToIncomingPacketQueue(PacketBase packet)
-        {
-            lock (this)
-            {
-                NetworkRef.qPacketsIn.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
-            }
-        }
-
-        private async Task AddToOutgoingPacketQueue(PacketBase packet)
-        {
-            NetworkRef.qPacketsOut.Enqueue(new OwnedPacket { Peer = this, PeerPacket = packet });
         }
     }
 }

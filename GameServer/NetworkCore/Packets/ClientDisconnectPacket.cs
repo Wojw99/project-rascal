@@ -12,7 +12,7 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_string)]
         public string AuthToken { get; } = string.Empty;
 
-        public ClientDisconnectPacket(string authToken) : base(PacketType.CLIENT_DISCONNECT)
+        public ClientDisconnectPacket(string authToken) : base(PacketType.CLIENT_DISCONNECT, false)
         {
             AuthToken = authToken;
         }

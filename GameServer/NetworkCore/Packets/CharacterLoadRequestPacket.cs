@@ -20,7 +20,7 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_string)]
         public string AuthToken { get; private set; } = string.Empty;
 
-        public CharacterLoadRequestPacket(string authToken) : base(PacketType.CHARACTER_LOAD_REQUEST)
+        public CharacterLoadRequestPacket(string authToken) : base(PacketType.CHARACTER_LOAD_REQUEST, false)
         {
             AuthToken = authToken;
         }

@@ -65,12 +65,12 @@ namespace NetworkCore.Packets
         } */
 
         // Be 100% sure this is the correct unique identificator of player.
-        public CharacterStatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_PACKET)
+        public CharacterStatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_PACKET, false)
         {
             CharacterVId = characterVId;
         }
 
-        public CharacterStatePacket(Character player) : base(PacketType.CHARACTER_STATE_PACKET)
+        public CharacterStatePacket(Character player) : base(PacketType.CHARACTER_STATE_PACKET, false)
         {
             CharacterVId = player.Vid;
             Name = player.Name;

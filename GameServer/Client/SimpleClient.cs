@@ -26,8 +26,11 @@ namespace Client
         private Character ClientPlayer;
         private TcpPeer? ServerPeer;
 
+        //TaskCompletionSource<bool> ResponseReceived;
+
+
         // only for test purposes - to not start main thread loop before Player object doesnt loaded from server
-        TaskCompletionSource<bool> ClientPlayerObjectSpecified;
+
         public TcpPeer? GetServerPeer
         {
             get
@@ -62,13 +65,13 @@ namespace Client
             PlayersCollection = new VisibleCharactersCollection();
             ServerPeer = null;
             ClientPlayer = new Character();
-            ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
+            //ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
         }
 
         public SimpleClient(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
             : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) 
         {
-            ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
+            //ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
             PlayersCollection = new VisibleCharactersCollection();
             ServerPeer = null;
             ClientPlayer = new Character();
@@ -77,24 +80,7 @@ namespace Client
         public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
-
-            
-            if (packet is CharacterLoadResponsePacket response)
-            {
-                if (response.Success == true)
-                {
-                    // set over ClientPlayer - Player class object
-                    ClientPlayer = response.GetCharacter();
-                    ClientPlayerObjectSpecified.SetResult(true);
-                    // if all goes okey, then send Succes packet with 'true' parameter
-                    await serverPeer.SendPacket(new CharacterLoadSuccesPacket(true));
-
-                }
-                else
-                {
-                    await serverPeer.Disconnect();
-                }
-            }
+         
             
 
             // Note that this is packet from server, but with state of other player.
@@ -106,7 +92,7 @@ namespace Client
             
         }
 
-        public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
+        /*public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
         {
             await Console.Out.WriteLineAsync($"[NEW SERVER CONNECTION] received, with info: {ServerTcpSocket.RemoteEndPoint} ");
             ServerPeer = new TcpPeer(this, ServerTcpSocket, newConnectionId, ownerType);
@@ -116,19 +102,19 @@ namespace Client
 
             // send request to client Player object with values from database
             await ServerPeer.SendPacket(new CharacterLoadRequestPacket(TestAuthToken));
-        }
+        }*/
 
-        public override async Task OnServerDisconnect(IPeer serverPeer)
+        /*public override async Task OnServerDisconnect(IPeer serverPeer)
         {
             await Console.Out.WriteLineAsync($"[SERVER CONNECTION CLOSED], with info: {serverPeer.PeerSocket.RemoteEndPoint}. ");
-        }
+        }*/
 
         public async Task TestingOperationsTask() // run it in main program in while loop
         {
-            if(!ClientPlayerObjectSpecified.Task.IsCompleted)
-            {
-                return;
-            }
+            //if(!ClientPlayerObjectSpecified.Task.IsCompleted)
+            //{
+            //    return;
+            //}
 
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
@@ -159,43 +145,43 @@ namespace Client
                         await Console.Out.WriteLineAsync("Podaj nowe imię: ");
                         string newName = await Task.Run(() => Console.ReadLine());
                         ClientPlayer.Name = newName;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 2:
                     {
                         ClientPlayer.Health += 20;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 3:
                     {
                         ClientPlayer.Mana += 20;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 4:
                     {
                         ClientPlayer.PositionY += 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 5:
                     {
                         ClientPlayer.PositionX += 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 6:
                     {
                         ClientPlayer.PositionY -= 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 case 7:
                     {
                         ClientPlayer.PositionX -= 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
                         break;
                     }
                 default:

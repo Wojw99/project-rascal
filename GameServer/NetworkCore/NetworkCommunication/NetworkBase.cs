@@ -17,9 +17,16 @@ namespace NetworkCore.NetworkCommunication
         //private readonly object IncomingLock = new object();
 
         //private readonly object OutgoingLock = new object();
-        public ConcurrentQueue<OwnedPacket> qPacketsIn { get; set; } = new ConcurrentQueue<OwnedPacket>();
+        private ConcurrentQueue<OwnedPacket> qPacketsIn { get; set; } 
+            = new ConcurrentQueue<OwnedPacket>();
 
-        public ConcurrentQueue<OwnedPacket> qPacketsOut { get; set; } = new ConcurrentQueue<OwnedPacket>();
+        private ConcurrentQueue<OwnedPacket> qPacketsOut { get; set; } 
+            = new ConcurrentQueue<OwnedPacket>();
+
+        // If errors with that ResponsePackets dictionary - move it to TcpPeer class. The problem can
+        // be with adding to that dictionary packets with same keys and from another peers.
+        public ConcurrentDictionary<PacketType, OwnedPacket> ResponsePackets { get; set; } 
+            = new ConcurrentDictionary<PacketType, OwnedPacket>();
 
         public bool IsRunning { get; set; }
 
@@ -30,6 +37,7 @@ namespace NetworkCore.NetworkCommunication
         private TimeSpan PacketProcessInterval { get; set; }
 
         public UInt32 InPacketCounter { get; private set; } = 0;
+
         public UInt32 OutPacketCounter { get; private set; } = 0;
 
         public abstract Task OnPacketReceived(IPeer Peer, PacketBase packet);
@@ -55,7 +63,7 @@ namespace NetworkCore.NetworkCommunication
 
             // LOGGER : INITIALIZED NetworkBase with default values
         }
-        public async Task SendOutgoingPacket(OwnedPacket receiver)
+        private async Task SendOutgoingPacket(OwnedPacket receiver)
         {
             byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
@@ -80,7 +88,15 @@ namespace NetworkCore.NetworkCommunication
                 {
                     if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
+                        if(ownedPacket.PeerPacket.IsResponse)
+                        {
+                            ResponsePackets.TryAdd(ownedPacket.PeerPacket.TypeId, ownedPacket);
+                        }
+                        else
+                        {
+                            await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
+                        }
+
                         packetCount++;
                     }
                 }
@@ -112,6 +128,39 @@ namespace NetworkCore.NetworkCommunication
                 await Task.Delay(PacketProcessInterval);
                
             }
+        }
+
+        public void AddToIncomingPacketQueue(IPeer peer, PacketBase packet)
+        {
+            lock (this)
+            {
+                qPacketsIn.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
+            }
+        }
+
+        public void AddToOutgoingPacketQueue(IPeer peer, PacketBase packet)
+        {
+            lock (this)
+            {
+                qPacketsOut.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
+            }
+        }
+
+        public async Task<PacketBase> WaitForResponsePacket(TimeSpan interval, TimeSpan timeLimit, PacketType packetType)
+        {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+
+            while(timer.ElapsedMilliseconds < timeLimit.TotalMilliseconds)
+            {
+                if(ResponsePackets.TryRemove(packetType, out OwnedPacket packet))
+                {
+                    return packet.PeerPacket;
+                }
+
+                await Task.Delay(interval);
+            }
+            throw new TimeoutException("Timeout occured while trying to get response packet. ");
         }
     }
 }

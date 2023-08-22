@@ -14,91 +14,97 @@ using UnityEngine;
 
 namespace Assets.Code.Scripts.NetClient
 {
-    public class SimpleClient : TcpNetworkClient
+    public class ClientNetwork : TcpNetworkClient
     {
+        public static string publicServerIpAdress = "127.0.0.1";
+        public static int AuthServerPort = 8050;
+        public static int GameServerPort = 8051;
+
         string TestAuthToken = "gracz"; // in the future we have to create authorization service 
         // we have to store also other information in Token, like username, and by username we can receive data from Database to that client
 
-        private VisibleCharactersCollection PlayersCollection;
-        private Character ClientPlayer;
-        private TcpPeer? ServerPeer;
+        private VisibleCharacterCollection CharactersCollection;
+        private Character ClientCharacter;
+
+        public TcpPeer GameServerPeer;
+        public TcpPeer AuthServerPeer; 
 
         // only for test purposes - to not start main thread loop before Player object doesnt loaded from server
         TaskCompletionSource<bool> ClientPlayerObjectSpecified;
-        public TcpPeer? GetServerPeer
+
+        public 
+
+        private static ClientNetwork _Instance;
+
+        public static ClientNetwork Instance
         {
             get
             {
-                if (ServerPeer == null)
+                if (_Instance == null)
                 {
-                    throw new InvalidOperationException("ServerPeer must be initialized before accessing it.");
+                    return new ClientNetwork(100, 100, System.TimeSpan.FromMilliseconds(50));
                 }
-                return ServerPeer;
+
+                return _Instance;
             }
         }
 
-        //ConcurrentDictionary<Guid, TcpPeer> servers = new ConcurrentDictionary<Guid, TcpPeer>();
-
-        /*Dictionary<PacketType, PacketHandler> packetHandlers =
-                new Dictionary<PacketType, PacketHandler>()
-            {
-                { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
-                 PacketFunction.HandleGlobalPlayerPosition, PacketFunction.SendPlayerMovePacket) },
-
-                { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
-                PacketFunction.HandleGlobalPlayerPosition, PacketFunction.SendEnemyShootPacket) },
-
-                { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet,
-                PacketFunction.HandleGlobalPlayerPosition, PacketFunction.SendTestPacket) },
-            };
-
-        PacketHandlerManager packetHandlerManager = new PacketHandlerManager();*/
-
-        public SimpleClient() : base()
+        public void Awake()
         {
-            PlayersCollection = new VisibleCharactersCollection();
-            ServerPeer = null;
-            ClientPlayer = new Character();
-            ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
+            ConnectTcpServer(publicServerIpAdress, AuthServerPort);
+
         }
 
-        public SimpleClient(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
+        public void Update()
+        {
+            
+        }
+
+        public ClientNetwork(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
             : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval)
         {
             ClientPlayerObjectSpecified = new TaskCompletionSource<bool>();
-            PlayersCollection = new VisibleCharactersCollection();
-            ServerPeer = null;
-            ClientPlayer = new Character();
+            CharactersCollection = new VisibleCharacterCollection();
+            ClientCharacter = new Character();
         }
 
         public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
         {
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
-
-
-            if (packet is CharacterLoadResponsePacket response)
+            
+            if(serverPeer == GameServerPeer)
             {
-                if (response.Success == true)
+                if (packet is CharacterLoadResponsePacket response)
                 {
-                    // set over ClientPlayer - Player class object
-                    ClientPlayer = response.GetCharacter();
-                    ClientPlayerObjectSpecified.SetResult(true);
-                    // if all goes okey, then send Succes packet with 'true' parameter
-                    await serverPeer.SendPacket(new CharacterLoadSuccesPacket(true));
 
-                }
-                else
-                {
-                    await serverPeer.Disconnect();
+                    if (response.Success == true)
+                    {
+                        // set over ClientPlayer - Player class object
+                        ClientCharacter = response.GetCharacter();
+                        ClientPlayerObjectSpecified.SetResult(true);
+                        // if all goes okey, then send Succes packet with 'true' parameter
+                        await serverPeer.SendPacket(new CharacterLoadSuccesPacket(true));
+
+                    }
+                    else
+                    {
+                        await serverPeer.Disconnect();
+                    }
                 }
             }
+            else if(serverPeer == AuthServerPeer)
+            {
+
+            }
+
+            
 
 
             // Note that this is packet from server, but with state of other player.
 
             if (packet is CharacterStatePacket statePacket)
             {
-                await PlayersCollection.OnCharacterStateReceived(statePacket);
+                await CharactersCollection.OnCharacterStateReceived(statePacket);
             }
 
         }
@@ -106,6 +112,9 @@ namespace Assets.Code.Scripts.NetClient
         public override async Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType)
         {
             await Console.Out.WriteLineAsync($"[NEW SERVER CONNECTION] received, with info: {ServerTcpSocket.RemoteEndPoint} ");
+            
+            
+            
             ServerPeer = new TcpPeer(this, ServerTcpSocket, newConnectionId, ownerType);
 
             // therefore, wait for the data
@@ -129,7 +138,7 @@ namespace Assets.Code.Scripts.NetClient
 
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
-            await ClientPlayer.Show();
+            await ClientCharacter.Show();
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync("ZMIEN STAN SWOJEGO GRACZA");
             await Console.Out.WriteLineAsync("[1] Ustaw imie");
@@ -141,7 +150,7 @@ namespace Assets.Code.Scripts.NetClient
             await Console.Out.WriteLineAsync("[7] IDŹ W LEWO");
             //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
             await Console.Out.WriteLineAsync("---------------------------------------------");
-            await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {PlayersCollection.PlayerCount()}");
+            await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {CharactersCollection.PlayerCount()}");
             await Console.Out.WriteLineAsync("---------------------------------------------");
             await Console.Out.WriteLineAsync($"WYSLANYCH PAKIETOW = {this.OutPacketCounter}");
             await Console.Out.WriteLineAsync($"ODEBRANYCH PAKIETOW = {this.InPacketCounter}");
@@ -155,44 +164,44 @@ namespace Assets.Code.Scripts.NetClient
                     {
                         await Console.Out.WriteLineAsync("Podaj nowe imię: ");
                         string newName = await Task.Run(() => Console.ReadLine());
-                        ClientPlayer.Name = newName;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.Name = newName;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 2:
                     {
-                        ClientPlayer.Health += 20;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.Health += 20;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 3:
                     {
-                        ClientPlayer.Mana += 20;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.Mana += 20;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 4:
                     {
-                        ClientPlayer.PositionY += 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.PositionY += 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 5:
                     {
-                        ClientPlayer.PositionX += 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.PositionX += 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 6:
                     {
-                        ClientPlayer.PositionY -= 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.PositionY -= 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 case 7:
                     {
-                        ClientPlayer.PositionX -= 1;
-                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientPlayer));
+                        ClientCharacter.PositionX -= 1;
+                        await ServerPeer.SendPacket(new CharacterStatePacket(ClientCharacter));
                         break;
                     }
                 default:
@@ -201,7 +210,6 @@ namespace Assets.Code.Scripts.NetClient
                         break;
                     }
             }
-
         }
     }
 }

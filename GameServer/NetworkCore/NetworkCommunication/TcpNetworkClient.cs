@@ -16,7 +16,7 @@ namespace NetworkCore.NetworkCommunication
         public TcpNetworkClient (UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval) 
         : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval) { }
 
-        public async Task ConnectTcpServer(string serverIpAddress, int serverTcpPort)
+        public async Task <TcpPeer> CreateTcpServerConnection(string serverIpAddress, int serverTcpPort)
         {
             Socket ServerTcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             await Console.Out.WriteLineAsync("Trying to connect to server...");
@@ -25,8 +25,13 @@ namespace NetworkCore.NetworkCommunication
             if(ServerTcpSocket.Connected)
             {
                 IsRunning = true;
-                await RunPacketProcessingInBackground();
-                await OnNewConnection(ServerTcpSocket, Guid.NewGuid(), Owner.client);
+                return new TcpPeer(this, ServerTcpSocket, Guid.NewGuid(), Owner.client);
+                //await RunPacketProcessingInBackground();
+                //await OnNewConnection(ServerTcpSocket, Guid.NewGuid(), Owner.client);
+            }
+            else
+            {
+                throw new Exception($"Cannot connect to server, with IP: {serverIpAddress}, PORT: {serverTcpPort}");
             }
         }
 
@@ -36,8 +41,8 @@ namespace NetworkCore.NetworkCommunication
         }
 
         //public override abstract Task<bool> OnServerConnect(IPeer serverPeer);
-        public abstract Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType);
-        public abstract Task OnServerDisconnect(IPeer serverPeer);
+        //public abstract Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType);
+        //public abstract Task OnServerDisconnect(IPeer serverPeer);
         public override abstract Task OnPacketReceived(IPeer serverPeer, PacketBase packet);
     }
 }

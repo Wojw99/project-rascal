@@ -12,7 +12,7 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_bool)]
         public bool Succes { get; private set; } 
 
-        public CharacterLoadSuccesPacket(bool succes) : base(PacketType.CHARACTER_LOAD_SUCCES)
+        public CharacterLoadSuccesPacket(bool succes) : base(PacketType.CHARACTER_LOAD_SUCCES, false)
         {
             Succes = succes;
         }

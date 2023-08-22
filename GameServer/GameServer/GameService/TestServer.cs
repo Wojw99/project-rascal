@@ -75,16 +75,16 @@ namespace ServerApplication.GameService
                         await playerConn.CharacterObj.Show();
 
                         // send response with player object
-                          await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
+                        playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
                         
                     }
                     else
                     {
                         // CharacterLoadResponsePacket Succes is false by default.
-                        await playerConn.SendPacket(new CharacterLoadResponsePacket());
+                        playerConn.SendPacket(new CharacterLoadResponsePacket());
 
                         //disconnet Connection
-                        await playerConn.Disconnect();
+                        playerConn.Disconnect();
                     }  
                 }
 
@@ -116,7 +116,7 @@ namespace ServerApplication.GameService
                     }
 
                     await _World.RemovePlayer(playerConn); // delete from world
-                    await playerConn.Disconnect(); // disconnect from server
+                    playerConn.Disconnect(); // disconnect from server
 
                     
                 }
@@ -132,7 +132,8 @@ namespace ServerApplication.GameService
             await Console.Out.WriteLineAsync($"[NEW CLIENT CONNECTION] received, with info: {clientSocket.RemoteEndPoint} ");
 
             PlayerConnection playerConn = new PlayerConnection(this, clientSocket, connId, ownerType, ConnCounter++);
-            await playerConn.ConnectToClient();
+            playerConn.Connect();
+            playerConn.StartRead();
 
         }
 

@@ -26,8 +26,8 @@ namespace NetworkCore.NetworkUtility
 
             await Console.Out.WriteLineAsync($"Total packets received: {ServerRef.InPacketCounter}");
             await Console.Out.WriteLineAsync($"Total packets send: {ServerRef.OutPacketCounter}");
-            await Console.Out.WriteLineAsync($"Incoming Packet Queue size: {ServerRef.qPacketsIn.Count}");
-            await Console.Out.WriteLineAsync($"Outgoing Packet Queue size:{ServerRef.qPacketsOut.Count}");
+            //await Console.Out.WriteLineAsync($"Incoming Packet Queue size: {ServerRef.qPacketsIn.Count}");
+            //await Console.Out.WriteLineAsync($"Outgoing Packet Queue size:{ServerRef.qPacketsOut.Count}");
         }
 
        /* public static async Task <long>SendPingRequest(TcpPeer serverPeer)

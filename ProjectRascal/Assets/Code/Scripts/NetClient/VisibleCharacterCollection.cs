@@ -15,12 +15,12 @@ namespace Assets.Code.Scripts.NetClient
     public class VisibleCharacterCollection
     {
         //private NetworkClient NetworkRef;
-        public ConcurrentDictionary<int, Player> VisiblePlayers { get; private set; }
+        public ConcurrentDictionary<int, Character> VisiblePlayers { get; private set; }
 
         public VisibleCharacterCollection()
         {
             //NetworkRef = networkRef;
-            VisiblePlayers = new ConcurrentDictionary<int, Player>();
+            VisiblePlayers = new ConcurrentDictionary<int, Character>();
         }
 
         public int PlayerCount()
@@ -29,21 +29,21 @@ namespace Assets.Code.Scripts.NetClient
         }
 
         // a'la AddPlayer
-        public async Task OnPlayerStateReceived(CharacterStatePacket statePacket)
+        public async Task OnCharacterStateReceived(CharacterStatePacket statePacket)
         {
-            int playerVId = statePacket.PlayerVId; // note that statePacket.PlayerVid cannot be null.
+            int playerVId = statePacket.CharacterVId; // note that statePacket.PlayerVid cannot be null.
 
             // Trying to find player with specified PlayerVid
-            if (VisiblePlayers.TryGetValue(playerVId, out Player foundedPlayer))
+            if (VisiblePlayers.TryGetValue(playerVId, out Character foundedPlayer))
             {
                 // Changing existing player attributes
-                foundedPlayer.pName = statePacket.Name ?? foundedPlayer.pName;
-                foundedPlayer.pHealth = statePacket.Health ?? foundedPlayer.pHealth;
-                foundedPlayer.pMana = statePacket.Mana ?? foundedPlayer.pMana;
-                foundedPlayer.pPositionX = statePacket.PosX ?? foundedPlayer.pPositionX; // if statePacket.posX != null
-                foundedPlayer.pPositionY = statePacket.PosY ?? foundedPlayer.pPositionY;
-                foundedPlayer.pPositionZ = statePacket.PosZ ?? foundedPlayer.pPositionZ;
-                foundedPlayer.pRotation = statePacket.Rot ?? foundedPlayer.pRotation;
+                foundedPlayer.Name = statePacket.Name ?? foundedPlayer.Name;
+                foundedPlayer.Health = statePacket.Health ?? foundedPlayer.Health;
+                foundedPlayer.Mana = statePacket.Mana ?? foundedPlayer.Mana;
+                foundedPlayer.PositionX = statePacket.PosX ?? foundedPlayer.PositionX; // if statePacket.posX != null
+                foundedPlayer.PositionY = statePacket.PosY ?? foundedPlayer.PositionY;
+                foundedPlayer.PositionZ = statePacket.PosZ ?? foundedPlayer.PositionZ;
+                foundedPlayer.Rotation = statePacket.Rot ?? foundedPlayer.Rotation;
                 await Console.Out.WriteLineAsync($"Received New Player State: ");
 
                 // For testing purposes, we are showing the player state which we received.
@@ -51,18 +51,18 @@ namespace Assets.Code.Scripts.NetClient
             }
             else // No existing player found. Try add new player.
             { 
-                Player player = new Player(statePacket);
-                if(!VisiblePlayers.TryAdd(player.pVid, player))
+                Character chr = new Character(statePacket);
+                if(!VisiblePlayers.TryAdd(chr.Vid, chr))
                 {
-                    throw new ArgumentException($"Cannot add player with {player.pVid} pVid. Specified id exists in collection. "); // if Vid is encrypted in future, we dont wanna to show that.
+                    throw new ArgumentException($"Cannot add player with {chr.Vid} pVid. Specified id exists in collection. "); // if Vid is encrypted in future, we dont wanna to show that.
                 }
                 await Console.Out.WriteLineAsync($"Received existing Player State: ");
-                await player.Show();
+                await chr.Show();
             }
 
         }
 
-        public async Task OnPlayerMoveReceived(PlayerMovePacket movePacket)
+        public async Task OnCharacterMoveReceived(CharacterMovePacket movePacket)
         {
             
         }
