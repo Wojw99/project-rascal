@@ -17,29 +17,32 @@ namespace ServerApplication.GameService.Base
     // But have this thing in mind.
     public class World
     {
-       // private TestServer ServerRef { get; }
         private ConcurrentDictionary<Guid, PlayerConnection> ConnectedPlayers = new ConcurrentDictionary<Guid, PlayerConnection>();
         private ConcurrentDictionary<int, Enemy> Enemies = new ConcurrentDictionary<int, Enemy>();
+        private ConcurrentDictionary<Guid, CharacterStateUpdatePacket> CharactersStatesUpdated = new ConcurrentDictionary<Guid, CharacterStateUpdatePacket> { };
 
         public int IdCounter = 0;
 
         public World() { }
 
-
-        // sending all information of Player (Player State) to other connected players
-        public async Task SendPlayerStateToConnectedPlayers(PlayerConnection senderPeer)
+        public async Task Update()
         {
-            // we overloading PlayerStatePacket with constructor, which initialize
-            // values in packet by values in player object.
-            CharacterStatePacket packet = new CharacterStatePacket(senderPeer.CharacterObj);
-                
-            foreach (var receiver in ConnectedPlayers)
+            CharacterStatesUpdatePacket statesPacket = new CharacterStatesUpdatePacket();
+
+            // Add updated states to packet
+            foreach(var characterState in CharactersStatesUpdated)
             {
-                if(receiver.Key != senderPeer.Id)
-                {
-                    receiver.Value.SendPacket(packet);
-                }
+                statesPacket.PacketCollection.Add(characterState.Value);
+                ConnectedPlayers[characterState.Key].OnCharactedStateSend();
             }
+
+            // Sending to all players
+            foreach (var player in ConnectedPlayers.Values)
+            {
+                await player.SendPacket(statesPacket);
+            }
+
+            CharactersStatesUpdated.Clear();
         }
 
         public async Task SendPacketToConnectedPlayers(Guid senderPeerId, PacketBase packet)
@@ -48,38 +51,26 @@ namespace ServerApplication.GameService.Base
             {
                 if (receiver.Key != senderPeerId)
                 {
-                    receiver.Value.SendPacket(packet);
+                    await receiver.Value.SendPacket(packet);
                 }
             }
         }
 
-
-        public async Task AddNewPlayer(PlayerConnection playerConn)
+        public void AddNewPlayer(PlayerConnection playerConn)
         {
             if(!ConnectedPlayers.TryAdd(playerConn.Id, playerConn))
                 throw new InvalidOperationException($"Failed to add player with id {playerConn.Id}.");
         }
 
-        public async Task RemovePlayer(PlayerConnection playerConn) 
+        public void RemovePlayer(PlayerConnection playerConn) 
         {
             if (!ConnectedPlayers.TryRemove(playerConn.Id, out PlayerConnection removedPlayer)) // idk we need object of removed player.
                 throw new InvalidOperationException($"Failed to remove player with id {playerConn.Id}.");
         }
 
-        // this we could use when, not all attributes changes. For example we get an state of player which hp was changed - after that we could
-        // reuse his statePacket which was send from him to server to send that to all other clients.
-        // important note: now we have more general method - SendPacketToConnectedPlayers
-
-        /*public async Task SendPlayerStateToConnectedPlayers(Guid senderPeerId, PlayerStatePacket statePacket)
+        public void AddNewCharacterStateUpdate(Guid ConnId, CharacterStateUpdatePacket updatedState)
         {
-            foreach (var receiver in ConnectedPlayers)
-            {
-                if (receiver.Key != senderPeerId)
-                {
-                    await receiver.Value.SendPacket(statePacket);
-                }
-            }
-
-        }*/
+            CharactersStatesUpdated[ConnId] = updatedState;
+        }
     }
 }

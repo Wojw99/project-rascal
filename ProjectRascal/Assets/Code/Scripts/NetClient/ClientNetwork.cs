@@ -26,13 +26,8 @@ namespace Assets.Code.Scripts.NetClient
         private VisibleCharacterCollection CharactersCollection;
         private Character ClientCharacter;
 
-        public TcpPeer GameServerPeer;
-        public TcpPeer AuthServerPeer; 
-
         // only for test purposes - to not start main thread loop before Player object doesnt loaded from server
         TaskCompletionSource<bool> ClientPlayerObjectSpecified;
-
-        public 
 
         private static ClientNetwork _Instance;
 

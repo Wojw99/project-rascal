@@ -47,9 +47,9 @@ namespace NetworkCore.NetworkData
 
         // Used on client side - when only new player state received.
         // Note that when Player object exists - we want to only change his state.
-        public Character(CharacterStatePacket packet)
+        public Character(CharacterStateUpdatePacket packet)
         {
-            Vid = packet.CharacterVId; // Vid in packet cannot be null.
+            //Vid = packet.CharacterVId; // Vid in packet cannot be null.
             Name = packet.Name != null ? packet.Name : string.Empty;
             Health = packet.Health != null ? packet.Health.Value : 0;
             Mana = packet.Mana != null ? packet.Mana.Value : 0;

@@ -25,7 +25,7 @@ namespace ServerApplication.GameService
             await playerConn.ServerRef._World.SendPacketToConnectedPlayers(playerConn.Id, movePacket);
         }
 
-        public static async Task OnCharacterStateChanged(PlayerConnection playerConn, CharacterStatePacket statePacket)
+        public static async Task OnCharacterStateChanged(PlayerConnection playerConn, CharacterStateUpdatePacket statePacket)
         {
             // Trying to change only values that changes, because not all of them must be assigned.
             // If value is not assigned, getter from packet returns null, so we checking
@@ -49,9 +49,9 @@ namespace ServerApplication.GameService
             }
 
             // for testing purposes
-            await playerConn.CharacterObj.Show();
+            //await playerConn.CharacterObj.Show();
 
-            await playerConn.ServerRef._World.SendPacketToConnectedPlayers(playerConn.Id, statePacket);
+            //await playerConn.ServerRef._World.SendPacketToConnectedPlayers(playerConn.Id, statePacket);
             // Important note: I dont run "SendPlayerStateToConnectedPlayers" method from World object, 
             // because I want to send values that only changed.
             

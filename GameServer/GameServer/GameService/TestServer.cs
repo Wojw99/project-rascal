@@ -53,7 +53,7 @@ namespace ServerApplication.GameService
 
         public override async Task OnPacketReceived(IPeer peer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
+            //await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
             await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
 
             // Check is received connection registered into PlayerConnection
@@ -75,13 +75,13 @@ namespace ServerApplication.GameService
                         await playerConn.CharacterObj.Show();
 
                         // send response with player object
-                        playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
                         
                     }
                     else
                     {
                         // CharacterLoadResponsePacket Succes is false by default.
-                        playerConn.SendPacket(new CharacterLoadResponsePacket());
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket());
 
                         //disconnet Connection
                         playerConn.Disconnect();
@@ -93,12 +93,12 @@ namespace ServerApplication.GameService
                 {
                     if (loadSuccesStatus.Succes == true)
                     {
-                        await _World.AddNewPlayer(playerConn);
-                        await _World.SendPlayerStateToConnectedPlayers(playerConn);
+                        _World.AddNewPlayer(playerConn);
+                        _World.SendPlayerStateToConnectedPlayers(playerConn);
                     }
                 }
 
-                else if (packet is CharacterStatePacket statePacket)
+                else if (packet is CharacterStateUpdatePacket statePacket)
                 {
                     // We run static method for that. We can load other packets in the same way.
                     // But by now I will write most of packets in OnPacketReceived
@@ -115,10 +115,15 @@ namespace ServerApplication.GameService
                         // save player state into database
                     }
 
-                    await _World.RemovePlayer(playerConn); // delete from world
+                    _World.RemovePlayer(playerConn); // delete from world
                     playerConn.Disconnect(); // disconnect from server
 
                     
+                }
+
+                else if(packet is PingRequestPacket pingRequest)
+                {
+                    await playerConn.SendPacket(new PingResponsePacket());
                 }
             }
 
@@ -144,6 +149,19 @@ namespace ServerApplication.GameService
 
             if (peer is PlayerConnection playerConnection)  // do przemyslenia
                 await _World.RemovePlayer(playerConnection); // do przemyslenia
+        }
+
+        protected override async Task Update()
+        {
+            await _World.Update();
+            /*try
+            {
+                await _World.SendPlayerStatesToConnectedPlayers();
+            }
+            catch(Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+            }*/
         }
     }
 }

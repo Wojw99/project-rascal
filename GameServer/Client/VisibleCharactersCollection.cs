@@ -32,7 +32,7 @@ namespace Client
         }
 
         // a'la AddPlayer
-        public async Task OnCharacterStateReceived(CharacterStatePacket statePacket)
+        public async Task OnCharacterStateReceived(CharacterStateUpdatePacket statePacket)
         {
             int charVId = statePacket.CharacterVId; // note that statePacket.PlayerVid cannot be null.
 
@@ -50,7 +50,7 @@ namespace Client
                 await Console.Out.WriteLineAsync($"Received New Player State: ");
 
                 // For testing purposes, we are showing the player state which we received.
-                await foundedCharacter.Show();
+                // await foundedCharacter.Show();
             }
             else // No existing player found. Try add new player.
             { 

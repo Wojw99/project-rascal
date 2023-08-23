@@ -14,5 +14,7 @@ namespace NetworkCore.Packets
         {
             AuthToken = authToken;
         }
+
+        public ClientLoginResponsePacket(byte[] data) : base(data) { }
     }
 }

@@ -17,52 +17,28 @@ namespace NetworkCore.Packets
         // Player VId cannot be null. See the description of this parameter in the Player class.
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int CharacterVId { get; private set; }
+        public int CharacterVId { get; private set; } = -1;
 
         [Serialization(Type: SerializationType.type_string)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int? Health { get; set; }
+        public int Health { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int? Mana { get; set; }
+        public int Mana { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
-        public float? PosX { get; set; }
+        public float PosX { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
-        public float? PosY { get; set; }
+        public float PosY { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
-        public float? PosZ { get; set; }
+        public float PosZ { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
-        public float? Rot { get; set; }
-
-        /*public void Init(int id, string name, int health, int mana, float posX, float posY, float posZ, float rot)
-        {
-            Write("Id", id);
-            Write("Name", name);
-            Write("Health", health);
-            Write("Mana", mana);
-            Write("PositionX", posX);
-            Write("PositionY", posY);
-            Write("PositionZ", posZ);
-            Write("Rotation", rot);
-        }*/
-
-        /*public void Init(Player player)
-        {
-            Write("PlayerVid", player.pVid);
-            Write("Name", player.pName);
-            Write("Health", player.pHealth);
-            Write("Mana", player.pMana);
-            Write("PositionX", player.pPositionX);
-            Write("PositionY", player.pPositionY);
-            Write("PositionZ", player.pPositionZ);
-            Write("Rotation", player.pRotation);
-        } */
+        public float Rot { get; set; } = -1;
 
         // Be 100% sure this is the correct unique identificator of player.
         public CharacterStatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_PACKET, false)
@@ -81,8 +57,6 @@ namespace NetworkCore.Packets
             PosZ = player.PositionZ;
             Rot = player.Rotation;
         }
-
-        //public CharacterStatePacket(PacketBase packet) : base(packet) { }
 
         public CharacterStatePacket(byte[] data) : base(data) { }
 

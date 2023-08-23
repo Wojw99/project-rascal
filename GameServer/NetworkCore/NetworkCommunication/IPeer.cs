@@ -22,7 +22,7 @@ public interface IPeer
 
     void Disconnect();
 
-    void SendPacket(PacketBase packet);
+    Task SendPacket(PacketBase packet);
 
     //void StartReceive();
 }

@@ -28,5 +28,8 @@ namespace NetworkCore.NetworkMessage
         type_double = 0x8,
         type_string = 0x9,
         type_bool = 0x10,
+        type_list = 0x11,
+        type_subPacket = 0x12,
+        type_subPacketList = 0x13,
     }
 }

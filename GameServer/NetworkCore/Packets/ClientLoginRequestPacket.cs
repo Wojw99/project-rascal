@@ -18,5 +18,7 @@ namespace NetworkCore.Packets
             Login = login;
             Password = password;
         }
+
+        public ClientLoginRequestPacket(byte[] data) : base(data) { }
     }
 }

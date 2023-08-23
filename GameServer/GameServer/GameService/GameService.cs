@@ -13,7 +13,7 @@ namespace ServerApplication.Game
 {
     public class GameService
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             /*GameServer gameServer = new GameServer(true, 120, "127.0.0.1",
             "Game Server", ServerType.world_server, 8050, null);
@@ -35,13 +35,14 @@ namespace ServerApplication.Game
             gameServer.Start();*/
 
 
-            TestServer Server = new TestServer(true, 120, "127.0.0.1",
-            "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(50), 8051);
+            TestServer Server = new TestServer(true, 120, "192.168.5.5",
+            "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(10), 8051);
 
             ServerMonitor Monitor = new ServerMonitor(Server);
 
-            await Server.StartListen(); 
-            await Server.RunPacketProcessingInBackground();
+            Server.StartListen(); 
+            Server.RunPacketProcessingInBackground();
+            Server.StartUpdate(TimeSpan.FromMilliseconds(50));
 
             /*while (Server.IsRunning)
             {
@@ -60,7 +61,7 @@ namespace ServerApplication.Game
 
             while (true)
             {
-                await Task.Delay(2000);
+                Thread.Sleep(5000);
             }
         }
     }

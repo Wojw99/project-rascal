@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 using NetworkCore.NetworkMessage.old;
+using System.Threading;
 
 namespace NetworkCore.NetworkCommunication
 {
@@ -63,15 +64,15 @@ namespace NetworkCore.NetworkCommunication
 
             // LOGGER : INITIALIZED NetworkBase with default values
         }
-        private async Task SendOutgoingPacket(OwnedPacket receiver)
+        public async Task SendOutgoingPacket(OwnedPacket receiver)
         {
             byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
-            await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
+            //await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }
 
         // "InBackground" mean that this method run packet processing methods on separate tasks.
-        public async Task RunPacketProcessingInBackground()
+        public void RunPacketProcessingInBackground()
         {
             var processIncomingTask = Task.Run(ProcessIncomingPackets);
             var processOutgoingTask = Task.Run(ProcessOutgoingPackets);
@@ -88,14 +89,7 @@ namespace NetworkCore.NetworkCommunication
                 {
                     if (qPacketsIn.TryDequeue(out var ownedPacket))
                     {
-                        if(ownedPacket.PeerPacket.IsResponse)
-                        {
-                            ResponsePackets.TryAdd(ownedPacket.PeerPacket.TypeId, ownedPacket);
-                        }
-                        else
-                        {
-                            await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
-                        }
+                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
 
                         packetCount++;
                     }
@@ -104,7 +98,8 @@ namespace NetworkCore.NetworkCommunication
                 InPacketCounter += packetCount;
 
 
-                await Task.Delay(PacketProcessInterval);
+                //await Task.Delay(PacketProcessInterval);
+                Thread.Sleep(PacketProcessInterval);
             }
         }
 
@@ -125,25 +120,24 @@ namespace NetworkCore.NetworkCommunication
 
                 OutPacketCounter += packetCount;
 
-                await Task.Delay(PacketProcessInterval);
-               
+                //await Task.Delay(PacketProcessInterval);
+                Thread.Sleep(PacketProcessInterval);
             }
         }
 
         public void AddToIncomingPacketQueue(IPeer peer, PacketBase packet)
         {
-            lock (this)
-            {
-                qPacketsIn.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
-            }
+            qPacketsIn.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
         }
 
         public void AddToOutgoingPacketQueue(IPeer peer, PacketBase packet)
         {
-            lock (this)
-            {
-                qPacketsOut.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
-            }
+            qPacketsOut.Enqueue(new OwnedPacket { Peer = peer, PeerPacket = packet });
+        }
+
+        public void AddToResponsePacketsCollection(IPeer peer, PacketBase packet)
+        {
+            ResponsePackets.TryAdd(packet.TypeId, new OwnedPacket { Peer = peer, PeerPacket = packet });
         }
 
         public async Task<PacketBase> WaitForResponsePacket(TimeSpan interval, TimeSpan timeLimit, PacketType packetType)
@@ -153,7 +147,7 @@ namespace NetworkCore.NetworkCommunication
 
             while(timer.ElapsedMilliseconds < timeLimit.TotalMilliseconds)
             {
-                if(ResponsePackets.TryRemove(packetType, out OwnedPacket packet))
+                if (ResponsePackets.TryRemove(packetType, out OwnedPacket packet))
                 {
                     return packet.PeerPacket;
                 }
