@@ -46,26 +46,12 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-/*        public async Task ConnectToClient()
-        {
-            if(IsConnected == false)
-            {
-                if(OwnerType == Owner.server)
-                {
-                    IsConnected = true;
-                    await Console.Out.WriteLineAsync("Connection approved.");
-                    Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
-                }
-            }
-        }*/
-
         public void Connect()
         {
             if(!IsConnected)
             {
                 IsConnected = true;
             }
-            //await Console.Out.WriteLineAsync("Connection open.");
         }
 
         public void Disconnect()
@@ -74,7 +60,6 @@ namespace NetworkCore.NetworkCommunication
             {
                 IsConnected = false;
             }
-            //await Console.Out.WriteLineAsync("Connection closed.");
         }
 
         public async Task SendPacket(PacketBase packet)
@@ -109,7 +94,6 @@ namespace NetworkCore.NetworkCommunication
                         continue;
                     }
 
-                    // Użyj Memory<byte> do manipulowania danymi
                     Memory<byte> combinedDataMemory = new byte[packetSize];
                     packetSizeBytes.CopyTo(combinedDataMemory);
                     packetData.CopyTo(combinedDataMemory.Slice(sizeof(int)));
@@ -132,56 +116,57 @@ namespace NetworkCore.NetworkCommunication
                 }
             }
         }
-        /*        private async Task ReadIncomingData()
+        /*  *OLD VERSION*      
+        private async Task ReadIncomingData()
+        {
+            while (NetworkRef.IsRunning)
+            {
+                // On first 4 bytes we storing size of all serialized data in packet.
+                // So by first we receive packet size to know what amount of bytes to read,
+                // and transform binary data into correct packet.
+                byte[] PacketSizeByte = new byte[sizeof(int)];
+                int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
+
+                if (bytesRead != sizeof(int))
                 {
-                    while (NetworkRef.IsRunning)
-                    {
-                        // On first 4 bytes we storing size of all serialized data in packet.
-                        // So by first we receive packet size to know what amount of bytes to read,
-                        // and transform binary data into correct packet.
-                        byte[] PacketSizeByte = new byte[sizeof(int)];
-                        int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
+                    await Console.Out.WriteLineAsync("Incorrect size of packet size");
+                    continue;
+                }
 
-                        if (bytesRead != sizeof(int))
-                        {
-                            await Console.Out.WriteLineAsync("Incorrect size of packet size");
-                            continue;
-                        }
+                int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
 
-                        int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
+                if (packetSize <= sizeof(int))
+                {
+                    await Console.Out.WriteLineAsync("Incorrect size of packet");
+                    continue;
+                }
 
-                        if (packetSize <= sizeof(int))
-                        {
-                            await Console.Out.WriteLineAsync("Incorrect size of packet");
-                            continue;
-                        }
+                byte[] packetData = new byte[packetSize - sizeof(int)];
 
-                        byte[] packetData = new byte[packetSize - sizeof(int)];
+                bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
 
-                        bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
+                if (bytesRead <= 0)
+                {
+                    await Console.Out.WriteLineAsync("No data received");
+                    continue;
+                }
 
-                        if (bytesRead <= 0)
-                        {
-                            await Console.Out.WriteLineAsync("No data received");
-                            continue;
-                        }
+                byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
 
-                        byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
+                //final check is size of packet correct.
+                if(combinedData.Length != packetSize)
+                {
+                    await Console.Out.WriteLineAsync("Expected size and size of packet not match.");
+                    continue;
+                }
 
-                        //final check is size of packet correct.
-                        if(combinedData.Length != packetSize)
-                        {
-                            await Console.Out.WriteLineAsync("Expected size and size of packet not match.");
-                            continue;
-                        }
+                PacketType receivedPacketType = (PacketType)combinedData[4];
+                // Packet Type is on 5 field of array (check PacketBase class for serializing)
 
-                        PacketType receivedPacketType = (PacketType)combinedData[4];
-                        // Packet Type is on 5 field of array (check PacketBase class for serializing)
+                PacketBase recognizedPacket = LoadPacket(receivedPacketType, combinedData);
+                await AddToIncomingPacketQueue(recognizedPacket);
 
-                        PacketBase recognizedPacket = LoadPacket(receivedPacketType, combinedData);
-                        await AddToIncomingPacketQueue(recognizedPacket);
-
-                    }
-                }*/
+            }
+        }*/
     }
 }

@@ -14,19 +14,19 @@ namespace NetworkCore.Packets
     public class CharacterMovePacket : PacketBase
     {
         [Serialization(Type: SerializationType.type_Int32)]
-        public int CharacterVId { get; }
+        public int CharacterVId { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosX { get; } 
+        public float PosX { get; set; } 
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosY { get; } 
+        public float PosY { get; set; } 
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosZ { get; } 
+        public float PosZ { get; set; } 
 
         [Serialization(Type: SerializationType.type_float)]
-        public float Rot { get; } 
+        public float Rot { get; set; } 
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.

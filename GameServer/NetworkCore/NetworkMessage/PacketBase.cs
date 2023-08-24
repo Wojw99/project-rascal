@@ -62,6 +62,9 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.CHARACTER_STATE_PACKET:
                     return new CharacterStatePacket(receivedData);
 
+                case PacketType.CHARACTER_STATES_PACKET: 
+                    return new CharacterStatesPacket(receivedData);
+
                 case PacketType.CHARACTER_STATE_UPDATE_PACKET:
                     return new CharacterStateUpdatePacket(receivedData);
 

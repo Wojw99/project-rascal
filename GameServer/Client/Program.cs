@@ -73,7 +73,7 @@ namespace Client
                 // wczytujemy naszą postać. W przyszłości, jak byśmy chcieli mieć np. więcej slotów postaci,
                 // to wyślemy dodatkowo wybrany slot. (będziemy też musieli sprawdzać czy ten slot jest pusty, itd...)
 
-                Character PlayerCharacter = new Character();
+                //Character PlayerCharacter = new Character();
                 await GameServer.SendPacket(new CharacterLoadRequestPacket(authToken));
 
                 try
@@ -85,13 +85,12 @@ namespace Client
                     {
                         if (characterLoadResponse.Success == true)
                         {
-                            PlayerCharacter = characterLoadResponse.GetCharacter();
+                            client.ClientPlayer = characterLoadResponse.GetCharacter();
                             
                             // Jeśli uda się wszystko załadować:
                             await GameServer.SendPacket(new CharacterLoadSuccesPacket(true));
 
-                            await Console.Out.WriteLineAsync("Character loaded succesfully, your character: ");
-                            await PlayerCharacter.Show();
+                            await Console.Out.WriteLineAsync("Character loaded succesfully.");
                         }
                         else
                         {
@@ -109,7 +108,7 @@ namespace Client
 
                 while(true)
                 {
-                    //await TestingOperationsTask(GameServer, PlayerCharacter);
+                    await TestingOperationsTask(GameServer, client);
                     /*Stopwatch watch = new Stopwatch();
 
                     watch.Start();
@@ -121,7 +120,7 @@ namespace Client
                     watch.Stop();
                     await Console.Out.WriteLineAsync($"Ping time: {watch.ElapsedMilliseconds}");
                     watch.Reset();*/
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
 
                 }
                   
@@ -132,25 +131,15 @@ namespace Client
             }
         }
 
-        public static async Task TestingOperationsTask(IPeer serverPeer, Character playerCharacter) // run it in main program in while loop
+        public static async Task TestingOperationsTask(IPeer serverPeer, SimpleClient client) // run it in main program in while loop
         {
-            //if(!ClientPlayerObjectSpecified.Task.IsCompleted)
-            //{
-            //    return;
-            //}
-
+            Console.Clear();
             await Console.Out.WriteLineAsync("---------------------------------------------");
-            await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
-            await playerCharacter.Show();
-            await Console.Out.WriteLineAsync("---------------------------------------------");
-            await Console.Out.WriteLineAsync("ZMIEN STAN SWOJEGO GRACZA");
-            await Console.Out.WriteLineAsync("[1] Ustaw imie");
-            await Console.Out.WriteLineAsync("[2] dodaj + 20 healtha");
-            await Console.Out.WriteLineAsync("[3] dodaj + 20 many");
-            await Console.Out.WriteLineAsync("[4] IDŹ DO GÓRY");
-            await Console.Out.WriteLineAsync("[5] IDŹ W PRAWO");
-            await Console.Out.WriteLineAsync("[6] IDŹ W DÓŁ");
-            await Console.Out.WriteLineAsync("[7] IDŹ W LEWO");
+            await Console.Out.WriteLineAsync("[1] IDŹ DO GÓRY");
+            await Console.Out.WriteLineAsync("[2] IDŹ W PRAWO");
+            await Console.Out.WriteLineAsync("[3] IDŹ W DÓŁ");
+            await Console.Out.WriteLineAsync("[4] IDŹ W LEWO");
+            await Console.Out.WriteLineAsync("[5] Pokaż graczy");
             //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
             await Console.Out.WriteLineAsync("---------------------------------------------");
             //await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {PlayersCollection.PlayerCount()}");
@@ -165,46 +154,37 @@ namespace Client
             {
                 case 1:
                     {
-                        await Console.Out.WriteLineAsync("Podaj nowe imię: ");
-                        string newName = await Task.Run(() => Console.ReadLine());
-                        playerCharacter.Name = newName;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
+                        client.ClientPlayer.PositionY += 1;
+                        await serverPeer.SendPacket(new CharacterMovePacket(client.ClientPlayer));
                         break;
                     }
                 case 2:
                     {
-                        playerCharacter.Health += 20;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
+                        client.ClientPlayer.PositionX += 1;
+                        await serverPeer.SendPacket(new CharacterMovePacket(client.ClientPlayer));
                         break;
                     }
                 case 3:
                     {
-                        playerCharacter.Mana += 20;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
+                        client.ClientPlayer.PositionY -= 1;
+                        await serverPeer.SendPacket(new CharacterMovePacket(client.ClientPlayer));
                         break;
                     }
                 case 4:
                     {
-                        playerCharacter.PositionY += 1;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
+                        client.ClientPlayer.PositionX -= 1;
+                        await serverPeer.SendPacket(new CharacterMovePacket(client.ClientPlayer));
                         break;
                     }
                 case 5:
                     {
-                        playerCharacter.PositionX += 1;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
-                        break;
-                    }
-                case 6:
-                    {
-                        playerCharacter.PositionY -= 1;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
-                        break;
-                    }
-                case 7:
-                    {
-                        playerCharacter.PositionX -= 1;
-                        await serverPeer.SendPacket(new CharacterStatePacket(playerCharacter));
+                        await Console.Out.WriteLineAsync("---------------------------------------------");
+                        await Console.Out.WriteLineAsync("TWOJA POSTAC: ");
+                        await client.ClientPlayer.Show();
+                        await Console.Out.WriteLineAsync("---------------------------------------------");
+                        await client.CharactersCollection.ShowCharacters();
+                        await Console.Out.WriteLineAsync("Wcisnij dowolny klawisz");
+                        ConsoleKeyInfo waitKeyInfo = Console.ReadKey();
                         break;
                     }
                 default:

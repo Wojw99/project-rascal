@@ -8,33 +8,14 @@ using NetworkCore.NetworkCommunication;
 using ServerApplication.GameService;
 using NetworkCore.Packets;
 using NetworkCore.NetworkUtility;
+using NetworkCore.NetworkData;
 
 namespace ServerApplication.Game
 {
     public class GameService
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            /*GameServer gameServer = new GameServer(true, 120, "127.0.0.1",
-            "Game Server", ServerType.world_server, 8050, null);
-
-            Dictionary<PacketType, PacketHandler> packetHandlers = 
-                new Dictionary<PacketType, PacketHandler>()
-            {
-                { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
-                PacketFunction.HandlePlayerMovePacket, PacketFunction.HandleGlobalPlayerPosition) },
-
-                { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
-                PacketFunction.HandleEnemyShootPacket, PacketFunction.HandleGlobalPlayerPosition) },
-
-                { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet, 
-                PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
-            };
-
-            gameServer.RegisterHandlers(packetHandlers);
-            gameServer.Start();*/
-
-
             TestServer Server = new TestServer(true, 120, "192.168.5.5",
             "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(10), 8051);
 
@@ -61,7 +42,56 @@ namespace ServerApplication.Game
 
             while (true)
             {
-                Thread.Sleep(5000);
+                await TestingOperationsTask(Server);
+            }
+        }
+
+        public static async Task TestingOperationsTask(TestServer Server)
+        {
+            Console.Clear();
+            await Server._World.ShowConnectedPlayers();
+
+            await Console.Out.WriteLineAsync("Choose player Id: ");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            int playerChoice = int.Parse(keyInfo.KeyChar.ToString());
+
+            if(playerChoice >= 0 && playerChoice <= Server._World.PlayerCount)
+            {
+                try
+                {
+                    PlayerConnection playerRef = Server._World.GetPlayerObj(playerChoice);
+                    await Console.Out.WriteLineAsync($"You choose char with id = {playerChoice}:");
+                    await playerRef.CharacterObj.Show();
+
+                    await Console.Out.WriteLineAsync("[1] Change Name");
+                    await Console.Out.WriteLineAsync("[2] Add + 10 Health");
+                    await Console.Out.WriteLineAsync("[3] Add + 10 Mana");
+
+                    ConsoleKeyInfo keyInfo2 = Console.ReadKey();
+                    int operationChoice = int.Parse(keyInfo2.KeyChar.ToString());
+
+                    switch(operationChoice)
+                    {
+                        case 1:
+                            await Console.Out.WriteLineAsync("Choose new name: ");
+                            string newName = await Task.Run(() => Console.ReadLine());
+                            playerRef.SetName(newName);
+                            break;
+                        case 2:
+                            playerRef.SetHealth(playerRef.CharacterObj.Health + 10);
+                            break;
+                        case 3:
+                            playerRef.SetMana(playerRef.CharacterObj.Mana + 10);
+                            break;
+
+                    }
+                }
+                catch(Exception ex) 
+                {
+                    await Console.Out.WriteLineAsync(ex.Message);
+                    Thread.Sleep(10000);
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ namespace ServerApplication.GameService
     {
         private TestServer ServerRef { get; set; }
         
-        private Character CharacterObj { get; set; }
+        public Character CharacterObj { get; set; }
 
         private CharacterStateUpdatePacket CharacterStateUpdate { get; set; }
 
@@ -30,12 +30,13 @@ namespace ServerApplication.GameService
         {
             ServerRef = serverRef;
             CharacterObj = new Character();
-            CharacterStateUpdate = new CharacterStateUpdatePacket();
+            CharacterStateUpdate = new CharacterStateUpdatePacket(-1);
         }
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
         {
             CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 0, 0, 0, 0);
+            CharacterStateUpdate.CharacterVId = UniqueId;
         }
 
         public void SetName(string name)
@@ -83,6 +84,24 @@ namespace ServerApplication.GameService
                 CharacterStateUpdate.PosY = posY;
                 CharacterStateUpdate.PosZ = posZ;
                 CharacterStateUpdate.Rot = rot;
+
+                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+            }
+        }
+
+        public void SetPosition(CharacterMovePacket movePacket)
+        {
+            lock (stateLock)
+            {
+                CharacterObj.PositionX = movePacket.PosX;
+                CharacterObj.PositionY = movePacket.PosY;
+                CharacterObj.PositionZ = movePacket.PosZ;
+                CharacterObj.Rotation = movePacket.Rot;
+
+                CharacterStateUpdate.PosX = movePacket.PosX;
+                CharacterStateUpdate.PosY = movePacket.PosY;
+                CharacterStateUpdate.PosZ = movePacket.PosZ;
+                CharacterStateUpdate.Rot = movePacket.Rot;
 
                 ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
             }

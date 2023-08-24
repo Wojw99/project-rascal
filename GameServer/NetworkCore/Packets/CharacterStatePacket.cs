@@ -60,6 +60,11 @@ namespace NetworkCore.Packets
 
         public CharacterStatePacket(byte[] data) : base(data) { }
 
+        public Character GetCharacter()
+        {
+            return new Character(CharacterVId, Name, Health, Mana, PosX, PosY, PosZ, Rot);
+        }
+
         public override string ToString()
         {
             return "";

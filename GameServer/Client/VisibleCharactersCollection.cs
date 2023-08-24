@@ -15,9 +15,11 @@ namespace Client
     // other players state, 
     public class VisibleCharactersCollection
     {
-        //private NetworkClient NetworkRef;
         public ConcurrentDictionary<int, Character> VisiblePlayers { get; private set; }
+
         public ConcurrentDictionary<int, Enemy> VisibleEnemies { get; private set; }
+
+        public int PlayerCount { get { return VisiblePlayers.Count; } }
 
         public VisibleCharactersCollection()
         {
@@ -26,17 +28,37 @@ namespace Client
             VisibleEnemies = new ConcurrentDictionary<int, Enemy>();
         }
 
-        public int PlayerCount()
+        public async Task ShowCharacters()
         {
-            return VisiblePlayers.Count;
+            await Console.Out.WriteLineAsync("----------------------------------------");
+            await Console.Out.WriteLineAsync($"Loaded {PlayerCount} player characters. ");
+            await Console.Out.WriteLineAsync("----------------------------------------");
+            foreach (var character in VisiblePlayers.Values)
+            {
+                await Console.Out.WriteLineAsync("--------------------------");
+                await character.Show();
+                await Console.Out.WriteLineAsync("--------------------------");
+            }
         }
 
-        // a'la AddPlayer
-        public async Task OnCharacterStateReceived(CharacterStateUpdatePacket statePacket)
-        {
-            int charVId = statePacket.CharacterVId; // note that statePacket.PlayerVid cannot be null.
 
-            // Trying to find player with specified PlayerVid
+        // a'la AddPlayer
+        public void OnCharacterStateReceived(CharacterStatePacket statePacket)
+        {
+            if (VisiblePlayers.ContainsKey(statePacket.CharacterVId))
+            {
+                VisiblePlayers[statePacket.CharacterVId] = statePacket.GetCharacter();
+            }
+            else
+            {
+                VisiblePlayers.TryAdd(statePacket.CharacterVId, statePacket.GetCharacter());
+            }
+        }
+
+        public void OnCharacterStateUpdateReceived(CharacterStateUpdatePacket statePacket)
+        {
+            int charVId = statePacket.CharacterVId;
+
             if (VisiblePlayers.TryGetValue(charVId, out Character foundedCharacter))
             {
                 // Changing existing player attributes
@@ -47,22 +69,17 @@ namespace Client
                 foundedCharacter.PositionY = statePacket.PosY ?? foundedCharacter.PositionY;
                 foundedCharacter.PositionZ = statePacket.PosZ ?? foundedCharacter.PositionZ;
                 foundedCharacter.Rotation = statePacket.Rot ?? foundedCharacter.Rotation;
-                await Console.Out.WriteLineAsync($"Received New Player State: ");
-
-                // For testing purposes, we are showing the player state which we received.
-                // await foundedCharacter.Show();
             }
-            else // No existing player found. Try add new player.
-            { 
+            else // No existing player found. Try add new player. Note that we probably dont need this, because alter succesfull
+            // loaded character, server send CharacterStatePacket always. So in this case, the else will not execute even once.
+            {
                 Character chr = new Character(statePacket);
-                if(!VisiblePlayers.TryAdd(chr.Vid, chr))
+                if (!VisiblePlayers.TryAdd(chr.Vid, chr))
                 {
                     throw new ArgumentException($"Cannot add player with {chr.Vid} pVid. Specified id exists in collection. "); // if Vid is encrypted in future, we dont wanna to show that.
                 }
-                await Console.Out.WriteLineAsync($"Received existing Player State: ");
-                await chr.Show();
             }
-
+            Console.WriteLine("test");
         }
 
         public async Task OnCharacterMoveReceived(CharacterMovePacket movePacket)

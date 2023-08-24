@@ -35,6 +35,18 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
+        public void StartUpdate(TimeSpan interval)
+        {
+            Task handleUpdate = Task.Run(async () =>
+            {
+                while (IsRunning)
+                {
+                    await Update();
+                    await Task.Delay(interval);
+                }
+            });
+        }
+
         public async Task Stop()
         {
             IsRunning = false;
@@ -44,5 +56,7 @@ namespace NetworkCore.NetworkCommunication
         //public abstract Task OnNewConnection(Socket ServerTcpSocket, Guid newConnectionId, Owner ownerType);
         //public abstract Task OnServerDisconnect(IPeer serverPeer);
         public override abstract Task OnPacketReceived(IPeer serverPeer, PacketBase packet);
+
+        protected abstract Task Update();
     }
 }

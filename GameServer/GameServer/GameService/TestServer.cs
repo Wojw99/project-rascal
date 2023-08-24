@@ -14,30 +14,12 @@ namespace ServerApplication.GameService
 {
     public class TestServer : TcpNetworkServer
     {
-        // public World world { get; set; }
         public World _World;
-        //public ConcurrentDictionary<Guid, PlayerConnection> qPeers { get; }
 
         private int ConnCounter = 0;
-        private int packetReceiveCount = 0;
 
         public int VidCounter { get; private set; } = 0; // by now is the way to create unique identifiers
         // But note that in the future we must load that Vid's from database!
-
-        /* Dictionary<PacketType, PacketHandler> packetHandlers =
-                 new Dictionary<PacketType, PacketHandler>()
-             {
-                 { PacketType.packet_player_move, new PacketHandler(PacketType.packet_player_move,
-                 PacketFunction.HandlePlayerMovePacket, PacketFunction.HandleGlobalPlayerPosition) },
-
-                 { PacketType.packet_enemy_shoot, new PacketHandler(PacketType.packet_enemy_shoot,
-                 PacketFunction.HandleEnemyShootPacket, PacketFunction.HandleGlobalPlayerPosition) },
-
-                 { PacketType.packet_test_packet, new PacketHandler(PacketType.packet_test_packet,
-                 PacketFunction.HandleTestPacket, PacketFunction.HandleGlobalPlayerPosition) },
-             };*/
-
-        //PacketHandlerManager packetHandlerManager = new PacketHandlerManager();
 
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType,
@@ -46,15 +28,17 @@ namespace ServerApplication.GameService
             : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, 
                   maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval, tcpPort)
         {
-            //packetHandlerManager.InitHandlers(packetHandlers);
-            //qPeers = new ConcurrentDictionary<Guid, PlayerConnection> ();
             _World = new World();
+        }
+
+        protected override async Task Update()
+        {
+            await _World.Update();
         }
 
         public override async Task OnPacketReceived(IPeer peer, PacketBase packet)
         {
-            //await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
-            await Console.Out.WriteLineAsync($"Received packets = {packetReceiveCount++}");
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
 
             // Check is received connection registered into PlayerConnection
             // note that we are registering all incoming connections into that Object
@@ -71,8 +55,6 @@ namespace ServerApplication.GameService
 
                         // load player object by username
                         playerConn.LoadCharacterFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
-
-                        await playerConn.CharacterObj.Show();
 
                         // send response with player object
                         await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
@@ -93,16 +75,21 @@ namespace ServerApplication.GameService
                 {
                     if (loadSuccesStatus.Succes == true)
                     {
-                        _World.AddNewPlayer(playerConn);
-                        _World.SendPlayerStateToConnectedPlayers(playerConn);
+                        // In that method we also run OnCharacterLoad(), which simply sends to new connected
+                        // player current states of all players.
+                        await _World.AddNewPlayer(playerConn);
+
+                        // After succesfull load for first time - we sending a full state of character to others.
+                        // Next step is receives updates for that player character and sending only updated
+                        // version of his state (check method Update() in World class).
+                        CharacterStatePacket NewCharacterState = new CharacterStatePacket(playerConn.CharacterObj);
+                        await _World.SendPacketToConnectedPlayers(playerConn.Id, NewCharacterState);
                     }
                 }
 
-                else if (packet is CharacterStateUpdatePacket statePacket)
+                else if(packet is CharacterMovePacket movePacket)
                 {
-                    // We run static method for that. We can load other packets in the same way.
-                    // But by now I will write most of packets in OnPacketReceived
-                    await PlayerFunction.OnCharacterStateChanged(playerConn, statePacket);
+                    playerConn.SetPosition(movePacket);
                 }
 
                 else if (packet is ClientDisconnectPacket clientDisconnect)
@@ -148,20 +135,7 @@ namespace ServerApplication.GameService
             //await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {peer.PeerSocket.RemoteEndPoint}. ");
 
             if (peer is PlayerConnection playerConnection)  // do przemyslenia
-                await _World.RemovePlayer(playerConnection); // do przemyslenia
-        }
-
-        protected override async Task Update()
-        {
-            await _World.Update();
-            /*try
-            {
-                await _World.SendPlayerStatesToConnectedPlayers();
-            }
-            catch(Exception ex)
-            {
-                await Console.Out.WriteLineAsync(ex.Message);
-            }*/
+                _World.RemovePlayer(playerConnection); // do przemyslenia
         }
     }
 }

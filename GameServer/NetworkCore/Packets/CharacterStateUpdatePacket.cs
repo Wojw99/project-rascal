@@ -14,6 +14,9 @@ namespace NetworkCore.Packets
     // can be helpfull if we dont need to send values, that doesn't change.
     public class CharacterStateUpdatePacket : PacketBase
     {
+        [Serialization(Type: SerializationType.type_Int32)]
+        public int CharacterVId { get; set; }
+
         [Serialization(Type: SerializationType.type_string)]
         public string? Name { get; set; }
 
@@ -37,6 +40,7 @@ namespace NetworkCore.Packets
 
         public void Clear()
         {
+            // We doesnt clear the id! Because it is unique for all characters.
             Name = null;
             Health = null;
             Mana = null;
@@ -45,7 +49,7 @@ namespace NetworkCore.Packets
             PosZ = null;
             Rot = null;
         }
-        public CharacterStateUpdatePacket() : base(PacketType.CHARACTER_STATE_UPDATE_PACKET, false) { }
+        public CharacterStateUpdatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_UPDATE_PACKET, false) { CharacterVId = characterVId; }
 
         public CharacterStateUpdatePacket(byte[] data) : base(data) { }
 
