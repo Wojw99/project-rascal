@@ -4,9 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
-using NetworkCore.NetworkMessage.old;
 using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkData.stare;
 using System.Xml.Linq;
 
 namespace NetworkCore.Packets

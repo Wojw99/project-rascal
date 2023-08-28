@@ -1,4 +1,4 @@
-﻿using Client;
+﻿/*using Client;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using System;
@@ -196,4 +196,4 @@ namespace Client
 
         }
     }
-}
+}*/

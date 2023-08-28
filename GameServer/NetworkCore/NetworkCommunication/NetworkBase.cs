@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
-using NetworkCore.NetworkMessage.old;
 using System.Threading;
 
 namespace NetworkCore.NetworkCommunication

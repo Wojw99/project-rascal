@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkData;
-using NetworkCore.NetworkData.stare;
 using NetworkCore.Packets;
 using ServerApplication.GameService.Base;
 

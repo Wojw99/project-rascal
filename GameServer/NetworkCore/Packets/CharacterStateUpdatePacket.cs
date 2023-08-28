@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NetworkCore.NetworkMessage.old;
 using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkData.stare;
 using System.Numerics;
 
 namespace NetworkCore.Packets

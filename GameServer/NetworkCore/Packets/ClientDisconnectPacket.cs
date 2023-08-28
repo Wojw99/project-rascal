@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkMessage;
-using NetworkCore.NetworkMessage.old;
 using System;
 using System.Collections.Generic;
 using System.Text;
