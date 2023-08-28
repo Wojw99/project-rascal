@@ -1,4 +1,4 @@
-﻿/*using NetworkCore.NetworkCommunication;
+﻿using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using NetworkCore.NetworkData;
@@ -7,11 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
-namespace Client
+namespace NetClient
 {
-    public class Client
+    public class Client : MonoBehaviour
     {
+        public delegate void OnCharacterStateUpdateReceivedDelegate(string packet);
+        public event OnCharacterStateUpdateReceivedDelegate OnCharacterStateUpdateReceived;
+
+        public GameCharacter ClientCharacter ;
+
         private static Client _instance;
 
         public static Client Instance
@@ -39,7 +45,6 @@ namespace Client
 
         string AuthToken = "gracz"; // in the future we have to create authorization service 
                                     // we have to store also other information in Token, like username, and by username we can receive data from Database to that client
-
         public TcpPeer AuthServer { get; private set; }
         public TcpPeer GameServer { get; private set; }
 
@@ -57,7 +62,7 @@ namespace Client
             }
             else
             {
-                Instance = this;
+                _instance = this;
                 DontDestroyOnLoad(gameObject);
             }
         }
@@ -86,7 +91,7 @@ namespace Client
 
         public async Task <bool>LoginToServer(string login, string password)
         {
-            if(AuthServer.IsConnected)
+            if (AuthServer.IsConnected)
             {
                 await AuthServer.SendPacket(new ClientLoginRequestPacket(login, password));
 
@@ -111,7 +116,7 @@ namespace Client
             return false;
         }
 
-        public async Task <Character> LoadCharacter(int slotNum)
+        public async Task LoadCharacter(int slotNum)
         {
             if(GameServer.IsConnected)
             {
@@ -136,7 +141,7 @@ namespace Client
 
                             await Console.Out.WriteLineAsync("Character loaded succesfully.");
                             
-                            return ClientChar;
+                            
                         }
                         else
                         {
@@ -155,4 +160,3 @@ namespace Client
         }
     }
 }
-*/

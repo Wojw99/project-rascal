@@ -1,4 +1,5 @@
-﻿using NetworkCore.Packets;
+﻿using NetworkCore.NetworkMessage;
+using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,13 @@ namespace NetworkCore.NetworkData
 
         public string Name { get; set; }
 
-        public int Health { get; set; }
+        public float CurrentHealth { get; set; }
 
-        public int Mana { get; set; }
+        public float MaxHealth { get; set; }
+
+        public float CurrentMana { get; set; }
+
+        public float MaxMana { get; set; }
 
         public float PositionX { get; set; }
 
@@ -37,8 +42,10 @@ namespace NetworkCore.NetworkData
         {
             Vid = -1; // 
             Name = string.Empty;
-            Health = 0;
-            Mana = 0;
+            CurrentHealth = 0;
+            MaxHealth = 0;
+            CurrentMana = 0;
+            MaxMana = 0;
             PositionX = 0;
             PositionY = 0;
             PositionZ = 0;
@@ -51,8 +58,10 @@ namespace NetworkCore.NetworkData
         {
             //Vid = packet.CharacterVId; // Vid in packet cannot be null.
             Name = packet.Name != null ? packet.Name : string.Empty;
-            Health = packet.Health != null ? packet.Health.Value : 0;
-            Mana = packet.Mana != null ? packet.Mana.Value : 0;
+            CurrentHealth = packet.CurrentHealth != null ? packet.CurrentHealth.Value : 0;
+            MaxHealth = packet.MaxHealth != null ? packet.MaxHealth.Value : 0;
+            CurrentMana = packet.CurrentMana != null ? packet.CurrentMana.Value : 0;
+            MaxMana = packet.MaxMana != null ? packet.MaxMana.Value : 0;
             PositionX = packet.PosX != null ? packet.PosX.Value : 0; // if null assign 0
             PositionY = packet.PosY != null ? packet.PosY.Value : 0;
             PositionZ = packet.PosZ != null ? packet.PosZ.Value : 0;
@@ -60,12 +69,14 @@ namespace NetworkCore.NetworkData
         }
 
         // Used on server side to create Player only from database data!
-        public Character (int PlayerVid, string Name, int Health, int Mana, float PositionX, float PositionY, float PositionZ, float Rotation)
+        public Character (int PlayerVid, string Name, float CurrentHealth, float MaxHealth, float CurrentMana, float MaxMana, float PositionX, float PositionY, float PositionZ, float Rotation)
         {
             this.Vid = PlayerVid;
             this.Name = Name;
-            this.Health = Health;
-            this.Mana = Mana;
+            this.CurrentHealth = CurrentHealth;
+            this.MaxHealth = MaxHealth;
+            this.CurrentMana = CurrentMana;
+            this.MaxMana = MaxMana;
             this.PositionX = PositionX;
             this.PositionY = PositionY;
             this.PositionZ = PositionZ;
@@ -76,8 +87,10 @@ namespace NetworkCore.NetworkData
         {
             await Console.Out.WriteLineAsync($"Id = {Vid}");
             await Console.Out.WriteLineAsync($"Name = {Name}");
-            await Console.Out.WriteLineAsync($"Health = {Health}");
-            await Console.Out.WriteLineAsync($"Mana = {Mana}");
+            await Console.Out.WriteLineAsync($"CurrentHealth = {CurrentHealth}");
+            await Console.Out.WriteLineAsync($"MaxHealth = {MaxHealth}");
+            await Console.Out.WriteLineAsync($"CurrentMana = {CurrentMana}");
+            await Console.Out.WriteLineAsync($"MaxMana = {MaxMana}");
             await Console.Out.WriteLineAsync($"PositionX = {PositionX}");
             await Console.Out.WriteLineAsync($"PositionY = {PositionY}");
             await Console.Out.WriteLineAsync($"PositionZ = {PositionZ}");

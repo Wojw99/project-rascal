@@ -21,6 +21,7 @@ namespace NetworkCore.NetworkMessage
         CHARACTER_STATE_UPDATE_PACKET = 0x22,  // To send single character state update.
         CHARACTER_STATES_UPDATE_PACKET = 0x23, // To send all updated characters states on World.
         CHARACTER_MOVE_PACKET = 0x24,
+        CHARACTER_EXIT_PACKET = 0x25,
 
         // 
         CLIENT_DISCONNECT = 0x30,

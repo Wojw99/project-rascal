@@ -35,7 +35,7 @@ namespace ServerApplication.GameService
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
         {
-            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 0, 0, 0, 0);
+            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0);
             CharacterStateUpdate.CharacterVId = UniqueId;
         }
 
@@ -51,22 +51,42 @@ namespace ServerApplication.GameService
             }
         }
 
-        public void SetHealth(int health)
+        public void SetCurrentHealth(float currentHealth)
         {
             lock (stateLock)
             {
-                CharacterObj.Health = health;
-                CharacterStateUpdate.Health = health;
+                CharacterObj.CurrentHealth = currentHealth;
+                CharacterStateUpdate.CurrentHealth = currentHealth;
                 ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
             }
         }
 
-        public void SetMana(int mana)
+        public void SetMaxHealth(float maxHealth)
+        {
+            lock (stateLock)
+            {
+                CharacterObj.MaxHealth = maxHealth;
+                CharacterStateUpdate.MaxHealth = maxHealth;
+                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+            }
+        }
+
+        public void SetCurrentMana(float currentMana)
+        {
+            lock (stateLock)
+            {
+                CharacterObj.CurrentMana = currentMana;
+                CharacterStateUpdate.CurrentMana = currentMana;
+                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+            }
+        }
+
+        public void SetMaxMana(float maxMana)
         {
             lock(stateLock)
             {
-                CharacterObj.Mana = mana;
-                CharacterStateUpdate.Mana = mana;
+                CharacterObj.MaxMana = maxMana;
+                CharacterStateUpdate.MaxMana = maxMana;
                 ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
             }
         }

@@ -74,6 +74,9 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.CHARACTER_MOVE_PACKET:
                     return new CharacterMovePacket(receivedData);
 
+                case PacketType.CHARACTER_EXIT_PACKET:
+                    return new CharacterExitPacket(receivedData);
+
                 case PacketType.CLIENT_DISCONNECT:
                     return new ClientDisconnectPacket(receivedData);
 

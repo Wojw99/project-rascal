@@ -21,10 +21,16 @@ namespace NetworkCore.Packets
         public string? Name { get; set; }
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int? Health { get; set; }
+        public float? CurrentHealth { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int? Mana { get; set; }
+        public float? MaxHealth { get; set; } = -1;
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public float? CurrentMana { get; set; } = -1;
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public float? MaxMana { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
         public float? PosX { get; set; }
@@ -42,8 +48,10 @@ namespace NetworkCore.Packets
         {
             // We doesnt clear the id! Because it is unique for all characters.
             Name = null;
-            Health = null;
-            Mana = null;
+            CurrentHealth = null;
+            MaxHealth = null;
+            CurrentMana = null;
+            MaxMana = null;
             PosX = null;
             PosY = null;
             PosZ = null;

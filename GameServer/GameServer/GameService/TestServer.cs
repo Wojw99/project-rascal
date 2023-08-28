@@ -22,11 +22,8 @@ namespace ServerApplication.GameService
         // But note that in the future we must load that Vid's from database!
 
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
-            string serverName, ServerType serverType,
-            UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
-            int tcpPort) 
-            : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, 
-                  maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval, tcpPort)
+            string serverName, ServerType serverType, int tcpPort) 
+            : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, tcpPort)
         {
             _World = new World();
         }
@@ -102,7 +99,7 @@ namespace ServerApplication.GameService
                         // save player state into database
                     }
 
-                    _World.RemovePlayer(playerConn); // delete from world
+                    await _World.RemovePlayer(playerConn); // delete from world
                     playerConn.Disconnect(); // disconnect from server
 
                     

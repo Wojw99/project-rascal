@@ -110,14 +110,18 @@ namespace ServerApplication.GameService.Base
         }
 
         // Send current connected player states to that player
-        private async Task OnCharacterLoad(PlayerConnection playerConn)
+
+        public async Task AddNewPlayer(PlayerConnection playerConn)
         {
+            if(!ConnectedPlayers.TryAdd(playerConn.Id, playerConn))
+                throw new InvalidOperationException($"Failed to add player with id {playerConn.Id}.");
+
+            // Send character states of currently connected players to new player.
             CharacterStatesPacket characterStatesPacket = new CharacterStatesPacket();
 
             foreach (var character in ConnectedPlayers)
             {
-                // except owner
-                if(character.Key != playerConn.Id)
+                if (character.Key != playerConn.Id)
                 {
                     characterStatesPacket.PacketCollection.Add(new CharacterStatePacket(character.Value.CharacterObj));
                 }
@@ -126,19 +130,19 @@ namespace ServerApplication.GameService.Base
             await playerConn.SendPacket(characterStatesPacket);
         }
 
-        public async Task AddNewPlayer(PlayerConnection playerConn)
-        {
-            if(!ConnectedPlayers.TryAdd(playerConn.Id, playerConn))
-                throw new InvalidOperationException($"Failed to add player with id {playerConn.Id}.");
-
-            await OnCharacterLoad(playerConn);
-        }
-
-        public void RemovePlayer(PlayerConnection playerConn) 
+        public async Task RemovePlayer(PlayerConnection playerConn) 
         {
             if (!ConnectedPlayers.TryRemove(playerConn.Id, out PlayerConnection removedPlayer)) // idk we need object of removed player.
                 throw new InvalidOperationException($"Failed to remove player with id {playerConn.Id}.");
-        }
 
+            // Send packet to all players to remove player character from their collections.
+            foreach (var player in ConnectedPlayers)
+            {
+                if (playerConn.Id != player.Key)
+                {
+                    await player.Value.SendPacket(new CharacterExitPacket(playerConn.CharacterObj.Vid));
+                }
+            }
+        }
     }
 }

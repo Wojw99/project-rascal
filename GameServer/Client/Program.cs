@@ -12,18 +12,18 @@ using NetworkCore.NetworkData;
 
 namespace Client
 {
-    class Client
+    class NetworkClient
     {
         static bool BrakeThatHellLoop = false;
         static async Task Main(string[] args)
         {     
-            SimpleClient client = new SimpleClient(50, 50, TimeSpan.FromMilliseconds(10));
+            TcpNetworkClient client = new TcpNetworkClient();
             client.IsRunning = true;
-            client.RunPacketProcessingInBackground();
+            client.RunPacketProcessingInBackground(50, 50, TimeSpan.FromMilliseconds(20);
 
             // PRZYKŁAD ŁĄCZENIA Z SERWEREM AUTORYZACJI
 
-            /*string authToken = string.Empty;
+            *//*string authToken = string.Empty;
 
             TcpPeer AuthServer = await client.CreateTcpServerConnection("127.0.0.1", 8050);
 
@@ -57,7 +57,7 @@ namespace Client
                 // dodatkowo będzie trzeba wysłać pakiet z błędem podczas logowania.
 
                 AuthServer.Disconnect();
-            }*/
+            }*//*
 
             try
             {
@@ -109,7 +109,7 @@ namespace Client
                 while(true)
                 {
                     await TestingOperationsTask(GameServer, client);
-                    /*Stopwatch watch = new Stopwatch();
+                    *//*Stopwatch watch = new Stopwatch();
 
                     watch.Start();
                     await GameServer.SendPacket(new PingRequestPacket());
@@ -119,7 +119,7 @@ namespace Client
 
                     watch.Stop();
                     await Console.Out.WriteLineAsync($"Ping time: {watch.ElapsedMilliseconds}");
-                    watch.Reset();*/
+                    watch.Reset();*//*
                     //Thread.Sleep(1000);
 
                 }
@@ -131,7 +131,7 @@ namespace Client
             }
         }
 
-        public static async Task TestingOperationsTask(IPeer serverPeer, SimpleClient client) // run it in main program in while loop
+        public static async Task TestingOperationsTask(IPeer serverPeer, NetworkClient client) // run it in main program in while loop
         {
             Console.Clear();
             await Console.Out.WriteLineAsync("---------------------------------------------");

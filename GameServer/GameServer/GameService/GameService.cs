@@ -16,13 +16,12 @@ namespace ServerApplication.Game
     {
         static async Task Main(string[] args)
         {
-            TestServer Server = new TestServer(true, 120, "192.168.5.5",
-            "Game Server", ServerType.world_server, 50, 50, TimeSpan.FromMilliseconds(10), 8051);
+            TestServer Server = new TestServer(true, 120, "192.168.5.5", "Game Server", ServerType.world_server, 8051);
 
             ServerMonitor Monitor = new ServerMonitor(Server);
 
             Server.StartListen(); 
-            Server.RunPacketProcessingInBackground();
+            Server.RunPacketProcessingInBackground(50, 50, TimeSpan.FromMilliseconds(20));
             Server.StartUpdate(TimeSpan.FromMilliseconds(50));
 
             /*while (Server.IsRunning)
@@ -79,10 +78,10 @@ namespace ServerApplication.Game
                             playerRef.SetName(newName);
                             break;
                         case 2:
-                            playerRef.SetHealth(playerRef.CharacterObj.Health + 10);
+                            playerRef.SetMaxHealth(playerRef.CharacterObj.MaxHealth + 10);
                             break;
                         case 3:
-                            playerRef.SetMana(playerRef.CharacterObj.Mana + 10);
+                            playerRef.SetMaxMana(playerRef.CharacterObj.MaxMana + 10);
                             break;
 
                     }

@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using NetworkCore.NetworkMessage.old;
 using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkData.stare;
+using System.Xml.Linq;
 
 namespace NetworkCore.Packets
 {
@@ -17,6 +18,12 @@ namespace NetworkCore.Packets
     public class CharacterLoadResponsePacket : PacketBase
     {
         [Serialization(Type: SerializationType.type_bool)]
+        public bool Success { get; private set; } // 1 - true
+
+        [Serialization(Type: SerializationType.type_subPacket)]
+        public CharacterStatePacket StatePacket { get; set; }
+
+        /*[Serialization(Type: SerializationType.type_bool)]
         public bool Success { get; private set; } // 1 - true
 
         [Serialization(Type: SerializationType.type_Int32)]
@@ -41,43 +48,38 @@ namespace NetworkCore.Packets
         public float PosZ { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float Rot { get; set; }
+        public float Rot { get; set; }*/
 
         public Character GetCharacter()
         {
-            return new Character(CharacterVId, Name, Health, Mana, PosX, PosY, PosZ, Rot);
+            return StatePacket.GetCharacter();
         }
 
 
         public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
+            StatePacket = new CharacterStatePacket(characterObj.Vid);
             Success = true;
-            CharacterVId = characterObj.Vid;
-            Name = characterObj.Name;
-            Health = characterObj.Health;
-            Mana = characterObj.Mana;
-            PosX = characterObj.PositionX;
-            PosY = characterObj.PositionY;
-            PosZ = characterObj.PositionZ;
-            Rot = characterObj.Rotation;
+            StatePacket.Name = characterObj.Name;
+            StatePacket.CurrentHealth = characterObj.CurrentHealth;
+            StatePacket.MaxHealth = characterObj.MaxHealth;
+            StatePacket.CurrentMana = characterObj.CurrentMana;
+            StatePacket.MaxMana = characterObj.MaxMana;
+            StatePacket.PosX = characterObj.PositionX;
+            StatePacket.PosY = characterObj.PositionY;
+            StatePacket.PosZ = characterObj.PositionZ;
+            StatePacket.Rot = characterObj.Rotation;
         }
 
         public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
             Success = false;
-            CharacterVId = -1;
-            Name = string.Empty;
-            Health = -1;
-            Mana = -1;
-            PosX = -1;
-            PosY = -1;
-            PosZ = -1;
-            Rot = -1;
+            StatePacket = new CharacterStatePacket(-1);
         }
 
         public CharacterLoadResponsePacket(byte[] data) : base(data)
         {
-
+            StatePacket = new CharacterStatePacket(-1);
         }
 
         public override string ToString()

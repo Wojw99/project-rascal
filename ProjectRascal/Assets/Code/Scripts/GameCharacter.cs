@@ -1,13 +1,34 @@
+using NetworkCore.Packets;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameCharacter : MonoBehaviour
 {
+    [SerializeField] protected int vId = -1;
+    [SerializeField] protected new string name = string.Empty;
     [SerializeField] protected float currentHealth = 20;
     [SerializeField] protected float maxHealth = 20;
     [SerializeField] protected float currentMana = 20;
     [SerializeField] protected float maxMana = 20;
     [SerializeField] protected float attack = 5;
     [SerializeField] protected float magic = 10;
+
+    public virtual void LoadAttributes(CharacterStatePacket packet) {
+        vId = packet.CharacterVId;
+        name = packet.Name;
+        currentHealth = packet.CurrentHealth;
+        maxHealth = packet.MaxHealth;
+        currentMana = packet.CurrentMana;
+        maxMana = packet.MaxMana;
+    }
+
+    public virtual void UpdateAttributes(CharacterStateUpdatePacket stateUpdate) {
+        name = stateUpdate.Name ?? name;
+        currentHealth = stateUpdate.CurrentHealth ?? currentHealth;
+        maxHealth = stateUpdate.MaxHealth ?? maxHealth;
+        currentMana = stateUpdate.CurrentMana ?? currentMana;
+        maxMana = stateUpdate.MaxMana ?? maxMana;
+    }
 
     public virtual void TakeDamage(float damageAmount) {
         currentHealth -= damageAmount;
@@ -25,6 +46,16 @@ public class GameCharacter : MonoBehaviour
         }
         var canvas = transform.gameObject.GetComponentInChildren<CharacterCanvas>();
         canvas.UpdateHealthBar(currentHealth, maxHealth);
+    }
+
+    public int VId
+    {
+        get { return VId; }
+    }
+
+    public string Name
+    {
+        get { return name; }
     }
 
     public float CurrentHealth

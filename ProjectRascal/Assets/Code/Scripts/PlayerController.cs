@@ -1,4 +1,4 @@
-using Assets.Code.Scripts.NetClient;
+using NetClient;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using System.Collections;
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private float timeSinceLastPacket = 0f;
-    private float packetSendInterval = 0.1f; // Pó³ sekundy
+    private float packetSendInterval = 0.1f; 
 
     private void HandleRunning() {
         timeSinceLastPacket += Time.deltaTime;
@@ -180,11 +180,12 @@ public class PlayerController : MonoBehaviour, IDamagaController {
 
             if(timeSinceLastPacket >= packetSendInterval)
             {
-                PlayerStatePacket statePacket = new PlayerStatePacket(Client._instanceNetwork.ClientPlayer.pVid);
-                statePacket.SetPositionX(transform.position.x);
-                statePacket.SetPositionY(transform.position.y);
-                statePacket.SetPositionZ(transform.position.z);
-                Client._instanceNetwork.ServerPeer.SendPacket(statePacket);
+                // Emisariusz
+                CharacterMovePacket statePacket = new CharacterMovePacket(gameCharacter.VId, 
+                    transform.position.x, transform.position.y, transform.position.z, 0);
+                
+                Client.Instance.GameServer.SendPacket(statePacket);
+                //
 
                 timeSinceLastPacket = 0f;
             }

@@ -28,10 +28,8 @@ namespace NetworkCore.NetworkCommunication
         protected Socket TcpSocket { get; }
 
         protected TcpNetworkServer (bool allowPhysicalClients, int maxClients, string publicIpAdress,
-            string serverName, ServerType serverType,
-            UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval,
-            int tcpPort)
-            : base(maxIncomingPacketCount, maxOutgoingPacketCount, packetProcessInterval)
+            string serverName, ServerType serverType, int tcpPort)
+            : base()
         {
             AllowPhysicalClients = allowPhysicalClients;
             MaxClients = maxClients;

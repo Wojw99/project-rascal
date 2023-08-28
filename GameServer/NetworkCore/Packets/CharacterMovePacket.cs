@@ -30,13 +30,13 @@ namespace NetworkCore.Packets
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.
-        public CharacterMovePacket(Character PlayerObj) : base(PacketType.CHARACTER_MOVE_PACKET, false)
+        public CharacterMovePacket(int characterVId, float posX, float posY, float posZ, float rotation) : base(PacketType.CHARACTER_MOVE_PACKET, false)
         {
-            CharacterVId = PlayerObj.Vid;
-            PosX = PlayerObj.PositionX;
-            PosY = PlayerObj.PositionY;
-            PosZ = PlayerObj.PositionZ;
-            Rot = PlayerObj.Rotation;
+            CharacterVId = characterVId;
+            PosX = posX;
+            PosY = posY;
+            PosZ = posZ;
+            Rot = rotation;
         }
 
         //public CharacterMovePacket(PacketBase packet) : base(packet) {}

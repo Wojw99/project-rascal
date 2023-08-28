@@ -1,13 +1,12 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerApplication.Old
+namespace Assets.Code.Scripts.NetClient.Emissary
 {
-    public class Map
+    internal class AuthEmissary
     {
     }
 }
-*/

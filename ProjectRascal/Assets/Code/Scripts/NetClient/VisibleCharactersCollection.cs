@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using NetworkCore.Packets;
 
-namespace Client
+namespace NetClient
 {
     // This class is representing other Players connected to server. We can receive
     // other players state, 

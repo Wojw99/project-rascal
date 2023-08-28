@@ -17,16 +17,22 @@ namespace NetworkCore.Packets
         // Player VId cannot be null. See the description of this parameter in the Player class.
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int CharacterVId { get; private set; } = -1;
+        public int CharacterVId { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_string)]
         public string Name { get; set; } = string.Empty;
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int Health { get; set; } = -1;
+        public float CurrentHealth { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int Mana { get; set; } = -1;
+        public float MaxHealth { get; set; } = -1;
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public float CurrentMana { get; set; } = -1;
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public float MaxMana { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
         public float PosX { get; set; } = -1;
@@ -50,8 +56,11 @@ namespace NetworkCore.Packets
         {
             CharacterVId = player.Vid;
             Name = player.Name;
-            Health = player.Health;
-            Mana = player.Mana;
+            CurrentHealth = player.CurrentHealth;
+            MaxHealth = player.MaxHealth;
+            CurrentMana = player.CurrentMana;
+            MaxMana = player.MaxMana;
+            CurrentMana = player.CurrentMana;
             PosX =  player.PositionX;
             PosY = player.PositionY;
             PosZ = player.PositionZ;
@@ -62,7 +71,7 @@ namespace NetworkCore.Packets
 
         public Character GetCharacter()
         {
-            return new Character(CharacterVId, Name, Health, Mana, PosX, PosY, PosZ, Rot);
+            return new Character(CharacterVId, Name, CurrentHealth, MaxHealth, CurrentMana, MaxMana, PosX, PosY, PosZ, Rot);
         }
 
         public override string ToString()
