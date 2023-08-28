@@ -5,7 +5,12 @@ using UnityEngine.AI;
 
 public class HumanAnimator : MonoBehaviour
 {
-    // private NavMeshAgent navMeshAgent;
+    [SerializeField] private int meleeAttackCastDuration = 42;
+    [SerializeField] private int buffCastDuration = 92;
+    [SerializeField] private int gatheringCastDuration = 80;
+    [SerializeField] private int spellCast2CastDuration = 60;
+    [SerializeField] private int attack2HandedDuration = 116;
+
     private Animator animator;
 
     private void Start()
@@ -17,6 +22,26 @@ public class HumanAnimator : MonoBehaviour
     private void Update()
     {
         // UpdateSpeed();
+    }
+
+    public void AnimateAttack2Handed() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Attack2Handed");
+    }
+
+    public void AnimateBuffMagicArmor() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("BuffMagicArmor");
+    }
+
+    public void AnimateSurprise() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Surprise");
+    }
+
+    public void AnimateGesture1() {
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Gesture1");
     }
 
     public void AnimateDeath() {
@@ -66,4 +91,32 @@ public class HumanAnimator : MonoBehaviour
     //     var speedPercent = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
     //     animator.SetFloat("Speed", speedPercent, .1f, Time.deltaTime);
     // }
+
+    public int MeleeAttackCastDuration
+    {
+        get { return meleeAttackCastDuration; }
+    }
+
+    public int BuffCastDuration
+    {
+        get { return buffCastDuration; }
+    }
+
+    public int GatheringCastDuration
+    {
+        get { return gatheringCastDuration; }
+    }
+
+    public int SpellCast2CastDuration
+    {
+        get { return spellCast2CastDuration; }
+    }
+
+    public int Attack2HandedDuration
+    {
+        get { return attack2HandedDuration; }
+    }
+
+
+    public static float NormalizeDuration(int duration) => duration / 60f;
 }

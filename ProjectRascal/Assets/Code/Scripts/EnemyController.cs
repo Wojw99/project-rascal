@@ -58,7 +58,8 @@ public class EnemyController : MonoBehaviour, IDamagaController
                 characterState = CharacterState.Casting;
                 navMeshAgent.isStopped = true;
                 humanAnimator.AnimateMeleeAttack();
-                Invoke("EnforceDamage", 0.8f);
+                var duration = HumanAnimator.NormalizeDuration(humanAnimator.MeleeAttackCastDuration);
+                StartCoroutine(WaitForEnforceDamage(duration));
                 return;
             }
         }
@@ -82,20 +83,17 @@ public class EnemyController : MonoBehaviour, IDamagaController
         chasingTarget = null;
     }
 
+    private IEnumerator WaitForEnforceDamage(float delay) {
+        yield return new WaitForSeconds(delay);
+        EnforceDamage();
+    }
+
     private void EnforceDamage()
     {
         if(characterState != CharacterState.Death) {
             characterState = CharacterState.Idle;
             weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: 0.8f);
         }
-    }
-
-    private void HandleAttack() {
-        
-    }
-
-    private void HandleIdle() {
-
     }
 
     public void VisualizeDamage(Vector3 hitDirection, bool bloodSpill = true){
