@@ -20,7 +20,9 @@ namespace ServerApplication.GameService
         
         public Character CharacterObj { get; set; }
 
-        private CharacterStateUpdatePacket CharacterStateUpdate { get; set; }
+        private CharacterAttrUpdatePacket CharacterStateUpdate { get; set; }
+
+        private CharacterTransformPacket CharacterTransform { get; set; }
 
         private readonly object stateLock = new object();
 
@@ -29,12 +31,12 @@ namespace ServerApplication.GameService
         {
             ServerRef = serverRef;
             CharacterObj = new Character();
-            CharacterStateUpdate = new CharacterStateUpdatePacket(-1);
+            CharacterStateUpdate = new CharacterAttrUpdatePacket(-1);
         }
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
         {
-            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0);
+            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0, 0, 0);
             CharacterStateUpdate.CharacterVId = UniqueId;
         }
 
@@ -90,79 +92,47 @@ namespace ServerApplication.GameService
             }
         }
 
-        public void SetPosition(float posX, float posY, float posZ, float rot)
+        public void SetTransform(float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
         {
             lock(stateLock)
             {
                 CharacterObj.PositionX = posX;
                 CharacterObj.PositionY = posY;
                 CharacterObj.PositionZ = posZ;
-                CharacterObj.Rotation = rot;
+                CharacterObj.RotationX = rotX;
+                CharacterObj.RotationY = rotY;
+                CharacterObj.RotationZ = rotZ;
 
-                CharacterStateUpdate.PosX = posX;
-                CharacterStateUpdate.PosY = posY;
-                CharacterStateUpdate.PosZ = posZ;
-                CharacterStateUpdate.Rot = rot;
+                CharacterTransform.PosX = posX;
+                CharacterTransform.PosY = posY;
+                CharacterTransform.PosZ = posZ;
+                CharacterTransform.RotX = rotX;
+                CharacterTransform.RotY = rotY;
+                CharacterTransform.RotZ = rotZ;
 
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+                ServerRef._World.AddNewCharacterTransform(Id, CharacterTransform);
             }
         }
 
-        public void SetPosition(CharacterMovePacket movePacket)
+        public void SetPosition(CharacterTransformPacket packet)
         {
             lock (stateLock)
             {
-                CharacterObj.PositionX = movePacket.PosX;
-                CharacterObj.PositionY = movePacket.PosY;
-                CharacterObj.PositionZ = movePacket.PosZ;
-                CharacterObj.Rotation = movePacket.Rot;
+                CharacterObj.PositionX = packet.PosX;
+                CharacterObj.PositionY = packet.PosY;
+                CharacterObj.PositionZ = packet.PosZ;
+                CharacterObj.RotationX = packet.RotX;
+                CharacterObj.RotationY = packet.RotY;
+                CharacterObj.RotationZ = packet.RotZ;
 
-                CharacterStateUpdate.PosX = movePacket.PosX;
-                CharacterStateUpdate.PosY = movePacket.PosY;
-                CharacterStateUpdate.PosZ = movePacket.PosZ;
-                CharacterStateUpdate.Rot = movePacket.Rot;
+                CharacterTransform.PosX = packet.PosX;
+                CharacterTransform.PosY = packet.PosY;
+                CharacterTransform.PosZ = packet.PosZ;
+                CharacterTransform.RotX = packet.RotX;
+                CharacterTransform.RotY = packet.RotY;
+                CharacterTransform.RotZ = packet.RotZ;
 
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
-            }
-        }
-
-        public void SetPositionX(float posX)
-        {
-            lock(stateLock)
-            {
-                CharacterObj.PositionX = posX;
-                CharacterStateUpdate.PosX = posX;
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
-            }
-        }
-
-        public void SetPositionY(float posY)
-        {
-            lock(stateLock)
-            {
-                CharacterObj.PositionY = posY;
-                CharacterStateUpdate.PosY = posY;
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
-            }
-        }
-
-        public void SetPositionZ(float posZ)
-        {
-            lock(stateLock)
-            {
-                CharacterObj.PositionZ = posZ;
-                CharacterStateUpdate.PosZ = posZ;
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
-            }
-        }
-
-        public void SetRotation(float rot)
-        {
-            lock(stateLock)
-            {
-                CharacterObj.Rotation = rot;
-                CharacterStateUpdate.Rot = rot;
-                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+                ServerRef._World.AddNewCharacterTransform(Id, CharacterTransform);
             }
         }
 

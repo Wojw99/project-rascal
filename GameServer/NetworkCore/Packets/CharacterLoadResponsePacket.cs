@@ -48,16 +48,18 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_float)]
         public float Rot { get; set; }*/
 
-        public Character GetCharacter()
+        /*public Character GetCharacter()
         {
             return StatePacket.GetCharacter();
-        }
+        }*/
 
 
         public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
             StatePacket = new CharacterStatePacket(characterObj.Vid);
+
             Success = true;
+
             StatePacket.Name = characterObj.Name;
             StatePacket.CurrentHealth = characterObj.CurrentHealth;
             StatePacket.MaxHealth = characterObj.MaxHealth;
@@ -66,7 +68,6 @@ namespace NetworkCore.Packets
             StatePacket.PosX = characterObj.PositionX;
             StatePacket.PosY = characterObj.PositionY;
             StatePacket.PosZ = characterObj.PositionZ;
-            StatePacket.Rot = characterObj.Rotation;
         }
 
         public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE, true)

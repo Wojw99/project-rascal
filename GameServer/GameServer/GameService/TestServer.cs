@@ -84,7 +84,7 @@ namespace ServerApplication.GameService
                     }
                 }
 
-                else if(packet is CharacterMovePacket movePacket)
+                else if(packet is CharacterTransformPacket movePacket)
                 {
                     playerConn.SetPosition(movePacket);
                 }

@@ -22,7 +22,7 @@ namespace Assets.Code.Scripts.NetClient.Clients
 
         public async void Start()
         {
-            AuthServerPeer = await TcpNetworkClient.Instance.CreateTcpServerConnection("127.0.0.1", 8050);
+            AuthServerPeer = await TcpNetworkClient.GetInstance().CreateTcpServerConnection("127.0.0.1", 8050);
             AuthServerPeer.Connect();
             AuthServerPeer.StartRead();
         }

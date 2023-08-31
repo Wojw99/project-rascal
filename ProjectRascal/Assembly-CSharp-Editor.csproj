@@ -345,28 +345,7 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
     </Reference>
     <Reference Include="NetworkCore">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\NetworkCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Abstractions">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IdentityModel.Tokens.Jwt">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-    </Reference>
-    <Reference Include="GameServer">
-      <HintPath>Assets\Code\GameServer\obj\Debug\net6.0\GameServer.dll</HintPath>
-    </Reference>
-    <Reference Include="ServerApplication">
-      <HintPath>Assets\Code\GameServer\obj\Debug\net6.0\ref\ServerApplication.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.JsonWebTokens">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <HintPath>Assets\Code\Scripts\NetClient\NetworkCore.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
@@ -886,10 +865,6 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{C69E9108-6AC4-14F6-2692-3F3266D6CCE8}</Project>
       <Name>Assembly-CSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="GameServerAssembly.csproj">
-      <Project>{379B340B-D00E-B1B4-BFCC-F738DA1A2D65}</Project>
-      <Name>GameServerAssembly</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

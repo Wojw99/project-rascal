@@ -21,7 +21,9 @@ namespace ServerApplication.GameService.Base
 
         private ConcurrentDictionary<int, Enemy> Enemies = new ConcurrentDictionary<int, Enemy>();
 
-        private ConcurrentDictionary<Guid, CharacterStateUpdatePacket> CharactersStatesUpdated = new ConcurrentDictionary<Guid, CharacterStateUpdatePacket> { };
+        private ConcurrentDictionary<Guid, CharacterAttrUpdatePacket> CharactersStatesUpdated = new ConcurrentDictionary<Guid, CharacterAttrUpdatePacket> ();
+
+        private ConcurrentDictionary<Guid, CharacterTransformPacket> CharactersTransforms = new ConcurrentDictionary<Guid, CharacterTransformPacket>();
 
         public int IdCounter = 0;
 
@@ -34,15 +36,38 @@ namespace ServerApplication.GameService.Base
         // Send updated character status to all players.
         public async Task Update()
         {
-            if(CharactersStatesUpdated.Count > 0)
+            // Sending position and rotation.
+
+            if(CharactersTransforms.Count > 0)
             {
-                CharacterStatesUpdatePacket statesPacket = new CharacterStatesUpdatePacket();
+                CharacterTransformsPacket transformsPacket = new CharacterTransformsPacket();
+
+                foreach (var transform in CharactersTransforms)
+                {
+                    transformsPacket.PacketCollection.Add(transform.Value);
+                }
+
+                foreach (var player in ConnectedPlayers.Values)
+                {
+                    await player.SendPacket(transformsPacket);
+                }
+
+                CharactersTransforms.Clear();
+            }
+
+
+            // Sending character States updates.
+
+            if (CharactersStatesUpdated.Count > 0)
+            {
+                CharactersAttrsUpdatePacket statesPacket = new CharactersAttrsUpdatePacket();
 
                 // Add updated states to packet
                 foreach (var characterState in CharactersStatesUpdated)
                 {
                     statesPacket.PacketCollection.Add(characterState.Value);
-                }
+                }  
+
                 // Sending to all players.
                 foreach (var player in ConnectedPlayers.Values)
                 {
@@ -61,9 +86,14 @@ namespace ServerApplication.GameService.Base
                 CharactersStatesUpdated.Clear();
             }
         }
-        public void AddNewCharacterStateUpdate(Guid ConnId, CharacterStateUpdatePacket updatedState)
+        public void AddNewCharacterStateUpdate(Guid ConnId, CharacterAttrUpdatePacket updatedState)
         {
             CharactersStatesUpdated[ConnId] = updatedState;
+        }
+
+        public void AddNewCharacterTransform(Guid ConnId, CharacterTransformPacket transform)
+        {
+            CharactersTransforms[ConnId] = transform;
         }
 
         public async Task ShowConnectedPlayers()

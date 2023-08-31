@@ -33,16 +33,13 @@ namespace NetworkCore.Packets
         public float MaxMana { get; set; } = -1;
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosX { get; set; } = -1;
+        public float PosX { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosY { get; set; } = -1;
+        public float PosY { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosZ { get; set; } = -1;
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float Rot { get; set; } = -1;
+        public float PosZ { get; set; }
 
         // Be 100% sure this is the correct unique identificator of player.
         public CharacterStatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_PACKET, false)
@@ -59,18 +56,17 @@ namespace NetworkCore.Packets
             CurrentMana = player.CurrentMana;
             MaxMana = player.MaxMana;
             CurrentMana = player.CurrentMana;
-            PosX =  player.PositionX;
+            PosX = player.PositionX;
             PosY = player.PositionY;
             PosZ = player.PositionZ;
-            Rot = player.Rotation;
         }
 
         public CharacterStatePacket(byte[] data) : base(data) { }
 
-        public Character GetCharacter()
+        /*public Character GetCharacter()
         {
-            return new Character(CharacterVId, Name, CurrentHealth, MaxHealth, CurrentMana, MaxMana, PosX, PosY, PosZ, Rot);
-        }
+            return new Character(CharacterVId, Name, CurrentHealth, MaxHealth, CurrentMana, MaxMana);
+        }*/
 
         public override string ToString()
         {

@@ -32,8 +32,11 @@ namespace NetworkCore.NetworkData
 
         public float PositionZ { get; set; }
 
-        public float Rotation { get; set; }
+        public float RotationX { get; set; }
 
+        public float RotationY { get; set; }
+
+        public float RotationZ { get; set; }
 
         // Server-side - I need to think about the default constructor. Maybe we want to load Player
         // from database at this point.
@@ -49,27 +52,13 @@ namespace NetworkCore.NetworkData
             PositionX = 0;
             PositionY = 0;
             PositionZ = 0;
-            Rotation = 0;
-        }
-
-        // Used on client side - when only new player state received.
-        // Note that when Player object exists - we want to only change his state.
-        public Character(CharacterStateUpdatePacket packet)
-        {
-            //Vid = packet.CharacterVId; // Vid in packet cannot be null.
-            Name = packet.Name != null ? packet.Name : string.Empty;
-            CurrentHealth = packet.CurrentHealth != null ? packet.CurrentHealth.Value : 0;
-            MaxHealth = packet.MaxHealth != null ? packet.MaxHealth.Value : 0;
-            CurrentMana = packet.CurrentMana != null ? packet.CurrentMana.Value : 0;
-            MaxMana = packet.MaxMana != null ? packet.MaxMana.Value : 0;
-            PositionX = packet.PosX != null ? packet.PosX.Value : 0; // if null assign 0
-            PositionY = packet.PosY != null ? packet.PosY.Value : 0;
-            PositionZ = packet.PosZ != null ? packet.PosZ.Value : 0;
-            Rotation = packet.Rot != null ? packet.Rot.Value : 0;
+            RotationX = 0;
+            RotationY = 0;
+            RotationZ = 0;
         }
 
         // Used on server side to create Player only from database data!
-        public Character (int PlayerVid, string Name, float CurrentHealth, float MaxHealth, float CurrentMana, float MaxMana, float PositionX, float PositionY, float PositionZ, float Rotation)
+        public Character (int PlayerVid, string Name, float CurrentHealth, float MaxHealth, float CurrentMana, float MaxMana, float PositionX, float PositionY, float PositionZ, float RotationX, float RotationY, float RotationZ)
         {
             this.Vid = PlayerVid;
             this.Name = Name;
@@ -80,7 +69,9 @@ namespace NetworkCore.NetworkData
             this.PositionX = PositionX;
             this.PositionY = PositionY;
             this.PositionZ = PositionZ;
-            this.Rotation = Rotation;
+            this.RotationX = RotationX;
+            this.RotationY = RotationY;
+            this.RotationZ = RotationZ;
         }
 
         public async Task Show()
@@ -94,7 +85,9 @@ namespace NetworkCore.NetworkData
             await Console.Out.WriteLineAsync($"PositionX = {PositionX}");
             await Console.Out.WriteLineAsync($"PositionY = {PositionY}");
             await Console.Out.WriteLineAsync($"PositionZ = {PositionZ}");
-            await Console.Out.WriteLineAsync($"Rotation = {Rotation}");
+            await Console.Out.WriteLineAsync($"RotationX = {RotationX}");
+            await Console.Out.WriteLineAsync($"RotationY = {RotationY}");
+            await Console.Out.WriteLineAsync($"RotationZ = {RotationZ}");
         }
     }
 }

@@ -62,17 +62,17 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.CHARACTER_STATE_PACKET:
                     return new CharacterStatePacket(receivedData);
 
-                case PacketType.CHARACTER_STATES_PACKET: 
+                case PacketType.CHARACTERS_STATES_PACKET: 
                     return new CharacterStatesPacket(receivedData);
 
-                case PacketType.CHARACTER_STATE_UPDATE_PACKET:
-                    return new CharacterStateUpdatePacket(receivedData);
+                case PacketType.CHARACTER_ATTR_UPDATE_PACKET:
+                    return new CharacterAttrUpdatePacket(receivedData);
 
-                case PacketType.CHARACTER_STATES_UPDATE_PACKET:
-                    return new CharacterStatesUpdatePacket(receivedData);
+                case PacketType.CHARACTERS_ATTRS_UPDATE_PACKET:
+                    return new CharactersAttrsUpdatePacket(receivedData);
 
-                case PacketType.CHARACTER_MOVE_PACKET:
-                    return new CharacterMovePacket(receivedData);
+                case PacketType.CHARACTER_TRANSFORM_PACKET:
+                    return new CharacterTransformPacket(receivedData);
 
                 case PacketType.CHARACTER_EXIT_PACKET:
                     return new CharacterExitPacket(receivedData);

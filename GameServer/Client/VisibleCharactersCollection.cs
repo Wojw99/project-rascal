@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkData;
+﻿/*using NetworkCore.NetworkData;
 using NetworkCore.Packets;
 using NetworkCore.NetworkCommunication;
 using System;
@@ -70,7 +70,7 @@ namespace Client
                 foundedCharacter.PositionX = statePacket.PosX ?? foundedCharacter.PositionX; // if statePacket.posX != null
                 foundedCharacter.PositionY = statePacket.PosY ?? foundedCharacter.PositionY;
                 foundedCharacter.PositionZ = statePacket.PosZ ?? foundedCharacter.PositionZ;
-                foundedCharacter.Rotation = statePacket.Rot ?? foundedCharacter.Rotation;
+                foundedCharacter.RotationX = statePacket.RotX ?? foundedCharacter.Rotation;
             }
             else // No existing player found. Try add new player. Note that we probably dont need this, because alter succesfull
             // loaded character, server send CharacterStatePacket always. So in this case, the else will not execute even once.
@@ -84,10 +84,11 @@ namespace Client
             Console.WriteLine("test");
         }
 
-        public async Task OnCharacterMoveReceived(CharacterMovePacket movePacket)
+        public async Task OnCharacterMoveReceived(CharacterTransformPacket movePacket)
         {
             
         }
 
     }
 }
+*/

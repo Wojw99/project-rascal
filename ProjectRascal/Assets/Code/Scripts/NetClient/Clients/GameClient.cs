@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using NetworkCore.Packets;
 
 namespace Assets.Code.Scripts.NetClient.Clients
 {
@@ -22,7 +23,7 @@ namespace Assets.Code.Scripts.NetClient.Clients
 
         public async void Start()
         {
-            GameServerPeer = await TcpNetworkClient.Instance.CreateTcpServerConnection("192.168.5.5", 8051);
+            GameServerPeer = await TcpNetworkClient.GetInstance().CreateTcpServerConnection("192.168.5.5", 8051);
             GameServerPeer.Connect();
             GameServerPeer.StartRead();
         }

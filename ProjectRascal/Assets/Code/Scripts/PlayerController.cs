@@ -1,3 +1,4 @@
+using Assets.Code.Scripts.NetClient.Emissary;
 using NetClient;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private GameObject rightHand;
     [SerializeField] private GameObject damageDealer;
 
-    private GameCharacter gameCharacter;
+    private PlayerCharacter playerCharacter;
     private CharacterCanvas characterCanvas;
     private NavMeshAgent navMeshAgent;
     private CharacterState playerState = CharacterState.Idle;
@@ -25,31 +26,62 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private Interactible targetInteractible;
     private SkillController skillController;
 
+    private bool CharacterLoadSuccesFlag = false;
+
     private void Start() {
+        PlayerCharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
+        PlayerCharacterLoadEmissary.instance.OnCharacterLoadFailed += CharacterLoadFailed;
+        PlayerCharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz");
+    }
+
+    private void CharacterLoadSucces()
+    {
         navMeshAgent = GetComponent<NavMeshAgent>();
         humanAnimator = GetComponent<HumanAnimator>();
-        lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
-        gameCharacter = GetComponent<GameCharacter>();
+        playerCharacter = GetComponent<PlayerCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         skillController = GetComponent<SkillController>();
+        
+        //lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+
+        lookDirection = PlayerCharacterLoadEmissary.instance.PlayerCharacterTransform.Rotation;
+        transform.position = PlayerCharacterLoadEmissary.instance.PlayerCharacterTransform.Position;
+        
+        PlayerCharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
+        CharacterLoadSuccesFlag = true;
+    }
+
+    private void CharacterLoadFailed()
+    {
+        CharacterLoadSuccesFlag = false;
     }
 
     private void Update() {
-        if(EventWizard.instance.IsOff()) {
-            mouseGroundPosition = GetMouseGroundPosition();
-            HandleRotation();
-            HandleRunning();
-            HandleMeleeAttack();
-            HandleIdle();
-            HandleInteractions();
-            HandleKey1();
-            HandleKey2();
-            HandleKey3();
-            HandleKey4();
-            HandleKey5();
-            HandleUI();
-            HandleTestAnim();
+        if(CharacterLoadSuccesFlag) {
+            if(EventWizard.instance.IsOff()) {
+                mouseGroundPosition = GetMouseGroundPosition();
+                HandleRotation();
+                HandleRunning();
+                HandleMeleeAttack();
+                HandleIdle();
+                HandleInteractions();
+                HandleKey1();
+                HandleKey2();
+                HandleKey3();
+                HandleKey4();
+                HandleKey5();
+                HandleUI();
+                HandleTestAnim();
+                HandleSendPlayerTransform();
+            }
         }
+    }
+
+    private void HandleSendPlayerTransform()
+    {
+        MovementEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId, 
+            transform.position.x, transform.position.y, transform.position.z,
+            transform.rotation.x, transform.rotation.y, transform.rotation.z);
     }
 
     private void HandleTestAnim() {
@@ -183,13 +215,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         var distance = Vector3.Distance(transform.position, mouseGroundPosition);
         return distance;
     }
-
-    private float timeSinceLastPacket = 0f;
-    private float packetSendInterval = 0.1f; 
+ 
 
     private void HandleRunning() {
-        timeSinceLastPacket += Time.deltaTime;
-
         if (InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting 
         && CountDistanceToMouse() > minDistanceForRunning) { 
@@ -197,18 +225,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             transform.position += movement;
             playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
-
-            if(timeSinceLastPacket >= packetSendInterval)
-            {
-                // Emisariusz
-                CharacterMovePacket statePacket = new CharacterMovePacket(gameCharacter.VId, 
-                    transform.position.x, transform.position.y, transform.position.z, 0);
-                
-                Client.Instance.GameServer.SendPacket(statePacket);
-                //
-
-                timeSinceLastPacket = 0f;
-            }
 
         }
     }
@@ -230,7 +246,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.MeleeAttackCastDuration);
             Invoke("ResetToIdle", duration);
             var weaponDD = GetComponentInChildren<WeaponDD>();
-            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: duration);
+            weaponDD.FeedAndDealDamage(ownerCharacter: playerCharacter, damageDuration: duration);
         }
     }
     
@@ -239,10 +255,10 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
             VfxWizard.instance.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitPosition));
         }
-        if (gameCharacter.IsDead()) {
+        if (playerCharacter.IsDead()) {
             characterCanvas.DisableHealthBarAndName();
         } else {
-            characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);
+            characterCanvas.UpdateHealthBar(playerCharacter.CurrentHealth, playerCharacter.MaxHealth);
         }
     }
 

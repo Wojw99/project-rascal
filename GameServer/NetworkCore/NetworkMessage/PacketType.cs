@@ -17,10 +17,14 @@ namespace NetworkCore.NetworkMessage
 
         // CHARACTER 
         CHARACTER_STATE_PACKET = 0x20, // To send single character state (full).
-        CHARACTER_STATES_PACKET = 0x21, // To send all character states on world.
-        CHARACTER_STATE_UPDATE_PACKET = 0x22,  // To send single character state update.
-        CHARACTER_STATES_UPDATE_PACKET = 0x23, // To send all updated characters states on World.
-        CHARACTER_MOVE_PACKET = 0x24,
+        CHARACTERS_STATES_PACKET = 0x21, // To send all character states on world.
+
+        CHARACTER_ATTR_UPDATE_PACKET = 0x22,  // To send single character state update.
+        CHARACTERS_ATTRS_UPDATE_PACKET = 0x23, // To send all updated characters states on World.
+
+        CHARACTER_TRANSFORM_PACKET = 0x24,
+        CHARACTER_TRANSFORMS_PACKET = 0X25,
+
         CHARACTER_EXIT_PACKET = 0x25,
 
         // 

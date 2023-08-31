@@ -13,23 +13,6 @@ public class GameCharacter : MonoBehaviour
     [SerializeField] protected float attack = 5;
     [SerializeField] protected float magic = 10;
 
-    public virtual void LoadAttributes(CharacterStatePacket packet) {
-        vId = packet.CharacterVId;
-        name = packet.Name;
-        currentHealth = packet.CurrentHealth;
-        maxHealth = packet.MaxHealth;
-        currentMana = packet.CurrentMana;
-        maxMana = packet.MaxMana;
-    }
-
-    public virtual void UpdateAttributes(CharacterStateUpdatePacket stateUpdate) {
-        name = stateUpdate.Name ?? name;
-        currentHealth = stateUpdate.CurrentHealth ?? currentHealth;
-        maxHealth = stateUpdate.MaxHealth ?? maxHealth;
-        currentMana = stateUpdate.CurrentMana ?? currentMana;
-        maxMana = stateUpdate.MaxMana ?? maxMana;
-    }
-
     public virtual void TakeDamage(float damageAmount) {
         currentHealth -= damageAmount;
         if(currentHealth < 0) {

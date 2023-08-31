@@ -58,75 +58,42 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.4f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\Scripts\InputWizard.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterMovePacket.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Client.cs" />
-    <Compile Include="Assets\Code\Scripts\MapCanvas.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkMessage\PacketBase.cs" />
-    <Compile Include="Assets\Code\Scripts\Gold.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkMessage\OwnedPacket.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterExitPacket.cs" />
-    <Compile Include="Assets\Code\Scripts\SceneLoadWizard.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\ClientLoginResponsePacket.cs" />
-    <Compile Include="Assets\Code\Scripts\UIWizard.cs" />
-    <Compile Include="Assets\Code\Scripts\DamageDealer.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkMessage\SerializationAttribute.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\ClientLoginRequestPacket.cs" />
-    <Compile Include="Assets\Code\Scripts\Potion.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AuthEmissary.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterStatesUpdatePacket - kopiować.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\PingResponsePacket.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\MovementEmissary.cs" />
-    <Compile Include="Assets\Code\Scripts\IDamageCharacter.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterLoadRequestPacket.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Clients\GameClient.cs" />
-    <Compile Include="Assets\Code\Scripts\DamageDealerWizard.cs" />
-    <Compile Include="Assets\Code\Scripts\Door.cs" />
-    <Compile Include="Assets\Code\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\NetworkBase.cs" />
-    <Compile Include="Assets\Code\Scripts\HumanAnimator.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterLoadSuccesPacket.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterLoadResponsePacket.cs" />
-    <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterStateEmissary.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkUtility\Character.cs" />
-    <Compile Include="Assets\Code\Scripts\Writing.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkUtility\ServerMonitor.cs" />
-    <Compile Include="Assets\Code\Scripts\GameCharacter.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\Owner.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterStatePacket.cs" />
-    <Compile Include="Assets\Code\Scripts\WeaponDD.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterStatesUpdatePacket.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\ClientDisconnectPacket.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Clients\AuthClient.cs" />
-    <Compile Include="Assets\Code\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Code\Scripts\TestWizard.cs" />
-    <Compile Include="Assets\Code\Scripts\InteractibleItem.cs" />
+    <Compile Include="Assets\Code\NetworkCore\obj\Debug\netstandard2.1\NetworkCore.AssemblyInfo.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkUtility\Enemy.cs" />
-    <Compile Include="Assets\Code\Scripts\VfxWizard.cs" />
-    <Compile Include="Assets\Code\Scripts\ThunderstruckDD.cs" />
-    <Compile Include="Assets\Code\Scripts\MagicBulletDD.cs" />
-    <Compile Include="Assets\Code\Scripts\EnemyCharacter.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\TcpNetworkClient.cs" />
-    <Compile Include="Assets\Code\Scripts\DamagableFire.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\TcpNetworkServer.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\VisibleCharactersCollection.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\IPeer.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\ServerType.cs" />
-    <Compile Include="Assets\Code\Scripts\Damagable.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\PingRequestPacket.cs" />
-    <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkCommunication\TcpPeer.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkMessage\PacketType.cs" />
     <Compile Include="Assets\Code\NetworkCore\Packets\CharacterStateUpdatePacket.cs" />
     <Compile Include="Assets\Code\NetworkCore\NetworkConfig\Constants.cs" />
-    <Compile Include="Assets\Code\Scripts\InteractibleCanvas.cs" />
-    <Compile Include="Assets\Code\Scripts\PlayerCharacter.cs" />
-    <Compile Include="Assets\Code\Scripts\Loading.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Code\NetworkCore\obj\Debug\netstandard2.1\NetworkCore.csproj.FileListAbsolute.txt" />
+    <None Include="Assets\Code\NetworkCore\obj\Debug\netstandard2.1\NetworkCore.dll" />
+    <None Include="Assets\Code\NetworkCore\bin\Debug\netstandard2.1\NetworkCore.dll" />
+    <None Include="Assets\Code\NetworkCore\Plany.txt" />
     <None Include="Assets\Code\NetworkCore\NetworkCoreAssembly.asmdef" />
-    <None Include="Assets\Code\Scripts\NetworkCoreReference.asmref" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -408,26 +375,29 @@
     <Reference Include="unityplastic">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Abstractions">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IdentityModel.Tokens.Jwt">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-    </Reference>
     <Reference Include="GameServer">
       <HintPath>Assets\Code\GameServer\obj\Debug\net6.0\GameServer.dll</HintPath>
     </Reference>
     <Reference Include="ServerApplication">
-      <HintPath>Assets\Code\GameServer\obj\Debug\net6.0\ref\ServerApplication.dll</HintPath>
+      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\ServerApplication.dll</HintPath>
+    </Reference>
+    <Reference Include="NetworkCore">
+      <HintPath>Assets\Code\NetworkCore\bin\Debug\netstandard2.1\NetworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens">
       <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging">
-      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.IdentityModel.Tokens">
       <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions">
+      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging">
+      <HintPath>Assets\Code\GameServer\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.4f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

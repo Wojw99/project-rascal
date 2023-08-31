@@ -68,7 +68,7 @@ namespace Client
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
 
             // Updated states of all players in world.
-            if (packet is CharacterStatesUpdatePacket chrStatesUpdate)
+            if (packet is CharactersAttrsUpdatePacket chrStatesUpdate)
             {
                 foreach (var stateUpdate in chrStatesUpdate.PacketCollection)
                 {
@@ -89,7 +89,7 @@ namespace Client
             }
 
             // Single updated state.
-            else if (packet is CharacterStateUpdatePacket chrStateUpdate)
+            else if (packet is CharacterAttrUpdatePacket chrStateUpdate)
             {
                 if (chrStateUpdate.CharacterVId == ClientPlayer.Vid)
                 {
