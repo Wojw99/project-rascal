@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkMessage;
+﻿/*using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,3 +12,4 @@ namespace Assets.Code.Scripts.NetClient
         public delegate void PacketReceived();
     }
 }
+*/

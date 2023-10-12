@@ -1,4 +1,4 @@
-﻿using NetClient;
+﻿/*using NetClient;
 using NetworkCore.NetworkCommunication;
 using System;
 using System.Collections.Generic;
@@ -28,3 +28,4 @@ namespace Assets.Code.Scripts.NetClient.Clients
         }
     }
 }
+*/

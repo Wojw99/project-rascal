@@ -79,12 +79,16 @@ namespace ServerApplication.GameService
                         // After succesfull load for first time - we sending a full state of character to others.
                         // Next step is receives updates for that player character and sending only updated
                         // version of his state (check method Update() in World class).
-                        CharacterStatePacket NewCharacterState = new CharacterStatePacket(playerConn.CharacterObj);
-                        await _World.SendPacketToConnectedPlayers(playerConn.Id, NewCharacterState);
+                        AdventurerLoadPacket adventurerLoadPacket = new AdventurerLoadPacket();
+                        adventurerLoadPacket.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
+                            playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj);
+                        adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj);
+
+                        await _World.SendPacketToConnectedPlayers(playerConn.Id, adventurerLoadPacket);
                     }
                 }
 
-                else if(packet is CharacterTransformPacket movePacket)
+                else if(packet is TransformPacket movePacket)
                 {
                     playerConn.SetPosition(movePacket);
                 }

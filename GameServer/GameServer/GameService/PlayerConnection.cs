@@ -20,9 +20,9 @@ namespace ServerApplication.GameService
         
         public Character CharacterObj { get; set; }
 
-        private CharacterAttrUpdatePacket CharacterStateUpdate { get; set; }
+        private AttributesUpdatePacket CharacterStateUpdate { get; set; }
 
-        private CharacterTransformPacket CharacterTransform { get; set; }
+        private TransformPacket CharacterTransform { get; set; }
 
         private readonly object stateLock = new object();
 
@@ -31,7 +31,7 @@ namespace ServerApplication.GameService
         {
             ServerRef = serverRef;
             CharacterObj = new Character();
-            CharacterStateUpdate = new CharacterAttrUpdatePacket(-1);
+            CharacterStateUpdate = new AttributesUpdatePacket(-1);
         }
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
@@ -114,7 +114,7 @@ namespace ServerApplication.GameService
             }
         }
 
-        public void SetPosition(CharacterTransformPacket packet)
+        public void SetPosition(TransformPacket packet)
         {
             lock (stateLock)
             {

@@ -1,162 +1,89 @@
-﻿/*using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using NetworkCore.NetworkMessage;
+﻿using Assets.Code.Scripts.NetClient.Attributes;
 using NetworkCore.Packets;
-using Assets.Code.Scripts.NetClient.Clients;
-using Unity.VisualScripting;
-using Assets.Code.Scripts.NetClient;
-using System.Collections.Concurrent;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 
-public class CharacterStateEmissary : MonoBehaviour
+namespace Assets.Code.Scripts.NetClient.Emissary
 {
-    public bool PlayerCharacterLoadSucces { get; private set; } = false;
-
-    private int PlayerCharacterVId = -1;
-
-    public delegate void PlayerAttributeChanged(object value);
-
-    public delegate void AdventurerAttributeChanged(int adventurerId, object value);
-
-    public event PlayerAttributeChanged OnPlayerNameChanged;
-    public event PlayerAttributeChanged OnPlayerCurrentHealthChanged;
-    public event PlayerAttributeChanged OnPlayerCurrentManaChanged;
-    public event PlayerAttributeChanged OnPlayerMaxHealthChanged;
-    public event PlayerAttributeChanged OnPlayerMaxManaChanged;
-    public event PlayerAttributeChanged OnPlayerAttackChanged;
-    public event PlayerAttributeChanged OnPlayerMagicChanged;
-
-    public event AdventurerAttributeChanged OnAdventurerNameChanged;
-    public event AdventurerAttributeChanged OnAdventurerCurrentHealthChanged;
-    public event AdventurerAttributeChanged OnAdventurerCurrentManaChanged;
-    public event AdventurerAttributeChanged OnAdventurerMaxHealthChanged;
-    public event AdventurerAttributeChanged OnAdventurerMaxManaChanged;
-    public event AdventurerAttributeChanged OnAdventurerAttackChanged;
-    public event AdventurerAttributeChanged OnAdventurerMagicChanged;
-
-    public void ReceivePacket(CharacterLoadResponsePacket packet)
+    public class CharacterStateEmissary : MonoBehaviour
     {
-        PlayerCharacterVId = packet.StatePacket.CharacterVId;
-        PlayerCharacterLoadSucces = true;
+        #region Singleton
 
-        ReceivePacket(packet.StatePacket);
-    }
+        public static CharacterStateEmissary instance;
 
-    public void ReceivePacket(CharacterStatesPacket statesPacket)
-    {
-        foreach (var statePacket in statesPacket.PacketCollection) {
-            ReceivePacket(statePacket);
-        }
-    }
-
-    public void ReceivePacket(CharacterStatesUpdatePacket statesUpdatePacket)
-    {
-        foreach (var stateUpdatePacket in statesUpdatePacket.PacketCollection) {
-            ReceivePacket(stateUpdatePacket);
-        }
-    }
-
-    public void ReceivePacket(CharacterStatePacket state)
-    {
-        if (PlayerCharacterLoadSucces) {
-            if (state.CharacterVId == PlayerCharacterVId) {
-                ChangePlayerAttributes(state);
-            }
-            else {
-                ChangeAdventurerAttributes(state);
-            }
-        }
-    }
-    public void ReceivePacket(CharacterStateUpdatePacket stateUpdate)
-    {
-        if (PlayerCharacterLoadSucces) {
-            if (stateUpdate.CharacterVId == PlayerCharacterVId) {
-                UpdatePlayerAttributes(stateUpdate);
-            }
-            else {
-                UpdateAdventurerAttributes(stateUpdate);
-            }
-        }
-    }
-
-    private void ChangePlayerAttributes(CharacterStatePacket statePacket)
-    {
-        OnPlayerNameChanged?.Invoke(statePacket.Name);
-        OnPlayerCurrentHealthChanged?.Invoke(statePacket.CurrentHealth);
-        OnPlayerCurrentManaChanged?.Invoke(statePacket.CurrentMana);
-        OnPlayerMaxHealthChanged?.Invoke(statePacket.MaxHealth);
-        OnPlayerMaxManaChanged?.Invoke(statePacket.MaxMana);
-    }
-
-    private void ChangeAdventurerAttributes(CharacterStatePacket statePacket)
-    {
-        int AdventurerId = statePacket.CharacterVId;
-        OnAdventurerNameChanged?.Invoke(AdventurerId, statePacket.Name);
-        OnAdventurerCurrentHealthChanged?.Invoke(AdventurerId, statePacket.CurrentHealth);
-        OnAdventurerCurrentManaChanged?.Invoke(AdventurerId, statePacket.CurrentMana);
-        OnAdventurerMaxHealthChanged?.Invoke(AdventurerId, statePacket.MaxHealth);
-        OnAdventurerMaxManaChanged?.Invoke(AdventurerId, statePacket.MaxMana);
-    }
-
-    private void UpdatePlayerAttributes(CharacterStateUpdatePacket stateUpdatePacket)
-    {
-        if (stateUpdatePacket.Name != null) {
-            OnPlayerNameChanged?.Invoke(stateUpdatePacket.Name);
-        }
-
-        if (stateUpdatePacket.CurrentHealth != null) {
-            OnPlayerCurrentHealthChanged?.Invoke(stateUpdatePacket.CurrentHealth);
-        }
-
-        if (stateUpdatePacket.MaxHealth != null) {
-            OnPlayerMaxHealthChanged?.Invoke(stateUpdatePacket.MaxHealth);
-        }
-
-        if (stateUpdatePacket.CurrentMana != null) {
-            OnPlayerCurrentManaChanged?.Invoke(stateUpdatePacket.CurrentMana);
-        }
-
-        if (stateUpdatePacket.MaxMana != null) {
-            OnPlayerMaxManaChanged?.Invoke(stateUpdatePacket.MaxMana);
-        }
-    }
-
-    private void UpdateAdventurerAttributes(CharacterStateUpdatePacket stateUpdatePacket)
-    {
-        int AdventurerId = stateUpdatePacket.CharacterVId;
-
-        if (stateUpdatePacket.Name != null) {
-            OnAdventurerNameChanged?.Invoke(AdventurerId, stateUpdatePacket.Name);
-        }
-
-        if (stateUpdatePacket.CurrentHealth != null) {
-            OnAdventurerCurrentHealthChanged?.Invoke(AdventurerId, stateUpdatePacket.CurrentHealth);
-        }
-
-        if (stateUpdatePacket.MaxHealth != null)
+        private void Awake()
         {
-            OnAdventurerMaxHealthChanged?.Invoke(AdventurerId, stateUpdatePacket.MaxHealth);
+            instance = this;
         }
 
-        if (stateUpdatePacket.CurrentMana != null) {
-            OnAdventurerCurrentManaChanged?.Invoke(AdventurerId, stateUpdatePacket.CurrentMana);
-        }
+        #endregion
 
-        if (stateUpdatePacket.MaxMana != null) {
-            OnAdventurerMaxManaChanged?.Invoke(AdventurerId, stateUpdatePacket.MaxMana);
+        public delegate void PlayerAttributeUpdate();
+        public delegate void PacketReceived();
+
+        public event PlayerAttributeUpdate OnPlayerNameUpdate;
+        public event PlayerAttributeUpdate OnPlayerCurrentHealthUpdate;
+        public event PlayerAttributeUpdate OnPlayerCurrentManaUpdate;
+        public event PlayerAttributeUpdate OnPlayerMaxHealthUpdate;
+        public event PlayerAttributeUpdate OnPlayerMaxManaUpdate;
+        public event PlayerAttributeUpdate OnPlayerAttackUpdate;
+        public event PlayerAttributeUpdate OnPlayerMagicUpdate;
+
+        public event PacketReceived OnPlayerStateChanged;
+
+        public int CharacterVId { get; private set; }
+        public string Name { get; private set; }
+        public float CurrentHealth { get; private set; }
+        public float CurrentMana { get; private set; }
+        public float MaxHealth { get; private set; }
+        public float MaxMana { get; private set; }
+
+        public void ReceiveAttributesData(AttributesPacket AttrPacket)
+        {
+            CharacterVId = AttrPacket.CharacterVId;
+            Name = AttrPacket.Name;
+            CurrentHealth = AttrPacket.CurrentHealth;
+            CurrentMana = AttrPacket.CurrentMana;
+            MaxHealth = AttrPacket.MaxHealth;
+            MaxMana = AttrPacket.MaxMana;
+
+            OnPlayerStateChanged?.Invoke();
+        }
+        public void ReceiveAttributesDataUpdate(AttributesUpdatePacket AttrUpdPacket)
+        {
+            if (AttrUpdPacket.Name != null)
+            {
+                Name = AttrUpdPacket.Name;
+                OnPlayerNameUpdate?.Invoke();
+            }
+
+            if (AttrUpdPacket.CurrentHealth != null)
+            {
+                CurrentHealth = AttrUpdPacket.CurrentHealth.Value;
+                OnPlayerCurrentHealthUpdate?.Invoke();
+            }
+
+            if (AttrUpdPacket.CurrentMana != null)
+            {
+                CurrentMana = AttrUpdPacket.CurrentMana.Value;
+                OnPlayerCurrentManaUpdate?.Invoke();
+            }
+
+            if (AttrUpdPacket.MaxHealth != null)
+            {
+                MaxHealth = AttrUpdPacket.MaxHealth.Value;
+                OnPlayerMaxHealthUpdate?.Invoke();
+            }
+
+            if (AttrUpdPacket.MaxMana != null)
+            {
+                MaxMana = AttrUpdPacket.MaxMana.Value;
+                OnPlayerMaxManaUpdate?.Invoke();
+            }
         }
     }
-
-    #region Singleton
-
-    public static CharacterStateEmissary instance;
-
-    private void Awake()
-    {
-        instance = this;
-    }
-
-    #endregion
 }
-*/

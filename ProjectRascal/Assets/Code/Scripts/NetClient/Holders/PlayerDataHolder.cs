@@ -1,4 +1,4 @@
-﻿using Assets.Code.Scripts.NetClient.Attributes;
+﻿/*using Assets.Code.Scripts.NetClient.Attributes;
 using Assets.Code.Scripts.NetClient.Emissary;
 using NetworkCore.Packets;
 using System;
@@ -13,7 +13,7 @@ namespace Assets.Code.Scripts.NetClient.Holder
 {
     public class PlayerDataHolder : MonoBehaviour
     {
-        private CharacterAttributes PlayerCharacterAttributes;
+        private Attributes PlayerCharacterAttributes;
         private TransformData PlayerCharacterTransform;
 
         public delegate void PlayerAttributeUpdate();
@@ -34,8 +34,8 @@ namespace Assets.Code.Scripts.NetClient.Holder
         public float CurrentMana { get { return PlayerCharacterAttributes.currentMana; } }
         public float MaxHealth { get { return PlayerCharacterAttributes.maxHealth; } }
         public float MaxMana { get { return PlayerCharacterAttributes.maxMana; } }
-        public Vector3 Position { get { return PlayerCharacterTransform.position; } }
-        public Vector3 Rotation { get { return PlayerCharacterTransform.rotation; } }
+        public Vector3 Position { get { return PlayerCharacterTransform.Position; } }
+        public Vector3 Rotation { get { return PlayerCharacterTransform.Rotation; } }
 
         public void InitPlayerCharacter(CharacterLoadResponsePacket chrPacket)
         {
@@ -46,9 +46,9 @@ namespace Assets.Code.Scripts.NetClient.Holder
             PlayerCharacterAttributes.maxHealth = chrPacket.StatePacket.MaxHealth;
             PlayerCharacterAttributes.maxMana = chrPacket.StatePacket.MaxMana;
 
-            PlayerCharacterTransform.characterVId = chrPacket.StatePacket.CharacterVId;
-            PlayerCharacterTransform.position = new Vector3(chrPacket.StatePacket.PosX, chrPacket.StatePacket.PosY, chrPacket.StatePacket.PosZ);
-            PlayerCharacterTransform.rotation = Vector3.zero;
+            PlayerCharacterTransform.CharacterVId = chrPacket.StatePacket.CharacterVId;
+            PlayerCharacterTransform.Position = new Vector3(chrPacket.StatePacket.PosX, chrPacket.StatePacket.PosY, chrPacket.StatePacket.PosZ);
+            PlayerCharacterTransform.Rotation = Vector3.zero;
         }
 
         public void UpdateName(string name)
@@ -83,8 +83,8 @@ namespace Assets.Code.Scripts.NetClient.Holder
 
         public void UpdateTransform(Vector3 position, Vector3 rotation)
         {
-            PlayerCharacterTransform.position = position;
-            PlayerCharacterTransform.rotation = rotation;
+            PlayerCharacterTransform.Position = position;
+            PlayerCharacterTransform.Rotation = rotation;
             OnPlayerTransformUpdate?.Invoke();
         }
 
@@ -105,3 +105,4 @@ namespace Assets.Code.Scripts.NetClient.Holder
         #endregion
     }
 }
+*/

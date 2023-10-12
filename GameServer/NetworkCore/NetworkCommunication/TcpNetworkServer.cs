@@ -54,10 +54,14 @@ namespace NetworkCore.NetworkCommunication
         }*/
 
         // Start listening, setting IsRunning flag.
+        public bool IsRunning()
+        {
+            return IsRunningFlag;
+        }
         public void StartListen()
         {
             TcpSocket.Listen(10); // we can assign that in WaitForTcpClientConnection()
-            IsRunning = true;
+            IsRunningFlag = true;
             Console.WriteLine($"Server, with GUID: {ServerId}, Name: {ServerName} started on TCP port.");
             Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
         }
@@ -66,7 +70,7 @@ namespace NetworkCore.NetworkCommunication
         {
             Task handleUpdate = Task.Run(async () =>
             {
-                while(IsRunning)
+                while(IsRunningFlag)
                 {
                     await Update();
                     await Task.Delay(interval);
@@ -76,7 +80,7 @@ namespace NetworkCore.NetworkCommunication
 
         public async Task Stop()
         {
-            IsRunning = false;
+            IsRunningFlag = false;
             TcpSocket.Close(); 
         }
 
@@ -87,7 +91,7 @@ namespace NetworkCore.NetworkCommunication
 
         private async Task WaitForTcpClientConnection()
         {
-            while(IsRunning)
+            while(IsRunningFlag)
             {
                 if (TcpSocket != null)
                 {

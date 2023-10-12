@@ -1,4 +1,4 @@
-﻿using NetClient;
+﻿/*using NetClient;
 using NetworkCore.NetworkCommunication;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace Assets.Code.Scripts.NetClient.Clients
 
         public async void Start()
         {
-            GameServerPeer = await TcpNetworkClient.GetInstance().CreateTcpServerConnection("192.168.5.5", 8051);
+            GameServerPeer = await Client.GetInstance().CreateTcpServerConnection("192.168.5.5", 8051);
             GameServerPeer.Connect();
             GameServerPeer.StartRead();
         }
@@ -35,3 +35,4 @@ namespace Assets.Code.Scripts.NetClient.Clients
         }
     }
 }
+*/

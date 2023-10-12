@@ -59,23 +59,26 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.CHARACTER_LOAD_SUCCES:
                     return new CharacterLoadSuccesPacket(receivedData);
 
-                case PacketType.CHARACTER_STATE_PACKET:
-                    return new CharacterStatePacket(receivedData);
+                case PacketType.ADVENTURER_LOAD_PACKET:
+                    return new AdventurerLoadPacket(receivedData);
 
-                case PacketType.CHARACTERS_STATES_PACKET: 
-                    return new CharacterStatesPacket(receivedData);
+                case PacketType.ATTRIBUTES_PACKET:
+                    return new AttributesPacket(receivedData);
 
-                case PacketType.CHARACTER_ATTR_UPDATE_PACKET:
-                    return new CharacterAttrUpdatePacket(receivedData);
+                case PacketType.ATTRIBUTES_COLLECTION_PACKET: 
+                    return new AttributesCollectionPacket(receivedData);
 
-                case PacketType.CHARACTERS_ATTRS_UPDATE_PACKET:
-                    return new CharactersAttrsUpdatePacket(receivedData);
+                case PacketType.ATTRIBUTES_UPDATE_PACKET:
+                    return new AttributesUpdatePacket(receivedData);
 
-                case PacketType.CHARACTER_TRANSFORM_PACKET:
-                    return new CharacterTransformPacket(receivedData);
+                case PacketType.ATTRIBUTES_COLLECTION_UPDATE_PACKET:
+                    return new AttributesUpdateCollectionPacket(receivedData);
+
+                case PacketType.TRANSFORM_PACKET:
+                    return new TransformPacket(receivedData);
 
                 case PacketType.CHARACTER_EXIT_PACKET:
-                    return new CharacterExitPacket(receivedData);
+                    return new AdventurerExitPacket(receivedData);
 
                 case PacketType.CLIENT_DISCONNECT:
                     return new ClientDisconnectPacket(receivedData);

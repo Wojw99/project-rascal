@@ -21,9 +21,9 @@ namespace ServerApplication.GameService.Base
 
         private ConcurrentDictionary<int, Enemy> Enemies = new ConcurrentDictionary<int, Enemy>();
 
-        private ConcurrentDictionary<Guid, CharacterAttrUpdatePacket> CharactersStatesUpdated = new ConcurrentDictionary<Guid, CharacterAttrUpdatePacket> ();
+        private ConcurrentDictionary<Guid, AttributesUpdatePacket> CharactersStatesUpdated = new ConcurrentDictionary<Guid, AttributesUpdatePacket> ();
 
-        private ConcurrentDictionary<Guid, CharacterTransformPacket> CharactersTransforms = new ConcurrentDictionary<Guid, CharacterTransformPacket>();
+        private ConcurrentDictionary<Guid, TransformPacket> CharactersTransforms = new ConcurrentDictionary<Guid, TransformPacket>();
 
         public int IdCounter = 0;
 
@@ -40,7 +40,7 @@ namespace ServerApplication.GameService.Base
 
             if(CharactersTransforms.Count > 0)
             {
-                CharacterTransformsPacket transformsPacket = new CharacterTransformsPacket();
+                TransformCollectionPacket transformsPacket = new TransformCollectionPacket();
 
                 foreach (var transform in CharactersTransforms)
                 {
@@ -60,7 +60,7 @@ namespace ServerApplication.GameService.Base
 
             if (CharactersStatesUpdated.Count > 0)
             {
-                CharactersAttrsUpdatePacket statesPacket = new CharactersAttrsUpdatePacket();
+                AttributesUpdateCollectionPacket statesPacket = new AttributesUpdateCollectionPacket();
 
                 // Add updated states to packet
                 foreach (var characterState in CharactersStatesUpdated)
@@ -86,12 +86,12 @@ namespace ServerApplication.GameService.Base
                 CharactersStatesUpdated.Clear();
             }
         }
-        public void AddNewCharacterStateUpdate(Guid ConnId, CharacterAttrUpdatePacket updatedState)
+        public void AddNewCharacterStateUpdate(Guid ConnId, AttributesUpdatePacket updatedState)
         {
             CharactersStatesUpdated[ConnId] = updatedState;
         }
 
-        public void AddNewCharacterTransform(Guid ConnId, CharacterTransformPacket transform)
+        public void AddNewCharacterTransform(Guid ConnId, TransformPacket transform)
         {
             CharactersTransforms[ConnId] = transform;
         }
@@ -147,7 +147,7 @@ namespace ServerApplication.GameService.Base
                 throw new InvalidOperationException($"Failed to add player with id {playerConn.Id}.");
 
             // Send character states of currently connected players to new player.
-            CharacterStatesPacket characterStatesPacket = new CharacterStatesPacket();
+            AttributesCollectionPacket characterStatesPacket = new AttributesCollectionPacket();
 
             foreach (var character in ConnectedPlayers)
             {
@@ -170,7 +170,7 @@ namespace ServerApplication.GameService.Base
             {
                 if (playerConn.Id != player.Key)
                 {
-                    await player.Value.SendPacket(new CharacterExitPacket(playerConn.CharacterObj.Vid));
+                    await player.Value.SendPacket(new AdventurerExitPacket(playerConn.CharacterObj.Vid));
                 }
             }
         }

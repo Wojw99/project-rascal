@@ -1,4 +1,6 @@
-﻿using NetworkCore.NetworkData;
+﻿// Move that class to NetworkCore project.
+
+using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using System;
@@ -13,50 +15,19 @@ using Unity.VisualScripting;
 
 namespace NetClient
 {
-    public class TcpNetworkClient : NetworkBase
+    public abstract class TcpNetworkClient : NetworkBase
     {
-        #region Singleton
-
-        private static TcpNetworkClient Instance;
-
-        private TcpNetworkClient()
-        {
-            IsRunning = true;
-            StartUpdate(TimeSpan.FromMilliseconds(20));
-            RunPacketProcessingInBackground(50, 50, TimeSpan.FromMilliseconds(20));
-        }
-
-        public static TcpNetworkClient GetInstance()
-        {
-            if (Instance == null)
-            {
-                Instance = new TcpNetworkClient();
-            }
-            return Instance;
-        }
-
-        #endregion
-
-        #region private
-
-        private void StartUpdate(TimeSpan interval)
+        public void StartUpdate(TimeSpan interval)
         {
             Task handleUpdate = Task.Run(async () =>
             {
-                while (IsRunning)
+                while (IsRunningFlag)
                 {
                     await Update();
                     await Task.Delay(interval);
                 }
             });
         }
-
-        private async Task Update()
-        {
-
-        }
-
-        #endregion
 
         public async Task <TcpPeer> CreateTcpServerConnection(string serverIpAddress, int serverTcpPort)
         {
@@ -74,36 +45,18 @@ namespace NetClient
             }
         }
 
-        public async Task Stop()
+        public void Start()
         {
-            IsRunning = false;
+            IsRunningFlag = true;
         }
 
-        public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
+        public void Stop()
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
-
-            if(packet is CharacterTransformPacket chrMovePck)
-            {
-                MovementEmissary.instance.ReceivePacket(chrMovePck);
-            }
-            else if (packet is CharacterStatePacket chrStatePck)
-            {
-                CharacterStateEmissary.instance.ReceivePacket(chrStatePck);
-            }
-            else if (packet is CharacterStatesPacket chrStatesPck)
-            {
-                CharacterStateEmissary.instance.ReceivePacket(chrStatesPck);
-            }
-            else if (packet is CharacterAttrUpdatePacket chrStateUpdatePck)
-            {
-                CharacterStateEmissary.instance.ReceivePacket(chrStateUpdatePck);
-            }
-            else if (packet is CharactersAttrsUpdatePacket chrStatesUpdatePck)
-            {
-                CharacterStateEmissary.instance.ReceivePacket(chrStatesUpdatePck);
-            }
-
+            IsRunningFlag = false;
         }
+
+        public abstract Task Update();
+
+        public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

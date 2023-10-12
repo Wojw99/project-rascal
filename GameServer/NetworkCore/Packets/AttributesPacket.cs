@@ -10,7 +10,7 @@ namespace NetworkCore.Packets
     // That packet is dynamic in my sense. Values in here can be null, so
     // we can decide which values to store in that packet. This practice
     // can be helpfull if we dont need to send values, that doesn't change.
-    public class CharacterStatePacket : PacketBase
+    public class AttributesPacket : PacketBase
     {
         // Player VId cannot be null. See the description of this parameter in the Player class.
 
@@ -32,36 +32,24 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_Int32)]
         public float MaxMana { get; set; } = -1;
 
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosX { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosY { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosZ { get; set; }
-
         // Be 100% sure this is the correct unique identificator of player.
-        public CharacterStatePacket(int characterVId) : base(PacketType.CHARACTER_STATE_PACKET, false)
+        public AttributesPacket(int characterVId) : base(PacketType.ATTRIBUTES_PACKET, false)
         {
             CharacterVId = characterVId;
         }
 
-        public CharacterStatePacket(Character player) : base(PacketType.CHARACTER_STATE_PACKET, false)
+        public AttributesPacket(int characterVId, string name, float currentHealth, 
+            float maxHealth, float currentMana, float maxMana) : base(PacketType.ATTRIBUTES_PACKET, false)
         {
-            CharacterVId = player.Vid;
-            Name = player.Name;
-            CurrentHealth = player.CurrentHealth;
-            MaxHealth = player.MaxHealth;
-            CurrentMana = player.CurrentMana;
-            MaxMana = player.MaxMana;
-            CurrentMana = player.CurrentMana;
-            PosX = player.PositionX;
-            PosY = player.PositionY;
-            PosZ = player.PositionZ;
+            CharacterVId = characterVId;
+            Name = name;
+            CurrentHealth = currentHealth;
+            MaxHealth = maxHealth;
+            CurrentMana = currentMana;
+            MaxMana = maxMana;
         }
 
-        public CharacterStatePacket(byte[] data) : base(data) { }
+        public AttributesPacket(byte[] data) : base(data) { }
 
         /*public Character GetCharacter()
         {

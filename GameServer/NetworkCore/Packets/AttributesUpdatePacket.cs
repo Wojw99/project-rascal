@@ -10,7 +10,7 @@ namespace NetworkCore.Packets
     // That packet is dynamic in my sense. Values in here can be null, so
     // we can decide which values to store in that packet. This practice
     // can be helpfull if we dont need to send values, that doesn't change.
-    public class CharacterAttrUpdatePacket : PacketBase
+    public class AttributesUpdatePacket : PacketBase
     {
         [Serialization(Type: SerializationType.type_Int32)]
         public int CharacterVId { get; set; }
@@ -39,9 +39,9 @@ namespace NetworkCore.Packets
             CurrentMana = null;
             MaxMana = null;
         }
-        public CharacterAttrUpdatePacket(int characterVId) : base(PacketType.CHARACTER_ATTR_UPDATE_PACKET, false) { CharacterVId = characterVId; }
+        public AttributesUpdatePacket(int characterVId) : base(PacketType.ATTRIBUTES_UPDATE_PACKET, false) { CharacterVId = characterVId; }
 
-        public CharacterAttrUpdatePacket(byte[] data) : base(data) { }
+        public AttributesUpdatePacket(byte[] data) : base(data) { }
 
         public override string ToString()
         {

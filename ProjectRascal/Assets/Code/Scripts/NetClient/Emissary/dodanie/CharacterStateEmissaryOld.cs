@@ -1,15 +1,16 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
-using Assets.Code.Scripts.NetClient.Clients;
 using Unity.VisualScripting;
 using Assets.Code.Scripts.NetClient;
 using System.Collections.Concurrent;
 using Assets.Code.Scripts.NetClient.Emissary;
 using Assets.Code.Scripts.NetClient.Holder;
+using System.Threading.Tasks;
+using NetClient;
 
 public class CharacterStateEmissary : MonoBehaviour
 {
@@ -26,31 +27,6 @@ public class CharacterStateEmissary : MonoBehaviour
         foreach (var stateUpdatePacket in updatesPacket.PacketCollection)
         {
             ReceivePacket(stateUpdatePacket);
-        }
-    }
-
-    public void ReceivePacket(CharacterStatePacket statePacket)
-    {
-        if (PlayerCharacterLoadEmissary.instance.PlayerCharacterLoadSucces)
-        {
-            if (statePacket.CharacterVId != PlayerDataHolder.instance.VId)
-            {
-                AdventurersDataHolder.instance.AddNewAdventurer(statePacket);
-            }
-        }
-    }
-    public void ReceivePacket(CharacterAttrUpdatePacket updatePacket)
-    {
-        if (PlayerCharacterLoadEmissary.instance.PlayerCharacterLoadSucces)
-        {
-            if (updatePacket.CharacterVId == PlayerDataHolder.instance.VId)
-            {
-                UpdatePlayerAttributes(updatePacket);
-            }
-            else
-            {
-                UpdateAdventurerAttributes(updatePacket);
-            }
         }
     }
 
@@ -90,6 +66,52 @@ public class CharacterStateEmissary : MonoBehaviour
             AdventurersDataHolder.instance.UpdateMaxHealth(updatePacket.CharacterVId, (float)updatePacket.MaxMana);
     }
 
+    public async Task LoadCharacterAttributes(int slotNum)
+    {
+        ClientSingleton Client = ClientSingleton.GetInstance();
+
+        if (Client.GameServer.IsConnected)
+        {
+
+            await Client.GameServer.SendPacket(new CharacterLoadRequestPacket(AuthEmissary.instance.AuthToken));
+
+            try
+            {
+                PacketBase packet = await Client.WaitForResponsePacket(TimeSpan.FromMilliseconds(20),
+                    TimeSpan.FromSeconds(20), PacketType.CHARACTER_LOAD_RESPONSE); // Parametry: 1.intervał, 2.limit czasu, 3.typ pakietu
+
+                if (packet is CharacterLoadResponsePacket characterLoadResponse)
+                {
+                    if (characterLoadResponse.Success == true)
+                    {
+                        //ClientNetwork.ClientPlayer = characterLoadResponse.GetCharacter();
+                        PlayerDataHolder.instance.
+                        Character ClientChar = characterLoadResponse.GetCharacter();
+
+
+                        // Jeśli uda się wszystko załadować:
+                        await GameServer.SendPacket(new CharacterLoadSuccesPacket(true));
+
+                        await Console.Out.WriteLineAsync("Character loaded succesfully.");
+
+
+                    }
+                    else
+                    {
+                        await GameServer.SendPacket(new ClientDisconnectPacket(AuthToken));
+                        GameServer.Disconnect();
+                    }
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+                await GameServer.SendPacket(new ClientDisconnectPacket(AuthToken));
+                GameServer.Disconnect();
+            }
+        }
+    }
+
     #region Singleton
 
     public static CharacterStateEmissary instance;
@@ -101,3 +123,4 @@ public class CharacterStateEmissary : MonoBehaviour
 
     #endregion
 }
+*/

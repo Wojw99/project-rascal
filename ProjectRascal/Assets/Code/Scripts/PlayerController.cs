@@ -29,9 +29,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private bool CharacterLoadSuccesFlag = false;
 
     private void Start() {
-        PlayerCharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
-        PlayerCharacterLoadEmissary.instance.OnCharacterLoadFailed += CharacterLoadFailed;
-        PlayerCharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz");
+        CharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
+        CharacterLoadEmissary.instance.OnCharacterLoadFailed += CharacterLoadFailed;
+        CharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz");
     }
 
     private void CharacterLoadSucces()
@@ -41,13 +41,13 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         playerCharacter = GetComponent<PlayerCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         skillController = GetComponent<SkillController>();
-        
+
         //lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
 
-        lookDirection = PlayerCharacterLoadEmissary.instance.PlayerCharacterTransform.Rotation;
-        transform.position = PlayerCharacterLoadEmissary.instance.PlayerCharacterTransform.Position;
-        
-        PlayerCharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
+        lookDirection = CharacterTransformEmissary.instance.Rotation;
+        transform.position = CharacterTransformEmissary.instance.Position;
+
+        CharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
         CharacterLoadSuccesFlag = true;
     }
 
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
 
     private void HandleSendPlayerTransform()
     {
-        MovementEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId, 
+        CharacterTransformEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId, 
             transform.position.x, transform.position.y, transform.position.z,
             transform.rotation.x, transform.rotation.y, transform.rotation.z);
     }

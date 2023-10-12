@@ -29,7 +29,7 @@ namespace Client
 
             if(ServerTcpSocket.Connected)
             {
-                IsRunning = true;
+                IsRunningFlag = true;
                 return new TcpPeer(this, ServerTcpSocket, Guid.NewGuid(), Owner.client);
             }
             else
@@ -42,7 +42,7 @@ namespace Client
         {
             Task handleUpdate = Task.Run(async () =>
             {
-                while (IsRunning)
+                while (IsRunningFlag)
                 {
                     await Update();
                     await Task.Delay(interval);
@@ -57,7 +57,7 @@ namespace Client
 
         public async Task Stop()
         {
-            IsRunning = false;
+            IsRunningFlag = false;
         }
 
         //public override abstract Task<bool> OnServerConnect(IPeer serverPeer);
@@ -68,7 +68,7 @@ namespace Client
             await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
 
             // Updated states of all players in world.
-            if (packet is CharactersAttrsUpdatePacket chrStatesUpdate)
+            if (packet is AttributesUpdatePacket chrStatesUpdate)
             {
                 foreach (var stateUpdate in chrStatesUpdate.PacketCollection)
                 {
@@ -89,7 +89,7 @@ namespace Client
             }
 
             // Single updated state.
-            else if (packet is CharacterAttrUpdatePacket chrStateUpdate)
+            else if (packet is AttributesUpdateCollectionPacket chrStateUpdate)
             {
                 if (chrStateUpdate.CharacterVId == ClientPlayer.Vid)
                 {
@@ -107,7 +107,7 @@ namespace Client
             }
 
             // States of all players in world.
-            else if (packet is CharacterStatesPacket chrStates)
+            else if (packet is AttributesCollectionPacket chrStates)
             {
                 foreach (var state in chrStates.PacketCollection)
                 {
@@ -123,10 +123,11 @@ namespace Client
             }
 
             // Single state
-            else if (packet is CharacterStatePacket statePacket)
+            else if (packet is AttributesPacket statePacket)
             {
                 if (statePacket.CharacterVId == ClientPlayer.Vid)
                 {
+                    
                     ClientPlayer = statePacket.GetCharacter();
                 }
                 else

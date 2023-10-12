@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Xml.Linq;
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 
@@ -9,7 +10,7 @@ namespace NetworkCore.Packets
 {
     // Values in that packet must be assigned. So we must overload constructor
     // with parameters.
-    public class CharacterTransformPacket : PacketBase
+    public class TransformPacket : PacketBase
     {
         [Serialization(Type: SerializationType.type_Int32)]
         public int CharacterVId { get; set; }
@@ -32,7 +33,7 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_float)]
         public float RotZ { get; set; }
 
-        public CharacterTransformPacket(int characterVId) : base(PacketType.CHARACTER_TRANSFORM_PACKET, false)
+        public TransformPacket(int characterVId) : base(PacketType.TRANSFORM_PACKET, false)
         {
             CharacterVId = characterVId;
             PosX = 0;
@@ -45,7 +46,7 @@ namespace NetworkCore.Packets
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.
-        public CharacterTransformPacket(int characterVId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ) : base(PacketType.CHARACTER_TRANSFORM_PACKET, false)
+        public TransformPacket(int characterVId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ) : base(PacketType.TRANSFORM_PACKET, false)
         {
             CharacterVId = characterVId;
             PosX = posX;
@@ -58,7 +59,7 @@ namespace NetworkCore.Packets
 
         //public CharacterMovePacket(PacketBase packet) : base(packet) {}
 
-        public CharacterTransformPacket(byte[] data ) : base(data) {}
+        public TransformPacket(byte[] data ) : base(data) {}
 
         public override string ToString()
         {

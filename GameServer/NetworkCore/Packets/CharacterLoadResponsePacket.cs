@@ -19,66 +19,38 @@ namespace NetworkCore.Packets
         public bool Success { get; private set; } // 1 - true
 
         [Serialization(Type: SerializationType.type_subPacket)]
-        public CharacterStatePacket StatePacket { get; set; }
+        public AttributesPacket AttributesPacket { get; set; }
 
-        /*[Serialization(Type: SerializationType.type_bool)]
-        public bool Success { get; private set; } // 1 - true
-
-        [Serialization(Type: SerializationType.type_Int32)]
-        public int CharacterVId { get; private set; }
-
-        [Serialization(Type: SerializationType.type_string)]
-        public string Name { get; set; }
-
-        [Serialization(Type: SerializationType.type_Int32)]
-        public int Health { get; set; }
-
-        [Serialization(Type: SerializationType.type_Int32)]
-        public int Mana { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosX { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosY { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float PosZ { get; set; }
-
-        [Serialization(Type: SerializationType.type_float)]
-        public float Rot { get; set; }*/
-
-        /*public Character GetCharacter()
-        {
-            return StatePacket.GetCharacter();
-        }*/
-
+        [Serialization(Type: SerializationType.type_subPacket)]
+        public TransformPacket TransformPacket { get; set; }
 
         public CharacterLoadResponsePacket(Character characterObj) : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
-            StatePacket = new CharacterStatePacket(characterObj.Vid);
-
+            AttributesPacket = new AttributesPacket(characterObj.Vid);
+            TransformPacket = new TransformPacket(characterObj.Vid);
             Success = true;
 
-            StatePacket.Name = characterObj.Name;
-            StatePacket.CurrentHealth = characterObj.CurrentHealth;
-            StatePacket.MaxHealth = characterObj.MaxHealth;
-            StatePacket.CurrentMana = characterObj.CurrentMana;
-            StatePacket.MaxMana = characterObj.MaxMana;
-            StatePacket.PosX = characterObj.PositionX;
-            StatePacket.PosY = characterObj.PositionY;
-            StatePacket.PosZ = characterObj.PositionZ;
+            AttributesPacket.Name = characterObj.Name;
+            AttributesPacket.CurrentHealth = characterObj.CurrentHealth;
+            AttributesPacket.MaxHealth = characterObj.MaxHealth;
+            AttributesPacket.CurrentMana = characterObj.CurrentMana;
+            AttributesPacket.MaxMana = characterObj.MaxMana;
+            TransformPacket.PosX = characterObj.PositionX;
+            TransformPacket.PosY = characterObj.PositionY;
+            TransformPacket.PosZ = characterObj.PositionZ;
         }
 
         public CharacterLoadResponsePacket() : base(PacketType.CHARACTER_LOAD_RESPONSE, true)
         {
             Success = false;
-            StatePacket = new CharacterStatePacket(-1);
+            AttributesPacket = new AttributesPacket(-1);
+            TransformPacket = new TransformPacket(-1);
         }
 
         public CharacterLoadResponsePacket(byte[] data) : base(data)
         {
-            StatePacket = new CharacterStatePacket(-1);
+            AttributesPacket = new AttributesPacket(-1);
+            TransformPacket = new TransformPacket(-1);
         }
 
         public override string ToString()

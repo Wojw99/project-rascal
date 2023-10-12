@@ -25,10 +25,10 @@ namespace NetworkCore.NetworkCommunication
 
         // If errors with that ResponsePackets dictionary - move it to TcpPeer class. The problem can
         // be with adding to that dictionary packets with same keys and from another peers.
-        public ConcurrentDictionary<PacketType, OwnedPacket> ResponsePackets { get; set; } 
+        private ConcurrentDictionary<PacketType, OwnedPacket> ResponsePackets { get; set; } 
             = new ConcurrentDictionary<PacketType, OwnedPacket>();
 
-        public bool IsRunning { get; set; }
+        protected bool IsRunningFlag { get; set; }
 
         public UInt32 InPacketCounter { get; private set; } = 0;
 
@@ -47,7 +47,7 @@ namespace NetworkCore.NetworkCommunication
             //await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }
 
-        public void RunPacketProcessingInBackground(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
+        public void StartPacketProcessing(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
         {
             //var processIncomingTask = Task.Run(ProcessIncomingPackets(maxIncomingPacketCount, packetProcessInterval));
             //var processOutgoingTask = Task.Run(ProcessOutgoingPackets(maxOutgoingPacketCount, packetProcessInterval));
@@ -58,7 +58,7 @@ namespace NetworkCore.NetworkCommunication
 
         private protected async Task ProcessIncomingPackets(UInt32 maxIncomingPacketCount, TimeSpan packetProcessInterval)
         {
-            while (IsRunning)
+            while (IsRunningFlag)
             {
                 
                 UInt32 packetCount = 0;
@@ -83,7 +83,7 @@ namespace NetworkCore.NetworkCommunication
 
         private protected async Task ProcessOutgoingPackets(UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
         {
-            while (IsRunning)
+            while (IsRunningFlag)
             {
                 UInt32 packetCount = 0;
 

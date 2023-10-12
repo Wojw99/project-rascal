@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,7 +65,7 @@ public class MovementEmissary : MonoBehaviour
     
 
     // public event EventHandler<OnSignalChangedEventArgs> OnSignalChanged;
-    /*public delegate void SignalEventDelegate(string signal);
+    *//*public delegate void SignalEventDelegate(string signal);
     public event SignalEventDelegate OnSignalChanged;*/
 
     /*public Vector3 Position
@@ -80,5 +80,6 @@ public class MovementEmissary : MonoBehaviour
     /*public void Clear()
     {
         currentSignal = "";
-    }*/
+    }*//*
 }
+*/

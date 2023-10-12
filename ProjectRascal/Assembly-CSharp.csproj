@@ -59,17 +59,22 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.4f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\Scripts\NetClient\Attributes\CharacterAttributes.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Attributes\TransformData.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\PlayerCharacterLoadEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Data\AdventurerAttributesData.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Data\TransformData.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerLoadEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerStateEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerTransformEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterStateEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterTransformEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterLoadEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\AdventurerCharacterStateEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\CharacterStateEmissaryOld1.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\PacketIdentifierEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Holders\AdventurersDataHolder.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Holders\PlayerDataHolder.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\IEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\IEmissary.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Client.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Base\ClientSingleton.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
     <Compile Include="Assets\Code\Scripts\MapCanvas.cs" />
     <Compile Include="Assets\Code\Scripts\DamageDealers\DamagableFire.cs" />
@@ -89,7 +94,7 @@
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AuthEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\InteractibleCanvas.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\MovementEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\dodanie\MovementEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\IDamageCharacter.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\DamageDealerWizard.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Clients\GameClient.cs" />
@@ -102,7 +107,7 @@
     <Compile Include="Assets\Code\Scripts\HumanAnimator.cs" />
     <Compile Include="Assets\Code\Scripts\SkillStatesController.cs" />
     <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterStateEmissaryOld.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\dodanie\CharacterStateEmissaryOld.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\SceneLoadWizard.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\TestWizard.cs" />
     <Compile Include="Assets\Code\Scripts\GameCharacter.cs" />
@@ -131,7 +136,7 @@
     <Compile Include="Assets\Code\Scripts\NetClient\Base\TcpNetworkClient.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\DDInteractible.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\VisibleCharactersCollection.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\VisibleCharactersCollection.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />

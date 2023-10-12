@@ -19,7 +19,7 @@ namespace NetworkCore.NetworkUtility
 
         public async Task ShowServerInfo()
         {
-            if(ServerRef.IsRunning)
+            if(ServerRef.IsRunning())
                 await Console.Out.WriteLineAsync("Server status: RUNNING. ");
             else
                 await Console.Out.WriteLineAsync("Server status: CLOSED. ");

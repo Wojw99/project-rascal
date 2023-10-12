@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkData;
+﻿/*using NetworkCore.NetworkData;
 using NetworkCore.Packets;
 using NetworkCore.NetworkCommunication;
 using System;
@@ -91,3 +91,4 @@ namespace NetClient
 
     }
 }
+*/

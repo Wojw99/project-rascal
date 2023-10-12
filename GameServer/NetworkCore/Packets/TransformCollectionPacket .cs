@@ -9,17 +9,17 @@ namespace NetworkCore.Packets
 {
     // Values in that packet must be assigned. So we must overload constructor
     // with parameters.
-    public class CharacterTransformsPacket : PacketBase
+    public class TransformCollectionPacket : PacketBase
     {
         [Serialization(Type: SerializationType.type_subPacketList)]
-        public List<CharacterTransformPacket> PacketCollection { get; set; } 
+        public List<TransformPacket> PacketCollection { get; set; } 
 
-        public CharacterTransformsPacket() : base(PacketType.CHARACTER_TRANSFORMS_PACKET, false) {
-            PacketCollection = new List<CharacterTransformPacket>();
+        public TransformCollectionPacket() : base(PacketType.TRANSFORM_COLLECTION_PACKET, false) {
+            PacketCollection = new List<TransformPacket>();
         }
 
-        public CharacterTransformsPacket(byte[] data ) : base(data) { 
-            PacketCollection = new List<CharacterTransformPacket>(); 
+        public TransformCollectionPacket(byte[] data ) : base(data) { 
+            PacketCollection = new List<TransformPacket>(); 
         }
 
         public override string ToString()

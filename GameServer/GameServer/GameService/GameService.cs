@@ -21,7 +21,7 @@ namespace ServerApplication.Game
             ServerMonitor Monitor = new ServerMonitor(Server);
 
             Server.StartListen(); 
-            Server.RunPacketProcessingInBackground(50, 50, TimeSpan.FromMilliseconds(20));
+            Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
             Server.StartUpdate(TimeSpan.FromMilliseconds(50));
 
             /*while (Server.IsRunning)

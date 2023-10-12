@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NetworkCore.Packets;
@@ -12,8 +12,8 @@ namespace Assets.Code.Scripts.NetClient.Holder
 {
     public class AdventurersDataHolder : MonoBehaviour
     {
-        public List<CharacterAttributes> AdventurerChrAttrCollection { get; private set; }
-            = new List<CharacterAttributes>();
+        public List<Attributes> AdventurerChrAttrCollection { get; private set; }
+            = new List<Attributes>();
 
         public List<TransformData> AdventurerChrTransformCollection { get; private set; }
             = new List<TransformData>();
@@ -42,7 +42,7 @@ namespace Assets.Code.Scripts.NetClient.Holder
         public void DeleteAdventurer(int adventurerVId)
         {
             AdventurerChrAttrCollection.Remove(AdventurerChrAttrCollection.Find(attr => attr.characterVId == adventurerVId));
-            AdventurerChrTransformCollection.Remove(AdventurerChrTransformCollection.Find(attr => attr.characterVId == adventurerVId));
+            AdventurerChrTransformCollection.Remove(AdventurerChrTransformCollection.Find(attr => attr.CharacterVId == adventurerVId));
         }
 
         public void UpdateName(int adventurerVId, string name)
@@ -77,9 +77,9 @@ namespace Assets.Code.Scripts.NetClient.Holder
 
         public void UpdateTransform(int adventurerVId, Vector3 position, Vector3 rotation)
         {
-            TransformData transform = AdventurerChrTransformCollection.Find(attr => attr.characterVId == adventurerVId);
-            transform.position = position;
-            transform.rotation = rotation;
+            TransformData transform = AdventurerChrTransformCollection.Find(attr => attr.CharacterVId == adventurerVId);
+            transform.Position = position;
+            transform.Rotation = rotation;
 
             OnAdventurerTransformUpdate?.Invoke(adventurerVId);
         }
@@ -126,3 +126,4 @@ namespace Assets.Code.Scripts.NetClient.Holder
         #endregion
     }
 }
+*/

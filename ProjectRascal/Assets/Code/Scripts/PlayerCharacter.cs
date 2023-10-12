@@ -12,49 +12,49 @@ public class PlayerCharacter : GameCharacter
 
     public void CharacterLoadSucces()
     {
-        name = PlayerCharacterLoadEmissary.instance.PlayerCharacterAttributes.name;
-        currentHealth = PlayerCharacterLoadEmissary.instance.PlayerCharacterAttributes.currentHealth;
-        currentMana = PlayerCharacterLoadEmissary.instance.PlayerCharacterAttributes.currentMana;
-        maxHealth = PlayerCharacterLoadEmissary.instance.PlayerCharacterAttributes.maxHealth;
-        maxMana = PlayerCharacterLoadEmissary.instance.PlayerCharacterAttributes.maxMana;
+        name = CharacterStateEmissary.instance.Name;
+        currentHealth = CharacterStateEmissary.instance.CurrentHealth;
+        currentMana = CharacterStateEmissary.instance.CurrentMana;
+        maxHealth = CharacterStateEmissary.instance.MaxHealth;
+        maxMana = CharacterStateEmissary.instance.MaxMana;
     }
 
     private void ChangeName()
     {
-        name = CharacterStateEmissary.instance.PlayerChrAttr.name;
+        name = CharacterStateEmissary.instance.Name;
     }
 
     private void ChangeCurrentHealth()
     {
-        currentHealth = CharacterStateEmissary.instance.PlayerChrAttr.currentHealth;
+        currentHealth = CharacterStateEmissary.instance.CurrentHealth;
         UIWizard.instance.UpdateHpBar(currentHealth, maxHealth);
     }
 
     private void ChangeCurrentMana()
     {
-        currentMana = CharacterStateEmissary.instance.PlayerChrAttr.currentMana;
+        currentMana = CharacterStateEmissary.instance.CurrentMana;
         UIWizard.instance.UpdateMpBar(currentMana, maxMana);
     }
 
     private void ChangeMaxHealth()
     {
-        maxHealth = CharacterStateEmissary.instance.PlayerChrAttr.maxHealth;
+        maxHealth = CharacterStateEmissary.instance.MaxHealth;
         UIWizard.instance.UpdateHpBar(currentHealth, maxHealth);
     }
 
     private void ChangeMaxMana()
     {
-        maxMana = CharacterStateEmissary.instance.PlayerChrAttr.maxMana;
+        maxMana = CharacterStateEmissary.instance.MaxMana;
         UIWizard.instance.UpdateMpBar(currentMana, maxMana);
     }
 
     private void Start() {
-        PlayerCharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
-        CharacterStateEmissary.instance.OnPlayerNameChanged += ChangeName;
-        CharacterStateEmissary.instance.OnPlayerCurrentHealthChanged += ChangeCurrentHealth;
-        CharacterStateEmissary.instance.OnPlayerCurrentManaChanged += ChangeCurrentMana;
-        CharacterStateEmissary.instance.OnPlayerMaxHealthChanged += ChangeMaxHealth;
-        CharacterStateEmissary.instance.OnPlayerMaxManaChanged += ChangeMaxMana;
+        CharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
+        CharacterStateEmissary.instance.OnPlayerNameUpdate += ChangeName;
+        CharacterStateEmissary.instance.OnPlayerCurrentHealthUpdate += ChangeCurrentHealth;
+        CharacterStateEmissary.instance.OnPlayerCurrentManaUpdate += ChangeCurrentMana;
+        CharacterStateEmissary.instance.OnPlayerMaxHealthUpdate += ChangeMaxHealth;
+        CharacterStateEmissary.instance.OnPlayerMaxManaUpdate += ChangeMaxMana;
 
         UIWizard.instance.UpdateGold(gold.ToString());
         UIWizard.instance.UpdateHpBar(currentHealth, maxHealth);
