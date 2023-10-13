@@ -88,6 +88,10 @@ namespace NetClient
             else if (packet is AdventurerLoadPacket adventurerLoadPacket)
                 AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(adventurerLoadPacket);
 
+            else if(packet is AdventurerLoadCollectionPacket adventurerLoadCollection)
+                foreach(var pck in adventurerLoadCollection.PacketCollection)
+                    AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(pck);
+
             #endregion
 
             #region Attributes

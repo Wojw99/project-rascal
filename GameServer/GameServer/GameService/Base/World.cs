@@ -147,17 +147,37 @@ namespace ServerApplication.GameService.Base
                 throw new InvalidOperationException($"Failed to add player with id {playerConn.Id}.");
 
             // Send character states of currently connected players to new player.
-            AttributesCollectionPacket characterStatesPacket = new AttributesCollectionPacket();
+            AdventurerLoadCollectionPacket adventurerLoadCollection = new AdventurerLoadCollectionPacket();
 
             foreach (var character in ConnectedPlayers)
             {
-                if (character.Key != playerConn.Id)
+                if (character.Key != playerConn.Id) // Except logged in player.
                 {
-                    characterStatesPacket.PacketCollection.Add(new CharacterStatePacket(character.Value.CharacterObj));
+                    AdventurerLoadPacket adventurerLoad = new AdventurerLoadPacket();
+
+                    adventurerLoad.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
+                        playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana);
+
+                    adventurerLoad.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
+                        playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
+
+                    adventurerLoadCollection.PacketCollection.Add(adventurerLoad);
                 }
             }
 
-            await playerConn.SendPacket(characterStatesPacket);
+            await playerConn.SendPacket(adventurerLoadCollection); // Send packet to one.
+
+            // Next step is to send a full state of currently logged character to others.
+
+            AdventurerLoadPacket adventurerLoadPacket = new AdventurerLoadPacket();
+
+            adventurerLoadPacket.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
+                playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana);
+
+            adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
+                playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
+
+            await this.SendPacketToConnectedPlayers(playerConn.Id, adventurerLoadPacket); // Send packet to all.
         }
 
         public async Task RemovePlayer(PlayerConnection playerConn) 

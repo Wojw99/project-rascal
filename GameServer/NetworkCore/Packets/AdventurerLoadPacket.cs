@@ -7,8 +7,8 @@ namespace NetworkCore.Packets
 {
     public class AdventurerLoadPacket : PacketBase
     {
-        [Serialization(Type: SerializationType.type_bool)]
-        public bool Success { get; private set; } // 1 - true
+        //[Serialization(Type: SerializationType.type_bool)]
+        //public bool Success { get; private set; } // 1 - true
 
         [Serialization(Type: SerializationType.type_subPacket)]
         public AttributesPacket AttributesPacket { get; set; }

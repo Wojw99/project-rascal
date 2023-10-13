@@ -76,15 +76,6 @@ namespace ServerApplication.GameService
                         // player current states of all players.
                         await _World.AddNewPlayer(playerConn);
 
-                        // After succesfull load for first time - we sending a full state of character to others.
-                        // Next step is receives updates for that player character and sending only updated
-                        // version of his state (check method Update() in World class).
-                        AdventurerLoadPacket adventurerLoadPacket = new AdventurerLoadPacket();
-                        adventurerLoadPacket.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
-                            playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj);
-                        adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj);
-
-                        await _World.SendPacketToConnectedPlayers(playerConn.Id, adventurerLoadPacket);
                     }
                 }
 

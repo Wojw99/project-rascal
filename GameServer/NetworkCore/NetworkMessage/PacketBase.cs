@@ -62,6 +62,9 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.ADVENTURER_LOAD_PACKET:
                     return new AdventurerLoadPacket(receivedData);
 
+                case PacketType.ADVENTURER_LOAD_COLLECTION_PACKET:
+                    return new AdventurerLoadCollectionPacket(receivedData);
+
                 case PacketType.ATTRIBUTES_PACKET:
                     return new AttributesPacket(receivedData);
 

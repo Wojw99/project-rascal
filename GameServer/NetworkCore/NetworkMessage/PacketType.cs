@@ -15,6 +15,7 @@ namespace NetworkCore.NetworkMessage
         CHARACTER_LOAD_RESPONSE = 0x11, // In response send character objest to client.
         CHARACTER_LOAD_SUCCES = 0X12, // Client-side succes operation of loading his character received from server.
         ADVENTURER_LOAD_PACKET = 0x13, // When new player loaded, we sending that packet to all players.
+        ADVENTURER_LOAD_COLLECTION_PACKET = 0x14,
 
         // CHARACTER / ADVENTURER STATE
         ATTRIBUTES_PACKET = 0x20, // To send single character state (full).
