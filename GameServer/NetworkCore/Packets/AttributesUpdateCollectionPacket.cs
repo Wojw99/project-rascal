@@ -17,5 +17,10 @@ namespace NetworkCore.Packets
         }
 
         public AttributesUpdateCollectionPacket(byte[] data) : base(data) { }
+
+        public override string GetInfo()
+        {
+            return "ATTRIBUTES COLLECTION UPDATE PACKET";
+        }
     }
 }

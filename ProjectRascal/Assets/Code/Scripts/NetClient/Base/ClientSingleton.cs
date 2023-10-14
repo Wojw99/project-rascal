@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Assets.Code.Scripts.NetClient.Emissary;
-using UnityEditor.Experimental.GraphView;
 
 namespace NetClient
 {
@@ -22,23 +21,37 @@ namespace NetClient
 
         private static ClientSingleton Instance;
 
-        private ClientSingleton()
+        private ClientSingleton() 
         {
-            Start();
-            StartUpdate(TimeSpan.FromMilliseconds(20));
-            StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
+            OnPacketSent += ShowPacketInfo;
         }
 
-        public static ClientSingleton GetInstance()
+        public static async Task<ClientSingleton> GetInstanceAsync()
         {
             if (Instance == null)
             {
                 Instance = new ClientSingleton();
+                await Instance.Initialize();
             }
             return Instance;
         }
 
+        private async Task Initialize()
+        {
+            Start();
+            StartUpdate(TimeSpan.FromMilliseconds(20));
+            StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
+
+            // Temporary
+            await ConnectToGameServer();
+        }
+
         #endregion
+
+        public void ShowPacketInfo(string packetInfo)
+        {
+            Debug.Log("[SEND] " + packetInfo);
+        }
 
         public async Task ConnectToAuthServer()
         {
@@ -49,7 +62,7 @@ namespace NetClient
 
         public async Task ConnectToGameServer()
         {
-            GameServer = await CreateTcpServerConnection("192.168.5.5", 8051);
+            GameServer = await CreateTcpServerConnection("127.0.0.1", 8051);
             GameServer.Connect();
             GameServer.StartRead();
         }
@@ -74,7 +87,7 @@ namespace NetClient
         /// </remarks>
         public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
+            Debug.Log($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
 
             #region Character
 

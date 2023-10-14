@@ -2,6 +2,7 @@ using Assets.Code.Scripts.NetClient.Emissary;
 using NetClient;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -27,6 +28,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private SkillController skillController;
 
     private bool CharacterLoadSuccesFlag = false;
+    private bool CharacterIsRunning = false;
+    private bool CharacterIsRotating = false;
 
     private void Start() {
         CharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
@@ -49,6 +52,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
 
         CharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
         CharacterLoadSuccesFlag = true;
+        Debug.Log("CharacterLoadSuccesFlag = true");
+        
     }
 
     private void CharacterLoadFailed()
@@ -77,11 +82,23 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
     }
 
+    private float timeSinceLastPacket = 0f;
+    private float packetSendInterval = 1f;
+
     private void HandleSendPlayerTransform()
     {
-        CharacterTransformEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId, 
+        timeSinceLastPacket += Time.deltaTime;
+
+        //if (CharacterIsRunning || CharacterIsRotating)
+        
+        if ((timeSinceLastPacket >= packetSendInterval))//&& (CharacterIsRunning || CharacterIsRotating)
+        {
+            CharacterTransformEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId,
             transform.position.x, transform.position.y, transform.position.z,
             transform.rotation.x, transform.rotation.y, transform.rotation.z);
+
+            timeSinceLastPacket = 0f;
+        }
     }
 
     private void HandleTestAnim() {
@@ -205,6 +222,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         direction.y = 0f; 
 
         if(direction != lookDirection && CountDistanceToMouse() > minDistanceForRotating) {
+            CharacterIsRotating = true;
             lookDirection = direction;
             var angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
@@ -221,11 +239,11 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         if (InputWizard.instance.IsRightClickPressed() 
         && playerState != CharacterState.Casting 
         && CountDistanceToMouse() > minDistanceForRunning) { 
+            CharacterIsRunning = true;
             var movement = lookDirection.normalized * moveSpeed * Time.deltaTime;
             transform.position += movement;
             playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
-
         }
     }
 
@@ -234,6 +252,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         && playerState != CharacterState.Casting)
         || (CountDistanceToMouse() <= minDistanceForRunning 
         && playerState != CharacterState.Casting)) { 
+            CharacterIsRunning = false;
+            CharacterIsRotating = false;
             playerState = CharacterState.Idle;
             humanAnimator.AnimateIdle();
         } 

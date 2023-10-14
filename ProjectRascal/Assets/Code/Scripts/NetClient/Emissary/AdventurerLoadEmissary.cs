@@ -18,6 +18,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         private void Awake()
         {
             instance = this;
+            Debug.Log("AdventurerLoadEmissary Awake");
         }
 
         #endregion

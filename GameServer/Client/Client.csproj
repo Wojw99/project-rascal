@@ -15,4 +15,8 @@
     <ProjectReference Include="..\NetworkCore\NetworkCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>

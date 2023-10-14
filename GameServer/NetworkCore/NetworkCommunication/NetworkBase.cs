@@ -34,6 +34,11 @@ namespace NetworkCore.NetworkCommunication
 
         public UInt32 OutPacketCounter { get; private set; } = 0;
 
+        //public string PacketSentInfo { get; private set; } = string.Empty;
+
+        public delegate void PacketSentInfo(string newPacketInfo);
+        public event PacketSentInfo OnPacketSent;
+
         public abstract Task OnPacketReceived(IPeer Peer, PacketBase packet);
 
         protected NetworkBase()
@@ -44,6 +49,8 @@ namespace NetworkCore.NetworkCommunication
         {
             byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+            OnPacketSent.Invoke(receiver.PeerPacket.GetInfo());
+            //await Console.Out.WriteLineAsync("Pomyslnie wyslano");
             //await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }
 

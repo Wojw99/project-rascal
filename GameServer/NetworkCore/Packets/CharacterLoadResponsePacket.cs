@@ -53,10 +53,10 @@ namespace NetworkCore.Packets
             TransformPacket = new TransformPacket(-1);
         }
 
-        public override string ToString()
+        public override string GetInfo()
         {
             // Include Success field in the ToString() representation.
-            return base.ToString() + $", Success = {Success}";
+            return "CHARACTER LOAD RESPONSE";
         }
 
         // We can store "Player" class object, because in this packet we want to receive all Player data (All Player State).

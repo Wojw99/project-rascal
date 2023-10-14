@@ -86,7 +86,7 @@ namespace Client
 
         public async Task OnCharacterMoveReceived(CharacterTransformPacket movePacket)
         {
-            
+
         }
 
     }

@@ -61,9 +61,9 @@ namespace NetworkCore.Packets
 
         public TransformPacket(byte[] data ) : base(data) {}
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "TRANSFORM PACKET";
             //return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
                // $"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }

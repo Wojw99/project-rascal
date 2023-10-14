@@ -35,7 +35,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public async Task LoginToServer(string login, string password)
         {
-            ClientSingleton Client = ClientSingleton.GetInstance();
+            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
 
             if(!Client.AuthServer.IsConnected)
             {

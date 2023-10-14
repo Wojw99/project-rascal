@@ -29,9 +29,6 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public Vector3 Position { get; private set; }
         public Vector3 Rotation { get; private set; }
 
-        private float timeSinceLastPacket = 0f;
-        private float packetSendInterval = 0.1f;
-
         public void ReceiveTransformationData(TransformPacket packet)
         {
             Position = new Vector3(packet.PosX, packet.PosY, packet.PosZ);
@@ -39,16 +36,13 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             OnCharacterTransformReceived?.Invoke();
         }
 
-        public void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
+        public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
             float rotX, float rotY, float rotZ)
         {
-            timeSinceLastPacket += Time.deltaTime;
+            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
 
-            if (timeSinceLastPacket >= packetSendInterval)
-            {
-                ClientSingleton.GetInstance().GameServer.SendPacket(
-                    new TransformPacket(characterVId, posX, posY, posZ, rotX, rotY, rotZ));
-            }
+            await client.GameServer.SendPacket(
+                new TransformPacket(characterVId, posX, posY, posZ, rotX, rotY, rotZ));
         }
     }
 }

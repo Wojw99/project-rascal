@@ -43,9 +43,9 @@ namespace NetworkCore.Packets
 
         public AttributesUpdatePacket(byte[] data) : base(data) { }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "ATTRIBUTES UPDATE PACKET";
             // return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
             //$"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }

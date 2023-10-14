@@ -27,7 +27,7 @@ namespace NetworkCore.NetworkMessage
         TRANSFORM_PACKET = 0x24,
         TRANSFORM_COLLECTION_PACKET = 0X25,
 
-        CHARACTER_EXIT_PACKET = 0x25,
+        CHARACTER_EXIT_PACKET = 0x26,
 
         // 
         CLIENT_DISCONNECT = 0x30,

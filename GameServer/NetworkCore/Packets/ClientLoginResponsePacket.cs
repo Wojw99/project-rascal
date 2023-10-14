@@ -16,5 +16,9 @@ namespace NetworkCore.Packets
         }
 
         public ClientLoginResponsePacket(byte[] data) : base(data) { }
+        public override string GetInfo()
+        {
+            return "LOGIN RESPONSE PACKET";
+        }
     }
 }

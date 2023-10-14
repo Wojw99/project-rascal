@@ -26,6 +26,12 @@ namespace ServerApplication.GameService
             : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, tcpPort)
         {
             _World = new World();
+            OnPacketSent += showSentPacketInfo;
+        }
+
+        public void showSentPacketInfo(string packetInfo)
+        {
+            Console.WriteLine("[SEND] " + packetInfo);
         }
 
         protected override async Task Update()

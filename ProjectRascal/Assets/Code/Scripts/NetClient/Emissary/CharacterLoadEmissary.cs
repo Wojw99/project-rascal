@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Code.Scripts.NetClient.Emissary
 {
-    public class CharacterLoadEmissary
+    public class CharacterLoadEmissary : MonoBehaviour 
     {
 
         public delegate void CharacterLoad();
@@ -19,7 +20,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public event CharacterLoad OnCharacterLoadFailed;
 
-        public void ReceiveCharacterData(CharacterLoadResponsePacket packet)
+        public async Task ReceiveCharacterData(CharacterLoadResponsePacket packet)
         {
             if(packet.Success)
             {
@@ -36,19 +37,24 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public async void CommitSendCharacterLoadRequest(string authToken)
         {
-            ClientSingleton Client = ClientSingleton.GetInstance();
+            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
+
+            Debug.Log("Wysylam pakiet wczytania postaci.");
 
             await Client.GameServer.SendPacket(new CharacterLoadRequestPacket(authToken));
-
+            
             PacketBase packet = await Client.WaitForResponsePacket(TimeSpan.FromMilliseconds(20), 
                 TimeSpan.FromSeconds(50), PacketType.CHARACTER_LOAD_RESPONSE);
 
-            ReceiveCharacterData(packet as CharacterLoadResponsePacket);
+            Debug.Log("Otrzymalem pakiet zwrotny");
+
+            await ReceiveCharacterData(packet as CharacterLoadResponsePacket);
         }
 
         public async void CommitSendCharacterLoadSucces(bool loadSucces)
         {
-            await ClientSingleton.GetInstance().GameServer.SendPacket(new CharacterLoadSuccesPacket(loadSucces));
+            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
+            await client.GameServer.SendPacket(new CharacterLoadSuccesPacket(loadSucces));
         }
 
         #region Singleton

@@ -80,6 +80,9 @@ namespace NetworkCore.NetworkMessage
                 case PacketType.TRANSFORM_PACKET:
                     return new TransformPacket(receivedData);
 
+                case PacketType.TRANSFORM_COLLECTION_PACKET:
+                    return new TransformCollectionPacket(receivedData);
+
                 case PacketType.CHARACTER_EXIT_PACKET:
                     return new AdventurerExitPacket(receivedData);
 
@@ -402,6 +405,11 @@ namespace NetworkCore.NetworkMessage
                 }
             }
             return totalSize;
+        }
+
+        public virtual string GetInfo()
+        {
+            return "";
         }
 
     }

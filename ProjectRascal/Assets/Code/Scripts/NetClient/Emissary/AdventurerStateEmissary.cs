@@ -37,6 +37,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public event AdventurerAttributeUpdate OnAdventurerTransformUpdate;
 
+        public AdventurerAttributesData GetAdventurerAttributes(int AdventurerVId)
+        {
+            return AdventurerChrAttrCollection.Find(attr => attr.CharacterVId == AdventurerVId);
+        }
+
         public void ReceiveAttributesData(AttributesPacket AttrPacket)
         {
             AdventurerAttributesData Attr = AdventurerChrAttrCollection.Find(attr => attr.CharacterVId == AttrPacket.CharacterVId);

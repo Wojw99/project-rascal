@@ -19,9 +19,9 @@ namespace NetworkCore.Packets
 
         public CharacterLoadSuccesPacket(byte[] data) : base(data) { }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "CHARACTER LOAD SUCCES PACKET";
         }
     }
 }

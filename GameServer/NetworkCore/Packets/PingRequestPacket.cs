@@ -11,9 +11,9 @@ namespace NetworkCore.Packets
 
         public PingRequestPacket(byte[] data) : base(data) { }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "PING REQUEST PACKET";
         }
     }
 }

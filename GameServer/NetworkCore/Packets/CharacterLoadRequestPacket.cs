@@ -29,9 +29,9 @@ namespace NetworkCore.Packets
 
         public CharacterLoadRequestPacket(byte[] data) : base(data) { }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "CHARACTER LOAD REQUEST";
         }
     }
 }

@@ -15,5 +15,9 @@ namespace NetworkCore.Packets
 
         public AdventurerExitPacket(int characterVId) : base (PacketType.CHARACTER_EXIT_PACKET, false) { CharacterVId = characterVId; }
         public AdventurerExitPacket(byte[] data) : base(data) { }
+        public override string GetInfo()
+        {
+            return "CHARACTER EXIT PACKET";
+        }
     }
 }

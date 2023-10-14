@@ -65,6 +65,7 @@
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\PacketIdentifierEmissary.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\Code\Scripts\AdventurerCollection.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Assets\Code\Scripts\Wizards\SceneLoadWizard.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerStateEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterTransformEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\AdventurerController.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\TestWizard.cs" />
     <Compile Include="Assets\Code\Scripts\GameCharacter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\AdventurerCharacterStateEmissary.cs" />
     <Compile Include="Assets\L_FG_Assets_Pack1.0\Demo\cameraMove.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
+    <Compile Include="Assets\Code\Scripts\AdventurerCharacter.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\IEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\ScriptableObjects\WeaponSO.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\dodanie\MovementEmissary.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\old\CharacterStateEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\EnemyCharacter.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Base\StartSingleton.cs" />
     <Compile Include="Assets\Code\Scripts\DamageDealers\DamageDealer.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\DDInteractible.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />

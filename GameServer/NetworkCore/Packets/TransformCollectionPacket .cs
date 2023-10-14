@@ -22,9 +22,9 @@ namespace NetworkCore.Packets
             PacketCollection = new List<TransformPacket>(); 
         }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "TRANSFORM_COLLECTION_PACKET";
         }
     }
 }

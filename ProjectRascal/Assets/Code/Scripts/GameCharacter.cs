@@ -33,31 +33,31 @@ public class GameCharacter : MonoBehaviour
 
     public int VId
     {
-        get { return VId; }
+        get;
     }
 
     public string Name
     {
-        get { return name; }
+        get;
     }
 
     public float CurrentHealth
     {
-        get { return currentHealth; }
+        get;
     }
 
     public float MaxHealth
     {
-        get { return maxHealth; }
+        get;
     }
 
     public float Attack
     {
-        get { return attack; }
+        get;
     }
 
     public float Magic
     {
-        get { return magic; }
+        get;
     }
 }

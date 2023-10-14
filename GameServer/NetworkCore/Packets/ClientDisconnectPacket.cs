@@ -20,9 +20,9 @@ namespace NetworkCore.Packets
 
         public ClientDisconnectPacket(byte[] data) : base(data) { }
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "CLIENT DISCONNECT PACKET";
         }
     }
 }

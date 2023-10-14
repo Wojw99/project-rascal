@@ -28,5 +28,9 @@ namespace NetworkCore.Packets
             AttributesPacket = new AttributesPacket(-1);
             TransformPacket = new TransformPacket(-1);
         }
+        public override string GetInfo()
+        {
+            return "ADVENTURER LOAD PACKET";
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace NetworkCore.Packets
         }
 
         public AttributesCollectionPacket(byte[] data) : base(data) { }
+
+        public override string GetInfo()
+        {
+            return "ATTRIBUTES COLLECTION PACKET";
+        }
     }
 }

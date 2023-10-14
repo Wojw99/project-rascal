@@ -20,16 +20,16 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_string)]
         public string Name { get; set; } = string.Empty;
 
-        [Serialization(Type: SerializationType.type_Int32)]
+        [Serialization(Type: SerializationType.type_float)]
         public float CurrentHealth { get; set; } = -1;
 
-        [Serialization(Type: SerializationType.type_Int32)]
+        [Serialization(Type: SerializationType.type_float)]
         public float MaxHealth { get; set; } = -1;
 
-        [Serialization(Type: SerializationType.type_Int32)]
+        [Serialization(Type: SerializationType.type_float)]
         public float CurrentMana { get; set; } = -1;
 
-        [Serialization(Type: SerializationType.type_Int32)]
+        [Serialization(Type: SerializationType.type_float)]
         public float MaxMana { get; set; } = -1;
 
         // Be 100% sure this is the correct unique identificator of player.
@@ -56,9 +56,9 @@ namespace NetworkCore.Packets
             return new Character(CharacterVId, Name, CurrentHealth, MaxHealth, CurrentMana, MaxMana);
         }*/
 
-        public override string ToString()
+        public override string GetInfo()
         {
-            return "";
+            return "ATTRIBUTES PACKET";
             // return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
             //$"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }

@@ -32,11 +32,13 @@ namespace ServerApplication.GameService
             ServerRef = serverRef;
             CharacterObj = new Character();
             CharacterStateUpdate = new AttributesUpdatePacket(-1);
+            CharacterTransform = new TransformPacket(-1);
         }
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
         {
             CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0, 0, 0);
+            CharacterTransform.CharacterVId = UniqueId;
             CharacterStateUpdate.CharacterVId = UniqueId;
         }
 
