@@ -6,15 +6,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor.Search;
 using UnityEngine;
+using System.Collections.Concurrent;
 
 namespace Assets.Code.Scripts
 {
-    public class AdventurerCollection : MonoBehaviour
+    public class AdventurerManager : MonoBehaviour
     {
+        public GameObject AdventurerPrefab;
 
-        private Dictionary<int, AdventurerController> Adventurers { get; set; } = 
+        //private Dictionary<int, GameObject> Adventurers  = 
+        // new Dictionary<int, GameObject>();
+
+        private Dictionary<int, AdventurerController> Adventurers =
             new Dictionary<int, AdventurerController>();
+
+        private ConcurrentQueue<(AdventurerAttributesData, TransformData)> AdventurerLoadData 
+            = new ConcurrentQueue<(AdventurerAttributesData, TransformData)>();
 
         private void Start()
         {
@@ -35,7 +44,32 @@ namespace Assets.Code.Scripts
 
         private void Update()
         {
-            delayTimer += Time.deltaTime;
+            if(AdventurerLoadData.Count > 0)
+            {
+                if (AdventurerLoadData.TryDequeue(out var loadData))
+                {
+                    GameObject adventurerObject = Instantiate(AdventurerPrefab, loadData.Item2.Position, Quaternion.identity);
+                    AdventurerController controller = adventurerObject.GetComponent<AdventurerController>();
+                    controller.InitializeData(loadData.Item1, loadData.Item2);
+                    //Adventurers.Add(loadData.Item1.CharacterVId, controller);
+                    Adventurers[loadData.Item1.CharacterVId] = controller;
+                    Debug.Log("Adventurers dictionary count = " + Adventurers.Count);
+                    
+                    string str = string.Empty;
+                    foreach(var adventurer in Adventurers)
+                    {
+                        str = str + adventurer.Key.ToString() + " ";
+                    }
+
+                    Debug.Log("Adventurers dictionary: " + str);
+                    Debug.Log("New Adventurer join! with VId = " + loadData.Item1.CharacterVId + "Position = " + controller.transform.position);
+                }
+                else
+                {
+
+                }
+            }
+            /*delayTimer += Time.deltaTime;
 
             if (delayTimer >= delayDuration)
             {
@@ -43,23 +77,20 @@ namespace Assets.Code.Scripts
 
                 foreach(var adventurer in Adventurers)
                 {
-                    Debug.Log("Adventurer, with id = " + adventurer.Key + 
-                        ", Transform = [" + adventurer.Value.getTransformInfo() + "]");
+                    //Debug.Log("Adventurer, with id = " + adventurer.Key + ", Transform = [" + adventurer.Value.getTransformInfo() + "]");
+                    Debug.Log("Adventurer, with id = " + adventurer.Key + ", Transform = [" + adventurer.Value.transform + "]");
                 }
 
                 delayTimer = 0f;
-            }
+            }*/
         }
 
         #region EventHandlers
 
         private void AddNewAdventurer(int AdventurerVId)
         {
-            AdventurerController newAdventurerController = AdventurerController.CreateAdventurerController(
-                    AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId),
-                    AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId));
-
-            Adventurers.Add(AdventurerVId, newAdventurerController);
+            AdventurerLoadData.Enqueue((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId),
+                AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId)));  
         }
         private void ChangeAdventurerName(int AdventurerVId)
         {
@@ -88,10 +119,11 @@ namespace Assets.Code.Scripts
 
         private void ChangeAdventurerTransform(int AdventurerVId)
         {
+            Debug.Log("Adventurers count = " + Adventurers.Count);
+            Debug.Log("Jakis gracz sie porusza :OO");
             TransformData transform = AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId);
-            //Adventurers[AdventurerVId].Item2.SetTransform(transform.Position, transform.Rotation );
-            Adventurers[AdventurerVId].HandleRotation(transform.Rotation);
-            Adventurers[AdventurerVId].HandleRunning(transform.Position);
+            //Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation );
+            Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation);
         }
 
         #endregion

@@ -63,9 +63,9 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "TRANSFORM PACKET";
+            return "TRANSFORM PACKET, " + base.GetInfo();
             //return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
-               // $"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
+            // $"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }
     }
 }

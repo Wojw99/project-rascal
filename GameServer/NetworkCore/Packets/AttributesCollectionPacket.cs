@@ -20,7 +20,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "ATTRIBUTES COLLECTION PACKET";
+            return "ATTRIBUTES COLLECTION PACKET, " + base.GetInfo();
         }
     }
 }

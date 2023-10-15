@@ -31,7 +31,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "CHARACTER LOAD REQUEST";
+            return "CHARACTER LOAD REQUEST, " + base.GetInfo();
         }
     }
 }

@@ -45,7 +45,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "ATTRIBUTES UPDATE PACKET";
+            return "ATTRIBUTES UPDATE PACKET, " + base.GetInfo();
             // return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
             //$"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }

@@ -22,7 +22,7 @@ namespace NetworkCore.Packets
         public ClientLoginRequestPacket(byte[] data) : base(data) { }
         public override string GetInfo()
         {
-            return "LOGIN REQUEST PACKET";
+            return "LOGIN REQUEST PACKET, " + base.GetInfo();
         }
     }
 }

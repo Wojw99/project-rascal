@@ -31,7 +31,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         {
             AdventurerStateEmissary.instance.AddAdventurer(new AdventurerAttributesData(adventurerLoadPacket.AttributesPacket));
             AdventurerTransformEmissary.instance.AddAdventurerTransform(new TransformData(adventurerLoadPacket.TransformPacket));
-            OnNewAdventurerLoad.Invoke(adventurerLoadPacket.AttributesPacket.CharacterVId);
+            OnNewAdventurerLoad?.Invoke(adventurerLoadPacket.AttributesPacket.CharacterVId);
         }
     }
 }

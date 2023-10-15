@@ -13,7 +13,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "PING REQUEST PACKET";
+            return "PING REQUEST PACKET, " + base.GetInfo();
         }
     }
 }

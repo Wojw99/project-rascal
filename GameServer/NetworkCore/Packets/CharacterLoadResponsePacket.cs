@@ -49,14 +49,13 @@ namespace NetworkCore.Packets
 
         public CharacterLoadResponsePacket(byte[] data) : base(data)
         {
-            AttributesPacket = new AttributesPacket(-1);
-            TransformPacket = new TransformPacket(-1);
+
         }
 
         public override string GetInfo()
         {
             // Include Success field in the ToString() representation.
-            return "CHARACTER LOAD RESPONSE";
+            return "CHARACTER LOAD RESPONSE, " + base.GetInfo();
         }
 
         // We can store "Player" class object, because in this packet we want to receive all Player data (All Player State).

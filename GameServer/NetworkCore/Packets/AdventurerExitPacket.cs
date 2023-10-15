@@ -17,7 +17,7 @@ namespace NetworkCore.Packets
         public AdventurerExitPacket(byte[] data) : base(data) { }
         public override string GetInfo()
         {
-            return "CHARACTER EXIT PACKET";
+            return "CHARACTER EXIT PACKET, " + base.GetInfo();
         }
     }
 }

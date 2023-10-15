@@ -60,7 +60,6 @@ namespace Client
         public static async void CommitSendPlayerCharacterTransfer()
         {
             ClientSingleton client = await ClientSingleton.GetInstanceAsync();
-
             await client.GameServer.SendPacket(transformPacket);
 
         }

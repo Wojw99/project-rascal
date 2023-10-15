@@ -19,12 +19,12 @@ namespace NetworkCore.Packets
         }
 
         public TransformCollectionPacket(byte[] data ) : base(data) { 
-            PacketCollection = new List<TransformPacket>(); 
+
         }
 
         public override string GetInfo()
         {
-            return "TRANSFORM_COLLECTION_PACKET";
+            return "TRANSFORM_COLLECTION_PACKET, " + base.GetInfo();
         }
     }
 }

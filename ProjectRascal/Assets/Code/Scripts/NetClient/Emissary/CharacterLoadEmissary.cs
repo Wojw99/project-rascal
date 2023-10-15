@@ -22,6 +22,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public async Task ReceiveCharacterData(CharacterLoadResponsePacket packet)
         {
+            Debug.Log("ReceiveCharacterData called, with succes = " + packet.Success);
+            Debug.Log("W pakiecie id = " + packet.AttributesPacket.CharacterVId);
             if(packet.Success)
             {
                 CharacterStateEmissary.instance.ReceiveAttributesData(packet.AttributesPacket);

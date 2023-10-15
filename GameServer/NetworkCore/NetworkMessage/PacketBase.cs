@@ -409,7 +409,7 @@ namespace NetworkCore.NetworkMessage
 
         public virtual string GetInfo()
         {
-            return "";
+            return CalculateTotalSize().ToString();
         }
 
     }

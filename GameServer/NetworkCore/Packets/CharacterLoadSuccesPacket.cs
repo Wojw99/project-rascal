@@ -21,7 +21,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "CHARACTER LOAD SUCCES PACKET";
+            return "CHARACTER LOAD SUCCES PACKET, " + base.GetInfo();
         }
     }
 }

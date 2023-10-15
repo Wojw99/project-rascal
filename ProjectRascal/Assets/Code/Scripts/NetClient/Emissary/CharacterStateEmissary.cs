@@ -45,6 +45,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public void ReceiveAttributesData(AttributesPacket AttrPacket)
         {
             CharacterVId = AttrPacket.CharacterVId;
+            Debug.Log("Przydzielam id = " + AttrPacket.CharacterVId);
             Name = AttrPacket.Name;
             CurrentHealth = AttrPacket.CurrentHealth;
             CurrentMana = AttrPacket.CurrentMana;

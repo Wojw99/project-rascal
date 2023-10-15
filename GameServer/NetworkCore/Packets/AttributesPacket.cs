@@ -15,22 +15,22 @@ namespace NetworkCore.Packets
         // Player VId cannot be null. See the description of this parameter in the Player class.
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public int CharacterVId { get; set; } = -1;
+        public int CharacterVId { get; set; }
 
         [Serialization(Type: SerializationType.type_string)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float CurrentHealth { get; set; } = -1;
+        public float CurrentHealth { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float MaxHealth { get; set; } = -1;
+        public float MaxHealth { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float CurrentMana { get; set; } = -1;
+        public float CurrentMana { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float MaxMana { get; set; } = -1;
+        public float MaxMana { get; set; }
 
         // Be 100% sure this is the correct unique identificator of player.
         public AttributesPacket(int characterVId) : base(PacketType.ATTRIBUTES_PACKET, false)
@@ -58,7 +58,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "ATTRIBUTES PACKET";
+            return "ATTRIBUTES PACKET, " + base.GetInfo();
             // return base.ToString() + $"PlayerId = {Position.PlayerId}, PosX = {Position.PosX}, " +
             //$"PosY = {Position.PosY}, PosZ = {Position.PosZ}, Rotation = {Position.Rotation}";
         }

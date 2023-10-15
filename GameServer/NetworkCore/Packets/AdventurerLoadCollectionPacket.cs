@@ -20,7 +20,7 @@ namespace NetworkCore.Packets
         public AdventurerLoadCollectionPacket(byte[] data) : base(data) { }
         public override string GetInfo()
         {
-            return "ADVENTURER LOAD COLLECTION PACKET";
+            return "ADVENTURER LOAD COLLECTION PACKET, " + base.GetInfo();
         }
     }
 }

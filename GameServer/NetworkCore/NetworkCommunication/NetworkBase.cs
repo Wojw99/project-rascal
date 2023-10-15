@@ -49,7 +49,8 @@ namespace NetworkCore.NetworkCommunication
         {
             byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
-            OnPacketSent.Invoke(receiver.PeerPacket.GetInfo());
+            OnPacketSent?.Invoke(receiver.PeerPacket.GetInfo());
+            
             //await Console.Out.WriteLineAsync("Pomyslnie wyslano");
             //await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }

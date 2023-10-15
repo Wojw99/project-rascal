@@ -22,7 +22,7 @@ namespace NetworkCore.Packets
 
         public override string GetInfo()
         {
-            return "CLIENT DISCONNECT PACKET";
+            return "CLIENT DISCONNECT PACKET, " + base.GetInfo();
         }
     }
 }

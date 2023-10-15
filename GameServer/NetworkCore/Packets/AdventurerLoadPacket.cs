@@ -25,12 +25,11 @@ namespace NetworkCore.Packets
 
         public AdventurerLoadPacket(byte[] data) : base(data) 
         {
-            AttributesPacket = new AttributesPacket(-1);
-            TransformPacket = new TransformPacket(-1);
+
         }
         public override string GetInfo()
         {
-            return "ADVENTURER LOAD PACKET";
+            return "ADVENTURER LOAD PACKET, " + base.GetInfo();
         }
     }
 }

@@ -36,9 +36,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public void ReceiveTransformationData(TransformPacket TransformPacket)
         {
+            Debug.Log("Szukam");
             TransformData Transform = AdventurerChrTransformCollection.Find(transform => transform.ObjectVId == TransformPacket.CharacterVId);
             if (Transform != null)
             {
+                Debug.Log("Jest");
                 Transform.Position.x = TransformPacket.PosX;
                 Transform.Position.y = TransformPacket.PosY;
                 Transform.Position.z = TransformPacket.PosZ;
@@ -48,12 +50,13 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             }
             else // if doesnt found - Add new Adventurer
             {
+                Debug.Log("Nie ma");
                 AddAdventurerTransform(new TransformData(TransformPacket.CharacterVId,
                     new Vector3(TransformPacket.PosX, TransformPacket.PosY, TransformPacket.PosZ),
                     new Vector3(TransformPacket.RotX, TransformPacket.RotY, TransformPacket.RotZ)));
             }
-
-            OnAdventurerTransformChanged.Invoke(TransformPacket.CharacterVId);
+            Debug.Log("Invoke");
+            OnAdventurerTransformChanged?.Invoke(TransformPacket.CharacterVId);
         }
 
         public void AddAdventurerTransform(TransformData transformData)
