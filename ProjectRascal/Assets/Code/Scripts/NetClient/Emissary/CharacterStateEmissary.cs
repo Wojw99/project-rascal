@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Scripts.NetClient.Attributes;
+using NetworkCore.NetworkUtility;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public event PlayerAttributeUpdate OnPlayerMaxManaUpdate;
         public event PlayerAttributeUpdate OnPlayerAttackUpdate;
         public event PlayerAttributeUpdate OnPlayerMagicUpdate;
+        public event PlayerAttributeUpdate OnPlayerMoveSpeedUpdate;
+        public event PlayerAttributeUpdate OnPlayerAttackSpeedUpdate;
 
         public event PacketReceived OnPlayerStateChanged;
 
@@ -41,6 +44,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public float CurrentMana { get; private set; }
         public float MaxHealth { get; private set; }
         public float MaxMana { get; private set; }
+        public float MoveSpeed { get; private set; }
+        public float AttackSpeed { get; private set; }
 
         public void ReceiveAttributesData(AttributesPacket AttrPacket)
         {
@@ -51,6 +56,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             CurrentMana = AttrPacket.CurrentMana;
             MaxHealth = AttrPacket.MaxHealth;
             MaxMana = AttrPacket.MaxMana;
+            MoveSpeed = AttrPacket.MoveSpeed; 
+            AttackSpeed = AttrPacket.AttackSpeed;
 
             OnPlayerStateChanged?.Invoke();
         }
@@ -84,6 +91,18 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             {
                 MaxMana = AttrUpdPacket.MaxMana.Value;
                 OnPlayerMaxManaUpdate?.Invoke();
+            }
+
+            if(AttrUpdPacket.MoveSpeed != null)
+            {
+                MoveSpeed = AttrUpdPacket.MoveSpeed.Value;
+                OnPlayerMoveSpeedUpdate?.Invoke();
+            }
+
+            if (AttrUpdPacket.AttackSpeed != null)
+            {
+                AttackSpeed = AttrUpdPacket.AttackSpeed.Value;
+                OnPlayerAttackSpeedUpdate?.Invoke();
             }
         }
     }

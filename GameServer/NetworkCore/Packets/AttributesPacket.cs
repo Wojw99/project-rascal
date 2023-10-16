@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using NetworkCore.NetworkMessage;
 using System.Numerics;
+using NetworkCore.NetworkUtility;
 
 namespace NetworkCore.Packets
 {
@@ -32,6 +33,15 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_float)]
         public float MaxMana { get; set; }
 
+        [Serialization(Type: SerializationType.type_float)]
+        public float MoveSpeed { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float AttackSpeed { get; set; }
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public AdventurerState State { get; set; }
+
         // Be 100% sure this is the correct unique identificator of player.
         public AttributesPacket(int characterVId) : base(PacketType.ATTRIBUTES_PACKET, false)
         {
@@ -39,7 +49,9 @@ namespace NetworkCore.Packets
         }
 
         public AttributesPacket(int characterVId, string name, float currentHealth, 
-            float maxHealth, float currentMana, float maxMana) : base(PacketType.ATTRIBUTES_PACKET, false)
+            float maxHealth, float currentMana, float maxMana, float moveSpeed, 
+            float attackSpeed, AdventurerState state) 
+            : base(PacketType.ATTRIBUTES_PACKET, false)
         {
             CharacterVId = characterVId;
             Name = name;
@@ -47,6 +59,9 @@ namespace NetworkCore.Packets
             MaxHealth = maxHealth;
             CurrentMana = currentMana;
             MaxMana = maxMana;
+            MoveSpeed = moveSpeed;
+            AttackSpeed = attackSpeed;
+            State = state;
         }
 
         public AttributesPacket(byte[] data) : base(data) { }

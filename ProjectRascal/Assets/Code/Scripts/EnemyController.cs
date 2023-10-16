@@ -21,9 +21,9 @@ public class EnemyController : MonoBehaviour, IDamagaController
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         weaponDD = GetComponentInChildren<WeaponDD>();
-        Debug.Log(humanAnimator.ToString());
-        Debug.Log(gameCharacter.ToString());
-        Debug.Log(characterCanvas.ToString());
+        //Debug.Log(humanAnimator.ToString());
+        //Debug.Log(gameCharacter.ToString());
+        //Debug.Log(characterCanvas.ToString());
     }
 
     private void Update() {

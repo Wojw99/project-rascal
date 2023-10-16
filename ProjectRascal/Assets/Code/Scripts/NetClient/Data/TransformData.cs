@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkCore.Packets;
+using NetworkCore.NetworkUtility;
 
 namespace Assets.Code.Scripts.NetClient.Attributes
 {

@@ -34,6 +34,9 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public event AdventurerAttributeUpdate OnAdventurerMaxManaUpdate;
         public event AdventurerAttributeUpdate OnAdventurerAttackUpdate;
         public event AdventurerAttributeUpdate OnAdventurerMagicUpdate;
+        public event AdventurerAttributeUpdate OnAdventurerMoveSpeedUpdate;
+        public event AdventurerAttributeUpdate OnAdventurerAttackSpeedUpdate;
+        public event AdventurerAttributeUpdate OnAdventurerStateUpdate;
 
         public event AdventurerAttributeUpdate OnAdventurerTransformUpdate;
 
@@ -55,8 +58,9 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             }
             else // if doesnt found - Add new Adventurer
             {
-                AddAdventurer(new AdventurerAttributesData(AttrPacket.CharacterVId, AttrPacket.Name, AttrPacket.CurrentHealth,
-                    AttrPacket.CurrentMana, AttrPacket.MaxHealth, AttrPacket.MaxMana, 0, 0));
+                AddAdventurer(new AdventurerAttributesData(AttrPacket.CharacterVId, AttrPacket.Name, 
+                    AttrPacket.CurrentHealth, AttrPacket.CurrentMana, AttrPacket.MaxHealth, AttrPacket.MaxMana, 
+                    0, 0, AttrPacket.MoveSpeed, AttrPacket.AttackSpeed, AttrPacket.State));
             }
 
         }
@@ -96,6 +100,25 @@ namespace Assets.Code.Scripts.NetClient.Emissary
                     Attr.MaxMana = AttrUpdatePacket.MaxMana.Value;
                     OnAdventurerMaxManaUpdate?.Invoke(Attr.CharacterVId);
                 }
+
+                if (AttrUpdatePacket.MoveSpeed != null)
+                {
+                    Attr.MoveSpeed = AttrUpdatePacket.MoveSpeed.Value;
+                    OnAdventurerMoveSpeedUpdate?.Invoke(Attr.CharacterVId);
+                }
+
+                if (AttrUpdatePacket.AttackSpeed != null)
+                {
+                    Attr.AttackSpeed = AttrUpdatePacket.AttackSpeed.Value;
+                    OnAdventurerAttackSpeedUpdate?.Invoke(Attr.CharacterVId);
+                }
+
+                if (AttrUpdatePacket.State != null)
+                {
+                    Attr.State = AttrUpdatePacket.State.Value;
+                    OnAdventurerStateUpdate?.Invoke(Attr.CharacterVId);
+                }
+
             }
             else
             {

@@ -93,7 +93,6 @@
     <Compile Include="Assets\Code\Scripts\Interactibles\Potion.cs" />
     <Compile Include="Assets\Code\Scripts\HumanAnimator.cs" />
     <Compile Include="Assets\Code\Scripts\SkillStatesController.cs" />
-    <Compile Include="Assets\Code\Scripts\AdventurerSpawner.cs" />
     <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterStateEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\SceneLoadWizard.cs" />
@@ -142,6 +141,7 @@
     <Compile Include="Assets\Code\Scripts\SkillController.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\Vladyslav.cs" />
     <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
+    <Compile Include="Assets\Code\Scripts\EntitySpawner.cs" />
     <Compile Include="Assets\Code\Scripts\DamageDealers\NecroSlashDD.cs" />
     <Compile Include="Assets\Other\PlayerInputActions.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\VfxWizard.cs" />

@@ -150,10 +150,10 @@ namespace NetClient
 
                 else if (packet is TransformCollectionPacket TrsColletionPacket)
                 {
-                    Debug.Log("JEST JEST JEST JEST JEST JEST JEST, Size = " + TrsColletionPacket.PacketCollection.Count);
+                    //Debug.Log("JEST JEST JEST JEST JEST JEST JEST, Size = " + TrsColletionPacket.PacketCollection.Count);
                     foreach (TransformPacket pck in TrsColletionPacket.PacketCollection)
                     {
-                        Debug.Log(MatchCharacterId(pck.CharacterVId));
+                        //Debug.Log(MatchCharacterId(pck.CharacterVId));
                         if (MatchCharacterId(pck.CharacterVId))
                         {
                             Debug.Log("Wywoluje 1 - gracz");
@@ -162,7 +162,7 @@ namespace NetClient
                         }
                         else 
                         {
-                            Debug.Log("Wywoluje 2 - adventurer");
+                           // Debug.Log("Wywoluje 2 - adventurer");
                             AdventurerTransformEmissary.instance.ReceiveTransformationData(pck);
                         }
                     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkUtility;
 
 namespace NetworkCore.Packets
 {
@@ -46,7 +47,9 @@ namespace NetworkCore.Packets
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.
-        public TransformPacket(int characterVId, float posX, float posY, float posZ, float rotX, float rotY, float rotZ) : base(PacketType.TRANSFORM_PACKET, false)
+        public TransformPacket(int characterVId, float posX, float posY, float posZ, 
+            float rotX, float rotY, float rotZ) 
+            : base(PacketType.TRANSFORM_PACKET, false)
         {
             CharacterVId = characterVId;
             PosX = posX;

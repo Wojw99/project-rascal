@@ -1,4 +1,5 @@
-﻿using NetworkCore.Packets;
+﻿using NetworkCore.NetworkUtility;
+using NetworkCore.Packets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace Assets.Code.Scripts.NetClient
         public float MaxMana;
         public float Attack;
         public float Magic;
+        public float MoveSpeed;
+        public float AttackSpeed;
+        public AdventurerState State;
 
         public AdventurerAttributesData(int characterVId)
         {
@@ -29,9 +33,14 @@ namespace Assets.Code.Scripts.NetClient
             this.MaxMana = 0;
             this.Attack = 0;
             this.Magic = 0;
+            this.MoveSpeed = 0;
+            this.AttackSpeed = 0;
+            State = AdventurerState.Idle;
         }
 
-        public AdventurerAttributesData(int characterVId, string name, float currentHealth, float currentMana, float maxHealth, float maxMana, float attack, float magic) : this(characterVId)
+        public AdventurerAttributesData(int characterVId, string name, float currentHealth, 
+            float currentMana, float maxHealth, float maxMana, float attack, float magic, 
+            float moveSpeed, float attackSpeed, AdventurerState state) : this(characterVId)
         {
             this.CharacterVId = characterVId;
             this.Name = name;
@@ -41,6 +50,9 @@ namespace Assets.Code.Scripts.NetClient
             this.MaxMana = maxMana;
             this.Attack = attack;
             this.Magic = magic;
+            this.MoveSpeed = moveSpeed; 
+            this.AttackSpeed = attackSpeed;
+            this.State = state;
         }
 
         public AdventurerAttributesData(AttributesPacket AttrPacket)
@@ -53,6 +65,9 @@ namespace Assets.Code.Scripts.NetClient
             this.MaxMana = AttrPacket.MaxMana;
             this.Attack = 0;//AttrPacket.Attack;
             this.Magic = 0;//AttrPacket.Magic;
+            this.MoveSpeed = AttrPacket.MoveSpeed; 
+            this.AttackSpeed = AttrPacket.AttackSpeed;
+            this.State = AttrPacket.State;
         }
     }
 }

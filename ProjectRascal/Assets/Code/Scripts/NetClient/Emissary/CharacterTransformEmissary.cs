@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using NetworkCore.NetworkUtility;
 
 namespace Assets.Code.Scripts.NetClient.Emissary
 {
@@ -37,7 +38,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         }
 
         public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
-            float rotX, float rotY, float rotZ)
+            float rotX, float rotY, float rotZ, AdventurerState state, float moveSpeed)
         {
             ClientSingleton client = await ClientSingleton.GetInstanceAsync();
 

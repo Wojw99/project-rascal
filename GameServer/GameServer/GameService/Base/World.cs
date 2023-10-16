@@ -8,6 +8,7 @@ using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
+using NetworkCore.NetworkUtility;
 
 namespace ServerApplication.GameService.Base
 {
@@ -155,10 +156,13 @@ namespace ServerApplication.GameService.Base
                 {
                     AdventurerLoadPacket adventurerLoad = new AdventurerLoadPacket();
 
-                    adventurerLoad.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
-                        playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana);
+                    adventurerLoad.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, 
+                        playerConn.CharacterObj.Name, playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, 
+                        playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana, playerConn.CharacterObj.MoveSpeed, 
+                        playerConn.CharacterObj.AttackSpeed, playerConn.CharacterObj.State);
 
-                    adventurerLoad.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
+                    adventurerLoad.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, 
+                        playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ, 
                         playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
 
                     adventurerLoadCollection.PacketCollection.Add(adventurerLoad);
@@ -171,10 +175,13 @@ namespace ServerApplication.GameService.Base
 
             AdventurerLoadPacket adventurerLoadPacket = new AdventurerLoadPacket();
 
-            adventurerLoadPacket.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.Name,
-                playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana);
+            adventurerLoadPacket.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, 
+                playerConn.CharacterObj.Name, playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, 
+                playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana, playerConn.CharacterObj.MoveSpeed,
+                playerConn.CharacterObj.AttackSpeed, playerConn.CharacterObj.State);
 
-            adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
+            adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, 
+                playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
                 playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
 
             await this.SendPacketToConnectedPlayers(playerConn.Id, adventurerLoadPacket); // Send packet to all.

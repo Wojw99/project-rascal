@@ -1,4 +1,7 @@
-﻿using NetworkCore.NetworkMessage;
+﻿// Move this class to ServerApplication project.
+
+using NetworkCore.NetworkMessage;
+using NetworkCore.NetworkUtility;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
@@ -38,6 +41,11 @@ namespace NetworkCore.NetworkData
 
         public float RotationZ { get; set; }
 
+        public float MoveSpeed { get; set; }
+
+        public float AttackSpeed { get; set; }
+        public AdventurerState State { get; set; }
+
         // Server-side - I need to think about the default constructor. Maybe we want to load Player
         // from database at this point.
         // Client-side - this default constructor is needed, when creating client player object in main Client class.
@@ -55,10 +63,15 @@ namespace NetworkCore.NetworkData
             RotationX = 0;
             RotationY = 0;
             RotationZ = 0;
+            MoveSpeed = 0;
+            State = AdventurerState.Idle;
         }
 
         // Used on server side to create Player only from database data!
-        public Character (int PlayerVid, string Name, float CurrentHealth, float MaxHealth, float CurrentMana, float MaxMana, float PositionX, float PositionY, float PositionZ, float RotationX, float RotationY, float RotationZ)
+        public Character (int PlayerVid, string Name, float CurrentHealth, float MaxHealth, 
+            float CurrentMana, float MaxMana, float PositionX, float PositionY, float PositionZ, 
+            float RotationX, float RotationY, float RotationZ, float MoveSpeed, float AttackSpeed,
+            AdventurerState State)
         {
             this.Vid = PlayerVid;
             this.Name = Name;
@@ -72,6 +85,9 @@ namespace NetworkCore.NetworkData
             this.RotationX = RotationX;
             this.RotationY = RotationY;
             this.RotationZ = RotationZ;
+            this.MoveSpeed = MoveSpeed;
+            this.AttackSpeed = AttackSpeed;
+            this.State = State;
         }
 
         public async Task Show()

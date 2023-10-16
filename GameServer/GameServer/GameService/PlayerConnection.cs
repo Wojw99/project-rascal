@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkData;
+using NetworkCore.NetworkUtility;
 using NetworkCore.Packets;
 using ServerApplication.GameService.Base;
 
@@ -37,7 +38,7 @@ namespace ServerApplication.GameService
 
         public void LoadCharacterFromDatabase(string username, int UniqueId)
         {
-            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0, 0, 0);
+            CharacterObj = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0, 0, 0, 5, 5, AdventurerState.Idle);
             CharacterTransform.CharacterVId = UniqueId;
             CharacterStateUpdate.CharacterVId = UniqueId;
         }
@@ -94,6 +95,17 @@ namespace ServerApplication.GameService
             }
         }
 
+        // maybe change name to smthing like SetPlayerCharacterState
+        public void SetAdventurerState(AdventurerState state)
+        {
+            lock(stateLock)
+            {
+                CharacterObj.State = state;
+                CharacterStateUpdate.State = state;
+                ServerRef._World.AddNewCharacterStateUpdate(Id, CharacterStateUpdate);
+            }
+        }
+
         public void SetTransform(float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
         {
             lock(stateLock)
@@ -138,6 +150,7 @@ namespace ServerApplication.GameService
             }
         }
 
+        // Change names - now we have additonal enum AdventurerState
         public void OnCharactedStateSend()
         {
             lock(stateLock)

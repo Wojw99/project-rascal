@@ -10,6 +10,8 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Playables;
+using NetworkCore.NetworkUtility;
 
 namespace Assets.Code.Scripts
 {
@@ -17,7 +19,6 @@ namespace Assets.Code.Scripts
     {
         //[SerializeField] private float moveSpeed = 5f;
         //[SerializeField] private float interactionDistance = 3f;
-
         public AdventurerCharacter adventurerCharacter { get; private set; }
 
         [SerializeField] private Camera mainCamera;
@@ -30,13 +31,13 @@ namespace Assets.Code.Scripts
         //private CharacterCanvas characterCanvas;
         //private NavMeshAgent navMeshAgent;
         //private CharacterState playerState = CharacterState.Idle;
-        //private HumanAnimator humanAnimator;
-
-        private Renderer renderer;
+        private HumanAnimator humanAnimator;
 
         private float rotationSpeed = 0.1f;
-        private float moveSpeed = 0.1f;
+        private float moveSpeed = 5f;
         private float arrivalThreshold = 0.4f;
+
+        AdventurerState adventurerState = AdventurerState.Idle;
 
         private Vector3 targetPosition;
         private Vector3 targetRotation;
@@ -44,45 +45,13 @@ namespace Assets.Code.Scripts
         private void Awake()
         {
             adventurerCharacter = GetComponent<AdventurerCharacter>();
-
-            //Material material = new Material(Shader.Find("Standard"));
-            //material.mainTexture = adventurerTexture;
-            
-            //renderer = GetComponent<Renderer>();
-            //renderer.material = material;
-        }
-
-        /*private void Awake()
-        {
-            //adventurerCharacter = new AdventurerCharacter();
-            //AdventurerTransformEmissary.instance.OnAdventurerTransformChanged += ChangeAdventurerTransform;
-        }*/
-
-        /*private void Update()
-        {
-
-            HandleRotation();
-            HandleRunning();
-        }*/
-        /*public AdventurerController(TransformData Transform)
-        {
-            this.targetPosition = Transform.Position;
-            this.targetRotation = Transform.Rotation;
-
-            navMeshAgent = GetComponent<NavMeshAgent>();
             humanAnimator = GetComponent<HumanAnimator>();
-            characterCanvas = GetComponentInChildren<CharacterCanvas>();
-        }*/
-
-        /*private void Awake()
-        {
-            navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-            humanAnimator = gameObject.GetComponent<HumanAnimator>();
-            characterCanvas = gameObject.GetComponentInChildren<CharacterCanvas>();
-        }*/
+            
+        }
 
         private void Update()
         {
+            HandleIdle();
             HandleRotation();
             HandleRunning();
         }
@@ -99,7 +68,7 @@ namespace Assets.Code.Scripts
             targetRotation = transformData.Rotation;
         }
 
-        
+
 
         /*public static AdventurerController CreateAdventurerController(TransformData transformData, AdventurerAttributesData attrData)
         {
@@ -117,25 +86,28 @@ namespace Assets.Code.Scripts
             return adventurerController;
         }*/
 
+        private void HandleIdle()
+        {
+            if (adventurerState != AdventurerState.Casting && adventurerState != AdventurerState.Running)
+            {
+                adventurerState = AdventurerState.Idle;
+                humanAnimator.AnimateIdle();
+            }
+        }
 
         public void HandleRotation()
         {
-           /* if(adventurerCharacter.VId != -1)
-            {
-                Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
+            Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
             
-                if (targetRotationQuaternion != transform.rotation)
-                {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
-                }
-
-                Debug.Log("Rotacja adventurera = " + transform.rotation);
-            }*/
+            if (targetRotationQuaternion != transform.rotation)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
+            }
         }
 
         public void HandleRunning()
         {
-            /*if(adventurerCharacter.VId != -1)
+            if(adventurerState == AdventurerState.Running)
             {
                 if(targetPosition != transform.position)
                 {
@@ -148,12 +120,14 @@ namespace Assets.Code.Scripts
 
                     if (Vector3.Distance(transform.position, targetPosition) < arrivalThreshold)
                     {
-
+                        // Adventurer comes to target position.
+                        adventurerState = AdventurerState.Idle;
                     }
 
-                    Debug.Log("Pozycja adventurera = " + transform.position + "Pozycja zadana = " + targetPosition + "VId = " + adventurerCharacter.VId);
+                    humanAnimator.AnimateRunning();
+                    adventurerState = AdventurerState.Running;
                 }
-            }*/
+            }
         }
 
         public string getTransformInfo()
@@ -164,9 +138,15 @@ namespace Assets.Code.Scripts
 
         public void SetTransform(Vector3 pos, Vector3 rot)
         {
-            Debug.Log("SetTransform called");
+            Debug.Log("SetTransform Called");
             this.targetPosition = pos;
             this.targetRotation = rot;
+            //this.adventurerState = AdventurerState.Running;
+        }
+
+        public void SetAdventurerState(AdventurerState state)
+        {
+            adventurerState = state;
         }
     }
 }

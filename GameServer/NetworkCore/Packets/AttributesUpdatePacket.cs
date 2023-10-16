@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using NetworkCore.NetworkMessage;
 using System.Numerics;
+using NetworkCore.NetworkUtility;
 
 namespace NetworkCore.Packets
 {
@@ -19,16 +20,25 @@ namespace NetworkCore.Packets
         public string? Name { get; set; }
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public float? CurrentHealth { get; set; } = -1;
+        public float? CurrentHealth { get; set; }
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public float? MaxHealth { get; set; } = -1;
+        public float? MaxHealth { get; set; }
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public float? CurrentMana { get; set; } = -1;
+        public float? CurrentMana { get; set; }
 
         [Serialization(Type: SerializationType.type_Int32)]
-        public float? MaxMana { get; set; } = -1;
+        public float? MaxMana { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float? MoveSpeed { get; set; }
+
+        [Serialization(Type: SerializationType.type_float)]
+        public float? AttackSpeed { get; set; }
+
+        [Serialization(Type: SerializationType.type_Int32)]
+        public AdventurerState? State { get; set; }
 
         public void Clear()
         {
@@ -38,6 +48,9 @@ namespace NetworkCore.Packets
             MaxHealth = null;
             CurrentMana = null;
             MaxMana = null;
+            MoveSpeed = null;
+            AttackSpeed = null;
+            State = null;
         }
         public AttributesUpdatePacket(int characterVId) : base(PacketType.ATTRIBUTES_UPDATE_PACKET, false) { CharacterVId = characterVId; }
 

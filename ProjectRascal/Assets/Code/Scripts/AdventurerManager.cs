@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using UnityEditor.Search;
 using UnityEngine;
 using System.Collections.Concurrent;
+using JetBrains.Annotations;
 
 namespace Assets.Code.Scripts
 {
@@ -22,13 +23,15 @@ namespace Assets.Code.Scripts
         private Dictionary<int, AdventurerController> Adventurers =
             new Dictionary<int, AdventurerController>();
 
-        private ConcurrentQueue<(AdventurerAttributesData, TransformData)> AdventurerLoadData 
+        private ConcurrentQueue<(AdventurerAttributesData, TransformData)> AdventurersLoadData 
             = new ConcurrentQueue<(AdventurerAttributesData, TransformData)>();
+
+        [SerializeField]int AdventurersCount { get { return Adventurers.Count; } }
+        [SerializeField] int AdventurersLoadDataCount { get { return AdventurersLoadData.Count; } }
 
         private void Start()
         {
             AdventurerLoadEmissary.instance.OnNewAdventurerLoad += AddNewAdventurer;
-            Debug.Log("AdventurerCollection Awake");
 
             AdventurerStateEmissary.instance.OnAdventurerNameUpdate += ChangeAdventurerName;
             AdventurerStateEmissary.instance.OnAdventurerCurrentHealthUpdate += ChangeAdventurerCurrentHealth;
@@ -37,6 +40,7 @@ namespace Assets.Code.Scripts
             AdventurerStateEmissary.instance.OnAdventurerMaxManaUpdate += ChangeAdventurerMaxMana;
 
             AdventurerTransformEmissary.instance.OnAdventurerTransformChanged += ChangeAdventurerTransform;
+            AdventurerStateEmissary.instance.OnAdventurerStateUpdate += ChangeAdventurerState;
         }
 
         private float delayTimer = 0f;
@@ -44,25 +48,21 @@ namespace Assets.Code.Scripts
 
         private void Update()
         {
-            if(AdventurerLoadData.Count > 0)
+            if(AdventurersLoadData.Count > 0)
             {
-                if (AdventurerLoadData.TryDequeue(out var loadData))
+                if (AdventurersLoadData.TryDequeue(out var loadData))
                 {
                     GameObject adventurerObject = Instantiate(AdventurerPrefab, loadData.Item2.Position, Quaternion.identity);
                     AdventurerController controller = adventurerObject.GetComponent<AdventurerController>();
                     controller.InitializeData(loadData.Item1, loadData.Item2);
                     //Adventurers.Add(loadData.Item1.CharacterVId, controller);
                     Adventurers[loadData.Item1.CharacterVId] = controller;
-                    Debug.Log("Adventurers dictionary count = " + Adventurers.Count);
                     
                     string str = string.Empty;
                     foreach(var adventurer in Adventurers)
                     {
                         str = str + adventurer.Key.ToString() + " ";
                     }
-
-                    Debug.Log("Adventurers dictionary: " + str);
-                    Debug.Log("New Adventurer join! with VId = " + loadData.Item1.CharacterVId + "Position = " + controller.transform.position);
                 }
                 else
                 {
@@ -89,7 +89,7 @@ namespace Assets.Code.Scripts
 
         private void AddNewAdventurer(int AdventurerVId)
         {
-            AdventurerLoadData.Enqueue((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId),
+            AdventurersLoadData.Enqueue((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId),
                 AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId)));  
         }
         private void ChangeAdventurerName(int AdventurerVId)
@@ -119,11 +119,15 @@ namespace Assets.Code.Scripts
 
         private void ChangeAdventurerTransform(int AdventurerVId)
         {
-            Debug.Log("Adventurers count = " + Adventurers.Count);
-            Debug.Log("Jakis gracz sie porusza :OO");
             TransformData transform = AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId);
             //Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation );
             Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation);
+
+        }
+
+        private void ChangeAdventurerState(int AdventurerVId)
+        {
+            Adventurers[AdventurerVId].SetAdventurerState(AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).State);
         }
 
         #endregion

@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
 
         CharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
         CharacterLoadSuccesFlag = true;
-        Debug.Log("CharacterLoadSuccesFlag = true");
         
     }
 
@@ -245,7 +244,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             transform.position += movement;
             playerState = CharacterState.Running;
             humanAnimator.AnimateRunning();
-            //Debug.Log("Ruch - pozycja = " + transform.position);
         }
     }
 
