@@ -34,6 +34,9 @@ namespace NetworkCore.Packets
         [Serialization(Type: SerializationType.type_float)]
         public float RotZ { get; set; }
 
+        [Serialization(Type: SerializationType.type_Int32)]
+        public AdventurerState State { get; set; }
+
         public TransformPacket(int characterVId) : base(PacketType.TRANSFORM_PACKET, false)
         {
             CharacterVId = characterVId;
@@ -43,12 +46,13 @@ namespace NetworkCore.Packets
             RotX = 0;
             RotY = 0;
             RotZ = 0;
+            State = AdventurerState.Idle;
         }
 
         // There is one overload, because we want to always store all values.
         // And also player Virtual Id must be correct.
         public TransformPacket(int characterVId, float posX, float posY, float posZ, 
-            float rotX, float rotY, float rotZ) 
+            float rotX, float rotY, float rotZ, AdventurerState state) 
             : base(PacketType.TRANSFORM_PACKET, false)
         {
             CharacterVId = characterVId;
@@ -58,6 +62,7 @@ namespace NetworkCore.Packets
             RotX = rotX;
             RotY = rotY;
             RotZ = rotZ;
+            State = state;
         }
 
         //public CharacterMovePacket(PacketBase packet) : base(packet) {}

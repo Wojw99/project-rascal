@@ -9,6 +9,7 @@ using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using NetworkCore.NetworkUtility;
+using ServerApplication.GameService.Player;
 
 namespace ServerApplication.GameService.Base
 {
@@ -163,7 +164,8 @@ namespace ServerApplication.GameService.Base
 
                     adventurerLoad.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, 
                         playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ, 
-                        playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
+                        playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ,
+                        playerConn.CharacterObj.State);
 
                     adventurerLoadCollection.PacketCollection.Add(adventurerLoad);
                 }
@@ -182,7 +184,8 @@ namespace ServerApplication.GameService.Base
 
             adventurerLoadPacket.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, 
                 playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ,
-                playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ);
+                playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ,
+                playerConn.CharacterObj.State);
 
             await this.SendPacketToConnectedPlayers(playerConn.Id, adventurerLoadPacket); // Send packet to all.
         }

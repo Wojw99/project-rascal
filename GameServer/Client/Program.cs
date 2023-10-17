@@ -1,6 +1,7 @@
 ﻿using Client;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
+using NetworkCore.NetworkUtility;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -72,7 +73,8 @@ namespace Client
             await Console.Out.WriteLineAsync("[2] IDŹ W PRAWO");
             await Console.Out.WriteLineAsync("[3] IDŹ W DÓŁ");
             await Console.Out.WriteLineAsync("[4] IDŹ W LEWO");
-            await Console.Out.WriteLineAsync("[5] Pokaż graczy");
+            await Console.Out.WriteLineAsync("[5] ZATRZYMAJ SIE");
+            await Console.Out.WriteLineAsync("[6] Pokaż graczy");
             //await Console.Out.WriteLineAsync("[8] Send packet every 100ms");
             await Console.Out.WriteLineAsync("---------------------------------------------");
             //await Console.Out.WriteLineAsync($"ZALOGOWANYCH GRACZY = {PlayersCollection.PlayerCount()}");
@@ -87,25 +89,34 @@ namespace Client
             {
                 case 1:
                     {
-                        transformPacket.PosY += 1;
+                        transformPacket.PosZ += 1;
+                        transformPacket.State = AdventurerState.Running;
                         break;
                     }
                 case 2:
                     {
                         transformPacket.PosX += 1;
+                        transformPacket.State = AdventurerState.Running;
                         break;
                     }
                 case 3:
                     {
-                        transformPacket.PosY -= 1;
+                        transformPacket.PosZ -= 1;
+                        transformPacket.State = AdventurerState.Running;
                         break;
                     }
                 case 4:
                     {
                         transformPacket.PosX -= 1;
+                        transformPacket.State = AdventurerState.Running;
                         break;
                     }
                 case 5:
+                    {
+                        transformPacket.State = AdventurerState.Idle;
+                        break;
+                    }
+                case 6:
                     {
                         await Console.Out.WriteLineAsync("---------------------------------------------");
                         await Console.Out.WriteLineAsync("TWOJA POSTAC: ");

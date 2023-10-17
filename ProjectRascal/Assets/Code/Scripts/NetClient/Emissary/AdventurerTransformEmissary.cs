@@ -1,4 +1,5 @@
 ﻿using Assets.Code.Scripts.NetClient.Attributes;
+using NetworkCore.NetworkUtility;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
@@ -47,13 +48,15 @@ namespace Assets.Code.Scripts.NetClient.Emissary
                 Transform.Rotation.x = TransformPacket.RotX;
                 Transform.Rotation.y = TransformPacket.RotY;
                 Transform.Rotation.z = TransformPacket.RotZ;
+                Transform.adventurerState = TransformPacket.State;
             }
             else // if doesnt found - Add new Adventurer
             {
                 Debug.Log("Nie ma");
                 AddAdventurerTransform(new TransformData(TransformPacket.CharacterVId,
                     new Vector3(TransformPacket.PosX, TransformPacket.PosY, TransformPacket.PosZ),
-                    new Vector3(TransformPacket.RotX, TransformPacket.RotY, TransformPacket.RotZ)));
+                    new Vector3(TransformPacket.RotX, TransformPacket.RotY, TransformPacket.RotZ),
+                    AdventurerState.Idle));
             }
             Debug.Log("Invoke");
             OnAdventurerTransformChanged?.Invoke(TransformPacket.CharacterVId);

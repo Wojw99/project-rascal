@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEditor.Search;
 using UnityEngine;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
@@ -122,7 +121,7 @@ namespace Assets.Code.Scripts
             TransformData transform = AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId);
             //Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation );
             Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation);
-
+            Adventurers[AdventurerVId].SetAdventurerState(transform.adventurerState);
         }
 
         private void ChangeAdventurerState(int AdventurerVId)

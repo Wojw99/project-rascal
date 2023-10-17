@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Collections.Concurrent;
 using NetworkCore.NetworkUtility;
+using ServerApplication.GameService.Player;
 
 namespace ServerApplication.GameService
 {
@@ -88,7 +89,7 @@ namespace ServerApplication.GameService
 
                 else if(packet is TransformPacket movePacket)
                 {
-                    playerConn.SetAdventurerState(AdventurerState.Running);
+                    //playerConn.SetAdventurerState(AdventurerState.Running);
                     playerConn.SetPosition(movePacket);
                 }
 

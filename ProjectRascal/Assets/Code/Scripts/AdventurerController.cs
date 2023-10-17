@@ -90,7 +90,7 @@ namespace Assets.Code.Scripts
         {
             if (adventurerState != AdventurerState.Casting && adventurerState != AdventurerState.Running)
             {
-                adventurerState = AdventurerState.Idle;
+                //adventurerState = AdventurerState.Idle;
                 humanAnimator.AnimateIdle();
             }
         }
@@ -98,11 +98,11 @@ namespace Assets.Code.Scripts
         public void HandleRotation()
         {
             Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
             
-            if (targetRotationQuaternion != transform.rotation)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
-            }
+            //if (targetRotationQuaternion != transform.rotation)
+            //{
+            //}
         }
 
         public void HandleRunning()
@@ -118,14 +118,14 @@ namespace Assets.Code.Scripts
 
                     transform.position += normalizedDirection * moveSpeed * Time.deltaTime;
 
-                    if (Vector3.Distance(transform.position, targetPosition) < arrivalThreshold)
+                    /*if (Vector3.Distance(transform.position, targetPosition) < arrivalThreshold)
                     {
                         // Adventurer comes to target position.
                         adventurerState = AdventurerState.Idle;
-                    }
+                    }*/
 
                     humanAnimator.AnimateRunning();
-                    adventurerState = AdventurerState.Running;
+                    //adventurerState = AdventurerState.Running;
                 }
             }
         }

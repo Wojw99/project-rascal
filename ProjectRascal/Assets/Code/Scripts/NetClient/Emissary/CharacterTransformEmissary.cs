@@ -38,12 +38,12 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         }
 
         public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
-            float rotX, float rotY, float rotZ, AdventurerState state, float moveSpeed)
+            float rotX, float rotY, float rotZ, AdventurerState adventurerState)
         {
             ClientSingleton client = await ClientSingleton.GetInstanceAsync();
 
             await client.GameServer.SendPacket(
-                new TransformPacket(characterVId, posX, posY, posZ, rotX, rotY, rotZ));
+                new TransformPacket(characterVId, posX, posY, posZ, rotX, rotY, rotZ, adventurerState));
         }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using NetworkCore.NetworkUtility;
 
 public class PlayerController : MonoBehaviour, IDamagaController {
     [SerializeField] private float moveSpeed = 5f;
@@ -18,7 +19,6 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private PlayerCharacter playerCharacter;
     private CharacterCanvas characterCanvas;
     private NavMeshAgent navMeshAgent;
-    private CharacterState playerState = CharacterState.Idle;
     private HumanAnimator humanAnimator;
     private Vector3 lookDirection;
     private float minDistanceForRunning = 1.1f;
@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private Vector3 mouseGroundPosition;
     private Interactible targetInteractible;
     private SkillController skillController;
+
+    private AdventurerState playerState = AdventurerState.Idle;
+    private AdventurerState previousPlayerState = AdventurerState.Idle;
 
     private bool CharacterLoadSuccesFlag = false;
     private bool SendTransform = false;
@@ -83,19 +86,19 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private float timeSinceLastPacket = 0f;
-    private float packetSendInterval = 1f;
+    private float packetSendInterval = 0.2f;
 
     private void HandleSendPlayerTransform()
     {
         timeSinceLastPacket += Time.deltaTime;
 
         //if (CharacterIsRunning || CharacterIsRotating)
-        
+
         if (SendTransform && (timeSinceLastPacket >= packetSendInterval))//&& (CharacterIsRunning || CharacterIsRotating)
         {
             CharacterTransformEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId,
             transform.position.x, transform.position.y, transform.position.z,
-            transform.rotation.x, transform.rotation.y, transform.rotation.z);
+            transform.rotation.x, transform.rotation.y, transform.rotation.z, playerState);
 
             timeSinceLastPacket = 0f;
         }
@@ -124,8 +127,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleKey1() {
-        if(InputWizard.instance.IsKey1Pressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsKey1Pressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateBuff();
             
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.BuffCastDuration);
@@ -135,8 +138,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleKey2() {
-        if(InputWizard.instance.IsKey2Pressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsKey2Pressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateSpellCast2();
 
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.SpellCast2CastDuration);
@@ -146,8 +149,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleKey3() {
-        if(InputWizard.instance.IsKey3Pressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsKey3Pressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateBuff();    
 
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.BuffCastDuration);
@@ -158,8 +161,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleKey4() {
-        if(InputWizard.instance.IsKey4Pressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsKey4Pressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateSpellCast2();    
 
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.SpellCast2CastDuration);
@@ -169,8 +172,8 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleKey5() {
-        if(InputWizard.instance.IsKey5Pressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsKey5Pressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateAttack2Handed();    
 
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.Attack2HandedDuration);
@@ -188,7 +191,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void HandleInteractions() {
-        if(playerState == CharacterState.Idle || playerState == CharacterState.Running) {
+        if(playerState == AdventurerState.Idle || playerState == AdventurerState.Running) {
             if(Physics.Raycast(transform.position, lookDirection, out RaycastHit raycastHit, interactionDistance)) {
                 if(raycastHit.transform.TryGetComponent(out Interactible interactibleItem)) {
                     TurnOffTargetInteractibleVision();
@@ -196,7 +199,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
                     interactibleItem.OnVisionStart();
                     if(InputWizard.instance.IsInteractionKeyPressed()) {
                         humanAnimator.AnimateGathering();
-                        playerState = CharacterState.Casting;
+                        playerState = AdventurerState.Casting;
                         interactibleItem.Interact(transform.gameObject);
                         var delay = HumanAnimator.NormalizeDuration(humanAnimator.GatheringCastDuration);
                         Invoke("ResetToIdle", delay);
@@ -226,6 +229,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
             lookDirection = direction;
             var angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            previousPlayerState = AdventurerState.Running;
         }
     }
 
@@ -237,30 +241,39 @@ public class PlayerController : MonoBehaviour, IDamagaController {
 
     private void HandleRunning() {
         if (InputWizard.instance.IsRightClickPressed() 
-        && playerState != CharacterState.Casting 
-        && CountDistanceToMouse() > minDistanceForRunning) { 
-            SendTransform = true;
+        && playerState != AdventurerState.Casting 
+        && CountDistanceToMouse() > minDistanceForRunning) {
+            if (previousPlayerState != playerState)
+            {
+                SendTransform = true;
+            }
             var movement = lookDirection.normalized * moveSpeed * Time.deltaTime;
             transform.position += movement;
-            playerState = CharacterState.Running;
+            playerState = AdventurerState.Running;
             humanAnimator.AnimateRunning();
+            previousPlayerState = playerState;
         }
     }
 
     private void HandleIdle() {
         if((!InputWizard.instance.IsRightClickPressed() 
-        && playerState != CharacterState.Casting)
+        && playerState != AdventurerState.Casting)
         || (CountDistanceToMouse() <= minDistanceForRunning 
-        && playerState != CharacterState.Casting)) { 
+        && playerState != AdventurerState.Casting)) { 
             SendTransform = false;
-            playerState = CharacterState.Idle;
+            playerState = AdventurerState.Idle;
             humanAnimator.AnimateIdle();
+
+            if(previousPlayerState != AdventurerState.Idle)
+                SendTransform = true;
+
+            previousPlayerState = playerState;
         } 
     }
 
     private void HandleMeleeAttack() {
-        if(InputWizard.instance.IsLeftClickJustPressed() && playerState != CharacterState.Casting) {
-            playerState = CharacterState.Casting;
+        if(InputWizard.instance.IsLeftClickJustPressed() && playerState != AdventurerState.Casting) {
+            playerState = AdventurerState.Casting;
             humanAnimator.AnimateMeleeAttack();
             var duration = HumanAnimator.NormalizeDuration(humanAnimator.MeleeAttackCastDuration);
             Invoke("ResetToIdle", duration);
@@ -282,7 +295,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     }
 
     private void ResetToIdle() {
-        playerState = CharacterState.Idle;
+        playerState = AdventurerState.Idle;
         humanAnimator.AnimateIdle();
     }
 
@@ -303,12 +316,12 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         return Input.mousePosition;
     }
 
-    public CharacterState PlayerState {
+    /*public AdventurerState PlayerState {
         get { return playerState; }
         set { playerState = value; }
-    }
+    }*/
 
-    public enum CharacterState {
+/*    public enum PlayerState {
         Idle, Running, Casting
-    }
+    }*/
 }

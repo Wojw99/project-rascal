@@ -12,13 +12,13 @@ using NetworkCore.NetworkUtility;
 using NetworkCore.Packets;
 using ServerApplication.GameService.Base;
 
-namespace ServerApplication.GameService
+namespace ServerApplication.GameService.Player
 {
     // Operations on CharacterStateUpdatePacket are thread-safe by using locks.
     public class PlayerConnection : TcpPeer
     {
         private TestServer ServerRef { get; set; }
-        
+
         public Character CharacterObj { get; set; }
 
         private AttributesUpdatePacket CharacterStateUpdate { get; set; }
@@ -26,6 +26,9 @@ namespace ServerApplication.GameService
         private TransformPacket CharacterTransform { get; set; }
 
         private readonly object stateLock = new object();
+
+        // Used to set 
+        //private PlayerTimer idleTimer;
 
         public PlayerConnection(TestServer serverRef, Socket peerSocket, Guid peerId,
             Owner ownerType, int connCounter) : base(serverRef, peerSocket, peerId, ownerType)
@@ -45,7 +48,7 @@ namespace ServerApplication.GameService
 
         public void SetName(string name)
         {
-            lock(stateLock)
+            lock (stateLock)
             {
                 // połączenie z bazą...
 
@@ -87,7 +90,7 @@ namespace ServerApplication.GameService
 
         public void SetMaxMana(float maxMana)
         {
-            lock(stateLock)
+            lock (stateLock)
             {
                 CharacterObj.MaxMana = maxMana;
                 CharacterStateUpdate.MaxMana = maxMana;
@@ -98,7 +101,7 @@ namespace ServerApplication.GameService
         // maybe change name to smthing like SetPlayerCharacterState
         public void SetAdventurerState(AdventurerState state)
         {
-            lock(stateLock)
+            lock (stateLock)
             {
                 CharacterObj.State = state;
                 CharacterStateUpdate.State = state;
@@ -108,7 +111,7 @@ namespace ServerApplication.GameService
 
         public void SetTransform(float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
         {
-            lock(stateLock)
+            lock (stateLock)
             {
                 CharacterObj.PositionX = posX;
                 CharacterObj.PositionY = posY;
@@ -145,6 +148,7 @@ namespace ServerApplication.GameService
                 CharacterTransform.RotX = packet.RotX;
                 CharacterTransform.RotY = packet.RotY;
                 CharacterTransform.RotZ = packet.RotZ;
+                CharacterTransform.State = packet.State; //AdventurerState.Running;
 
                 ServerRef._World.AddNewCharacterTransform(Id, CharacterTransform);
             }
@@ -153,7 +157,7 @@ namespace ServerApplication.GameService
         // Change names - now we have additonal enum AdventurerState
         public void OnCharactedStateSend()
         {
-            lock(stateLock)
+            lock (stateLock)
             {
                 CharacterStateUpdate.Clear();
             }

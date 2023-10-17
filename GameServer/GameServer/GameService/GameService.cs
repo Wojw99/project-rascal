@@ -10,6 +10,7 @@ using NetworkCore.Packets;
 using NetworkCore.NetworkUtility;
 using NetworkCore.NetworkData;
 using System.Linq.Expressions;
+using ServerApplication.GameService.Player;
 
 namespace ServerApplication.Game
 {
