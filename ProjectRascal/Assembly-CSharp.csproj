@@ -95,6 +95,7 @@
     <Compile Include="Assets\Code\Scripts\SkillStatesController.cs" />
     <Compile Include="Assets\Code\Scripts\CharacterCanvas.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterStateEmissary.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\NetworkTimeSyncEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\SceneLoadWizard.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerStateEmissary.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\CharacterTransformEmissary.cs" />
@@ -143,11 +144,13 @@
     <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
     <Compile Include="Assets\Code\Scripts\EntitySpawner.cs" />
     <Compile Include="Assets\Code\Scripts\DamageDealers\NecroSlashDD.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\UnityTaskUtils.cs" />
     <Compile Include="Assets\Other\PlayerInputActions.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\VfxWizard.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\AdventurerLoadInfo.cs" />
     <Compile Include="Assets\Code\Scripts\PlayerCharacter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Base\ServerPeer.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\Gold.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Data\TransformData.cs" />
     <Compile Include="Assets\Code\Scripts\Interactibles\Door.cs" />

@@ -37,6 +37,13 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             OnCharacterTransformReceived?.Invoke();
         }
 
+        float GetInterpolationTime(int AdventurerVId)
+        {
+            // Send ping packet to measure network latency.
+
+            return 0.1f; // Przykładowa stała wartość
+        }
+
         public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
             float rotX, float rotY, float rotZ, AdventurerState adventurerState)
         {

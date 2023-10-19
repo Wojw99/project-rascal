@@ -37,11 +37,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public void ReceiveTransformationData(TransformPacket TransformPacket)
         {
-            Debug.Log("Szukam");
+            //Debug.Log("Szukam");
             TransformData Transform = AdventurerChrTransformCollection.Find(transform => transform.ObjectVId == TransformPacket.CharacterVId);
             if (Transform != null)
             {
-                Debug.Log("Jest");
+                //Debug.Log("Jest");
                 Transform.Position.x = TransformPacket.PosX;
                 Transform.Position.y = TransformPacket.PosY;
                 Transform.Position.z = TransformPacket.PosZ;
@@ -49,17 +49,12 @@ namespace Assets.Code.Scripts.NetClient.Emissary
                 Transform.Rotation.y = TransformPacket.RotY;
                 Transform.Rotation.z = TransformPacket.RotZ;
                 Transform.adventurerState = TransformPacket.State;
+                OnAdventurerTransformChanged?.Invoke(TransformPacket.CharacterVId);
             }
-            else // if doesnt found - Add new Adventurer
+            else
             {
-                Debug.Log("Nie ma");
-                AddAdventurerTransform(new TransformData(TransformPacket.CharacterVId,
-                    new Vector3(TransformPacket.PosX, TransformPacket.PosY, TransformPacket.PosZ),
-                    new Vector3(TransformPacket.RotX, TransformPacket.RotY, TransformPacket.RotZ),
-                    AdventurerState.Idle));
+                Debug.Log("Otrzymano pakiet pozycji aktualnego gracza - twojego");
             }
-            Debug.Log("Invoke");
-            OnAdventurerTransformChanged?.Invoke(TransformPacket.CharacterVId);
         }
 
         public void AddAdventurerTransform(TransformData transformData)

@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Playables;
 using NetworkCore.NetworkUtility;
+using System.Collections;
 
 namespace Assets.Code.Scripts
 {
@@ -42,6 +43,10 @@ namespace Assets.Code.Scripts
         private Vector3 targetPosition;
         private Vector3 targetRotation;
 
+        private Coroutine movementCoroutine;
+
+        float lastTargetTransformTime = 0f;
+
         private void Awake()
         {
             adventurerCharacter = GetComponent<AdventurerCharacter>();
@@ -49,11 +54,27 @@ namespace Assets.Code.Scripts
             
         }
 
+        private void Start()
+        {
+            
+        }
+
         private void Update()
         {
-            HandleIdle();
-            HandleRotation();
-            HandleRunning();
+            if(targetPosition != transform.position)
+            {
+                if (movementCoroutine == null)
+                {
+                    Debug.Log($"NetworkLatency =  {NetworkTimeSyncEmissary.instance.GetNetworkLatency() * 1000} ms.");
+
+                    movementCoroutine = StartCoroutine(MoveTowardsPosition(targetPosition, 
+                        CalculateInterpolationTime(2 + NetworkTimeSyncEmissary.instance.GetNetworkLatency())));
+                }
+            }
+           /* else
+            {
+                humanAnimator.AnimateIdle();
+            }*/
         }
 
         public void InitializeData(AdventurerAttributesData attrData, TransformData transformData)
@@ -86,48 +107,86 @@ namespace Assets.Code.Scripts
             return adventurerController;
         }*/
 
-        private void HandleIdle()
+        /*private void HandleIdle()
         {
             if (adventurerState != AdventurerState.Casting && adventurerState != AdventurerState.Running)
             {
                 //adventurerState = AdventurerState.Idle;
                 humanAnimator.AnimateIdle();
             }
-        }
+        }*/
 
-        public void HandleRotation()
+        /* public void HandleRotation()
+         {
+             Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
+             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
+
+             //if (targetRotationQuaternion != transform.rotation)
+             //{
+             //}
+         }*/
+
+        /* public void HandleRunning()
+         {
+             if(adventurerState == AdventurerState.Running)
+             {
+                 if(targetPosition != transform.position)
+                 {
+                     Vector3 direction = targetPosition - transform.position;
+                     direction.y = 0f;
+
+                     Vector3 normalizedDirection = direction.normalized;
+
+                     transform.position += normalizedDirection * moveSpeed * Time.deltaTime;
+
+                     if (Vector3.Distance(transform.position, targetPosition) < arrivalThreshold)
+                     {
+                         // Adventurer comes to target position.
+                         adventurerState = AdventurerState.Idle;
+                     }
+
+                     humanAnimator.AnimateRunning();
+                     //adventurerState = AdventurerState.Running;
+                 }
+             }
+         }*/
+
+        public IEnumerator MoveTowardsPosition(Vector3 targetPosition, float time)
         {
-            Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
+            float elapsedTime = 0f;
+            Vector3 startingPosition = transform.position;
+
+            humanAnimator.AnimateRunning();
             
-            //if (targetRotationQuaternion != transform.rotation)
-            //{
-            //}
+            while (elapsedTime < time)
+            {
+                Quaternion targetRotationQuaternion = Quaternion.Euler(targetRotation);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotationQuaternion, Time.deltaTime * rotationSpeed);
+                transform.position = Vector3.Lerp(startingPosition, targetPosition, elapsedTime / time);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            Debug.Log("WIELKI TEST WSZYSTKIEGO");
+            movementCoroutine = null;
+            transform.position = targetPosition; // Zapewnij dokładne ustawienie na koniec
+            humanAnimator.AnimateIdle();
         }
 
-        public void HandleRunning()
+        private float CalculateInterpolationTime(float latency)
         {
-            if(adventurerState == AdventurerState.Running)
-            {
-                if(targetPosition != transform.position)
-                {
-                    Vector3 direction = targetPosition - transform.position;
-                    direction.y = 0f;
+            // Dostosuj czas interpolacji na podstawie opóźnienia sieciowego
+            // Możesz dostosować te wartości do uzyskania pożądanego efektu
+            float minInterpolationTime = 0.05f;
+            float maxInterpolationTime = 0.2f;
 
-                    Vector3 normalizedDirection = direction.normalized;
+            // Przykładowe skalowanie w zależności od opóźnienia
+            float scale = Mathf.Clamp01(latency / 0.1f); // Skalowanie między 0 a 1 w zależności od opóźnienia
 
-                    transform.position += normalizedDirection * moveSpeed * Time.deltaTime;
+            // Zastosuj skalowanie do czasu interpolacji
+            float interpolationTime = Mathf.Lerp(minInterpolationTime, maxInterpolationTime, scale);
 
-                    /*if (Vector3.Distance(transform.position, targetPosition) < arrivalThreshold)
-                    {
-                        // Adventurer comes to target position.
-                        adventurerState = AdventurerState.Idle;
-                    }*/
-
-                    humanAnimator.AnimateRunning();
-                    //adventurerState = AdventurerState.Running;
-                }
-            }
+            return interpolationTime;
         }
 
         public string getTransformInfo()
@@ -136,11 +195,19 @@ namespace Assets.Code.Scripts
         }
 
 
-        public void SetTransform(Vector3 pos, Vector3 rot)
+        public void SetTargetTransform(Vector3 pos, Vector3 rot)
         {
-            Debug.Log("SetTransform Called");
+            //Debug.Log("SetTransform Called");
+
+            if (movementCoroutine != null)
+            {
+                StopCoroutine(movementCoroutine);
+                movementCoroutine = null;
+            }
+
             this.targetPosition = pos;
             this.targetRotation = rot;
+
             //this.adventurerState = AdventurerState.Running;
         }
 

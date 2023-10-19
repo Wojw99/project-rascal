@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections.Concurrent;
 using JetBrains.Annotations;
+using TMPro;
 
 namespace Assets.Code.Scripts
 {
@@ -120,7 +121,7 @@ namespace Assets.Code.Scripts
         {
             TransformData transform = AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId);
             //Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation );
-            Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation);
+            Adventurers[AdventurerVId].SetTargetTransform(transform.Position, transform.Rotation);
             Adventurers[AdventurerVId].SetAdventurerState(transform.adventurerState);
         }
 

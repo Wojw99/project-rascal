@@ -51,6 +51,11 @@ namespace ServerApplication.GameService.Base
 
                 foreach (var player in ConnectedPlayers.Values)
                 {
+                    // To not send a player's transformation pack to the same player.
+                    //TransformPacket? pck = transformsPacket.PacketCollection.Find(attr => attr.CharacterVId == player.CharacterObj.Vid);
+                    // if (pck != null)
+                        //transformsPacket.PacketCollection.Remove(pck);
+
                     await player.SendPacket(transformsPacket);
                 }
 

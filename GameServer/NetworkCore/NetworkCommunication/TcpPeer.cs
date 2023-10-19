@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NetworkCore.NetworkCommunication
 {
-    public class TcpPeer : IPeer
+    public abstract class TcpPeer : IPeer
     {
         public bool IsProxy => false;
 
@@ -28,9 +28,12 @@ namespace NetworkCore.NetworkCommunication
 
         private NetworkBase NetworkRef { get; set; } // storing reference to NetworkServer or NetworkClient
 
+        public delegate void PacketReceived(PacketBase packet);
+
         public TcpPeer(NetworkBase networkBase, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
+            
             NetworkRef = networkBase;
             PeerSocket = peerSocket;
             Id = peerId;
@@ -115,57 +118,8 @@ namespace NetworkCore.NetworkCommunication
                 }
             }
         }
-        /*  *OLD VERSION*      
-        private async Task ReadIncomingData()
-        {
-            while (NetworkRef.IsRunning)
-            {
-                // On first 4 bytes we storing size of all serialized data in packet.
-                // So by first we receive packet size to know what amount of bytes to read,
-                // and transform binary data into correct packet.
-                byte[] PacketSizeByte = new byte[sizeof(int)];
-                int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(PacketSizeByte), SocketFlags.None);
 
-                if (bytesRead != sizeof(int))
-                {
-                    await Console.Out.WriteLineAsync("Incorrect size of packet size");
-                    continue;
-                }
-
-                int packetSize = BitConverter.ToInt32(PacketSizeByte, 0);
-
-                if (packetSize <= sizeof(int))
-                {
-                    await Console.Out.WriteLineAsync("Incorrect size of packet");
-                    continue;
-                }
-
-                byte[] packetData = new byte[packetSize - sizeof(int)];
-
-                bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
-
-                if (bytesRead <= 0)
-                {
-                    await Console.Out.WriteLineAsync("No data received");
-                    continue;
-                }
-
-                byte[] combinedData = PacketSizeByte.Concat(packetData).ToArray();
-
-                //final check is size of packet correct.
-                if(combinedData.Length != packetSize)
-                {
-                    await Console.Out.WriteLineAsync("Expected size and size of packet not match.");
-                    continue;
-                }
-
-                PacketType receivedPacketType = (PacketType)combinedData[4];
-                // Packet Type is on 5 field of array (check PacketBase class for serializing)
-
-                PacketBase recognizedPacket = LoadPacket(receivedPacketType, combinedData);
-                await AddToIncomingPacketQueue(recognizedPacket);
-
-            }
-        }*/
+        public abstract void OnPacketReceived(PacketBase packet);
+      
     }
 }

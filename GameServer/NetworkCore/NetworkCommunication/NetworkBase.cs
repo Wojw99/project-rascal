@@ -128,6 +128,7 @@ namespace NetworkCore.NetworkCommunication
 
         public async Task<PacketBase> WaitForResponsePacket(TimeSpan interval, TimeSpan timeLimit, PacketType packetType)
         {
+
             Stopwatch timer = new Stopwatch();
             timer.Start();
 

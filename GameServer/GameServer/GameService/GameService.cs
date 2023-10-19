@@ -25,9 +25,8 @@ namespace ServerApplication.Game
                 ServerMonitor Monitor = new ServerMonitor(Server);
 
                 Server.StartListen(); 
-                Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
-                Server.StartUpdate(TimeSpan.FromMilliseconds(50));
-
+                Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));
+                Server.StartUpdate(TimeSpan.FromMilliseconds(1));
                 await Task.Run(async () => await TestingOperationsTask(Server));
 
                 /*while (Server.IsRunning)

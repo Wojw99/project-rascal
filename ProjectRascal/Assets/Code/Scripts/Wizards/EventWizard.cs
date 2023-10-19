@@ -80,7 +80,7 @@ public class EventWizard : MonoBehaviour
             throw new Exception(GetInvalidFormatWarning(ActionType.e));
         }
 
-        Debug.Log("change signal to " + signal);
+        //Debug.Log("change signal to " + signal);
         EventSignalizer.instance.CurrentSignal = signal;
         Invoke(nameof(EndActionE), waitTime);
     }

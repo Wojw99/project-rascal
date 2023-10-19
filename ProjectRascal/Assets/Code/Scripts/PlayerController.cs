@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     private void Start() {
         CharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
         CharacterLoadEmissary.instance.OnCharacterLoadFailed += CharacterLoadFailed;
-        CharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz");
+        StartCoroutine(CharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz"));
     }
 
     private void CharacterLoadSucces()

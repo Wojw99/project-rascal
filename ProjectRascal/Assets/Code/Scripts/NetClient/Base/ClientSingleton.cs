@@ -9,13 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Assets.Code.Scripts.NetClient.Emissary;
+using Assets.Code.Scripts.NetClient;
+using Assets.Code.Scripts.NetClient.Base;
 
 namespace NetClient
 {
     public class ClientSingleton : TcpNetworkClient
     {
-        public TcpPeer AuthServer { get; private set; }
-        public TcpPeer GameServer { get; private set; }
+        [SerializeField] public ServerPeer AuthServer { get; private set; }
+        [SerializeField] public ServerPeer GameServer { get; private set; }
 
         #region Singleton
 
@@ -23,28 +25,49 @@ namespace NetClient
 
         private ClientSingleton() 
         {
+            GameServer = new ServerPeer("127.0.0.1", 8050);
+            GameServer.Connect();
+            GameServer.StartRead();
+
+            AuthServer = new ServerPeer("127.0.0.1", 8051);
+            AuthServer.Connect();
+            AuthServer.StartRead();
+
             OnPacketSent += ShowPacketInfo;
+            Start();
+            StartUpdate(TimeSpan.FromMilliseconds(20));
+            StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
         }
 
-        public static async Task<ClientSingleton> GetInstanceAsync()
-        {
-            if (Instance == null)
+        public static ClientSingleton GetInstance()
+        { 
+            if(Instance == null)
             {
                 Instance = new ClientSingleton();
-                await Instance.Initialize();
+                
             }
             return Instance;
         }
 
-        private async Task Initialize()
+        /*public static async Task<ClientSingleton> GetInstanceAsync()
+        {
+            if (Instance == null)
+            {
+                Instance = new ClientSingleton();
+                Instance.Initialize();
+            }
+            return Instance;
+        }*/
+
+       /* private void Initialize()
         {
             Start();
             StartUpdate(TimeSpan.FromMilliseconds(20));
             StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
 
             // Temporary
-            await ConnectToGameServer();
-        }
+            //await ConnectToGameServer();
+        }*/
 
         #endregion
 
@@ -53,7 +76,7 @@ namespace NetClient
             Debug.Log("[SEND] " + packetInfo);
         }
 
-        public async Task ConnectToAuthServer()
+/*        public async Task ConnectToAuthServer()
         {
             AuthServer = await CreateTcpServerConnection("127.0.0.1", 8050);
             AuthServer.Connect();
@@ -65,7 +88,7 @@ namespace NetClient
             GameServer = await CreateTcpServerConnection("127.0.0.1", 8051);
             GameServer.Connect();
             GameServer.StartRead();
-        }
+        }*/
 
         public override async Task Update()
         {
@@ -74,8 +97,8 @@ namespace NetClient
 
         private bool MatchCharacterId(int CharacterVId)
         {
-            Debug.Log("Sprawdzam id = " + CharacterVId + " z id = " + CharacterStateEmissary.instance.CharacterVId);
-            Debug.Log("Wynik = " + (CharacterVId == CharacterStateEmissary.instance.CharacterVId));
+            //Debug.Log("Sprawdzam id = " + CharacterVId + " z id = " + CharacterStateEmissary.instance.CharacterVId);
+            //Debug.Log("Wynik = " + (CharacterVId == CharacterStateEmissary.instance.CharacterVId));
             return CharacterVId == CharacterStateEmissary.instance.CharacterVId;
         }
 
@@ -98,7 +121,7 @@ namespace NetClient
                 if (packet is CharacterLoadResponsePacket characterLoadResponsePacket)
                 {
                     Debug.Log("CharacterLoadResponsePacket with CharacterVId = " + characterLoadResponsePacket.AttributesPacket.CharacterVId);
-                    CharacterLoadEmissary.instance.ReceiveCharacterData(characterLoadResponsePacket);
+                    await CharacterLoadEmissary.instance.ReceiveCharacterData(characterLoadResponsePacket);
                 }
 
                 #endregion

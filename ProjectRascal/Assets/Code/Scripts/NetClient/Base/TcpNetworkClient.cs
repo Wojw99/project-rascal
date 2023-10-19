@@ -29,7 +29,7 @@ namespace NetClient
             });
         }
 
-        public async Task <TcpPeer> CreateTcpServerConnection(string serverIpAddress, int serverTcpPort)
+        /*ublic async Task <TcpPeer> CreateTcpServerConnection(string serverIpAddress, int serverTcpPort)
         {
             Socket ServerTcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             await Console.Out.WriteLineAsync("Trying to connect to server...");
@@ -43,11 +43,12 @@ namespace NetClient
             {
                 throw new Exception($"Cannot connect to server, with IP: {serverIpAddress}, PORT: {serverTcpPort}");
             }
-        }
+        }*/
 
         public void Start()
         {
             IsRunningFlag = true;
+
         }
 
         public void Stop()

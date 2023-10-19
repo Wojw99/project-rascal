@@ -28,7 +28,7 @@ public class DamageDealer : MonoBehaviour
     }
 
     public void SetLifetime(float lifetime = 6f) {
-        Debug.Log("Destroy damage dealer until " + lifetime);
+        //Debug.Log("Destroy damage dealer until " + lifetime);
         Destroy(transform.gameObject, lifetime);
     }
 
