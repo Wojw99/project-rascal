@@ -48,7 +48,6 @@ namespace NetClient
         public void Start()
         {
             IsRunningFlag = true;
-
         }
 
         public void Stop()
@@ -57,7 +56,6 @@ namespace NetClient
         }
 
         public abstract Task Update();
-
         public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

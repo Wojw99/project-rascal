@@ -13,12 +13,27 @@ namespace Assets.Code.Scripts.NetClient.Emissary
     {
         #region Singleton
 
-        public static AdventurerLoadEmissary instance;
+        private static AdventurerLoadEmissary instance;
+
+        public static AdventurerLoadEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<AdventurerLoadEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<AdventurerLoadEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
-            Debug.Log("AdventurerLoadEmissary Awake");
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -29,8 +44,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         public void ReceiveNewAdventurerData(AdventurerLoadPacket adventurerLoadPacket)
         {
-            AdventurerStateEmissary.instance.AddAdventurer(new AdventurerAttributesData(adventurerLoadPacket.AttributesPacket));
-            AdventurerTransformEmissary.instance.AddAdventurerTransform(new TransformData(adventurerLoadPacket.TransformPacket));
+            AdventurerStateEmissary.Instance.AddAdventurer(new AdventurerAttributesData(adventurerLoadPacket.AttributesPacket));
+            AdventurerTransformEmissary.Instance.AddAdventurerTransform(new TransformData(adventurerLoadPacket.TransformPacket));
             OnNewAdventurerLoad?.Invoke(adventurerLoadPacket.AttributesPacket.CharacterVId);
         }
     }

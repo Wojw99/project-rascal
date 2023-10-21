@@ -1,7 +1,7 @@
 ﻿using Assets.Code.Scripts.NetClient.Emissary;
 using NetClient;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +11,39 @@ namespace Assets.Code.Scripts.NetClient.Base
 {
     public class StartSingleton : MonoBehaviour
     {
-        public static StartSingleton instance;
-        
+        #region Singleton
+
+        private static StartSingleton instance;
+
+        public static StartSingleton Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<StartSingleton>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<StartSingleton>();
+                return instance;
+            }
+        }
+
         private void Awake()
         {
-            instance = this;
-// ClientSingleton client = ClientSingleton.GetInstanceAsync();
+            if (instance == null) {
+                instance = this;
+                ClientSingleton.GetInstance().GameServer.ConnectToServer();
+            }
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
+
+        #endregion
+
+        /*private IEnumerator StartServers()
+        {
+            yield return UnityTaskUtils.RunTaskAsync(() => ClientSingleton.GetInstance().GameServer.ConnectToServer());
+            //yield return UnityTaskUtils.RunTaskAsync(() => ClientSingleton.GetInstance().AuthServer.ConnectToServer());
+        }*/
     }
 }

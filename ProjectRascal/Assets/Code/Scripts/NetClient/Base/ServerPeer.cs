@@ -18,10 +18,7 @@ namespace Assets.Code.Scripts.NetClient.Base
     {
         private IPEndPoint ServerIpEndpoint;
         
-        public PacketReceived OnCharacterLoadResponsePacketReceived;
-
-        
-        
+        /*public PacketReceived OnCharacterLoadResponsePacketReceived;
         public PacketReceived OnAdventurerExitPacketReceived;
         public PacketReceived OnAdventurerLoadCollectionPacketReceived;
         public PacketReceived OnAdventurerLoadPacketReceived;
@@ -35,28 +32,29 @@ namespace Assets.Code.Scripts.NetClient.Base
         public PacketReceived OnClientLoginResponsePacketReceived;
         public PacketReceived OnPingRequestPacketReceived;
         public PacketReceived OnPingResponsePacketReceived;
-        public PacketReceived OnTransformCollectionPacketReceived;
+        public PacketReceived OnTransformCollectionPacketReceived;*/
 
-        public ServerPeer(string serverIpAddress, int serverTcpPort)
-            : base(ClientSingleton.GetInstance(), new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp),
+        public ServerPeer(NetworkBase network, string serverIpAddress, int serverTcpPort)
+            : base(network, new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp),
                   Guid.NewGuid(), Owner.client)
         {
             
             ServerIpEndpoint = new IPEndPoint(IPAddress.Parse(serverIpAddress), serverTcpPort);
         }
 
-        public async Task ConnectToServer()
+        public void ConnectToServer()
         {
             Debug.Log("Trying to connect to server...");
-            await PeerSocket.ConnectAsync(ServerIpEndpoint);
+            PeerSocket.Connect(ServerIpEndpoint);
 
             if(PeerSocket.Connected)
             {
-                Debug.Log("Pomyslnie udalo sie polaczyc z serwerem.");
+                Debug.Log($"Succesfully connected with server, on port = " +
+                    $"{ServerIpEndpoint.Port}, adress = {ServerIpEndpoint.Address}." );
             }
         }
 
-        public override void OnPacketReceived(PacketBase packet)
+        /*public override void OnPacketReceived(PacketBase packet)
         {
 
             //Debug.Log($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}, SIZE = {packet.CalculateTotalSize()}");
@@ -142,6 +140,6 @@ namespace Assets.Code.Scripts.NetClient.Base
 
                 #endregion
 
-        }
+        }*/
     }
 }

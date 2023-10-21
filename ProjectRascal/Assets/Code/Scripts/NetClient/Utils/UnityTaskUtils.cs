@@ -30,9 +30,7 @@ namespace Assets.Code.Scripts.NetClient
         public static IEnumerator WaitForTask(Task task)
         {
             while (!task.IsCompleted)
-            {
                 yield return null;
-            }
         }
     }
 }

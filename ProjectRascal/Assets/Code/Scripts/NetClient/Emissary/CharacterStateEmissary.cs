@@ -14,11 +14,27 @@ namespace Assets.Code.Scripts.NetClient.Emissary
     {
         #region Singleton
 
-        public static CharacterStateEmissary instance;
+        private static CharacterStateEmissary instance;
+
+        public static CharacterStateEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<CharacterStateEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<CharacterStateEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -50,7 +66,6 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public void ReceiveAttributesData(AttributesPacket AttrPacket)
         {
             CharacterVId = AttrPacket.CharacterVId;
-            //Debug.Log("Przydzielam id = " + AttrPacket.CharacterVId);
             Name = AttrPacket.Name;
             CurrentHealth = AttrPacket.CurrentHealth;
             CurrentMana = AttrPacket.CurrentMana;

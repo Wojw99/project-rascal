@@ -16,54 +16,53 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 {
     public class CharacterLoadEmissary : MonoBehaviour 
     {
-
         public delegate void CharacterLoad();
-
         public event CharacterLoad OnCharacterLoadSucces;
-
         public event CharacterLoad OnCharacterLoadFailed;
 
         #region Singleton
 
-        public static CharacterLoadEmissary instance;
+        private static CharacterLoadEmissary instance;
+
+        public static CharacterLoadEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<CharacterLoadEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<CharacterLoadEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
-            ClientSingleton.GetInstance().GameServer.OnCharacterLoadResponsePacketReceived += 
-                (packet) => ReceiveCharacterData(packet as CharacterLoadResponsePacket);
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
 
-            ClientSingleton.GetInstance().GameServer.OnCharacterLoadResponsePacketReceived += ReceiveCharacterData;
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
 
         public void ReceiveCharacterData(CharacterLoadResponsePacket packet)
         {
-            //Debug.Log("ReceiveCharacterData called, with succes = " + packet.Success);
-            //Debug.Log("W pakiecie id = " + packet.AttributesPacket.CharacterVId);
             if(packet.Success)
             {
-                CharacterStateEmissary.instance.ReceiveAttributesData(packet.AttributesPacket);
-                CharacterTransformEmissary.instance.ReceiveTransformationData(packet.TransformPacket);
-
+                CharacterStateEmissary.Instance.ReceiveAttributesData(packet.AttributesPacket);
+                CharacterTransformEmissary.Instance.ReceiveTransformationData(packet.TransformPacket);
                 OnCharacterLoadSucces?.Invoke();
             }
             else
-            {
-                OnCharacterLoadFailed?.Invoke();
-            }         
+                OnCharacterLoadFailed?.Invoke();        
         }
 
         public IEnumerator CommitSendCharacterLoadRequest(string authToken)
         {
-            ClientSingleton client = null;
-
-            yield return UnityTaskUtils.RunTaskWithResultAsync(() => ClientSingleton.GetInstanceAsync(), result =>
-            {
-                client = result;
-            });
-
+            Debug.Log("test");
+            ClientSingleton client = ClientSingleton.GetInstance();
 
             yield return UnityTaskUtils.RunTaskAsync(async () => await client.GameServer.SendPacket(new CharacterLoadRequestPacket(authToken)));
 
@@ -77,18 +76,12 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             });
 
             if(packet  != null)
-                yield return UnityTaskUtils.RunTaskAsync(async () => await ReceiveCharacterData(packet as CharacterLoadResponsePacket));
-           
-
+                ReceiveCharacterData(packet as CharacterLoadResponsePacket);
         }
 
         public async void CommitSendCharacterLoadSucces(bool loadSucces)
         {
-            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
-            await client.GameServer.SendPacket(new CharacterLoadSuccesPacket(loadSucces));
+            await ClientSingleton.GetInstance().GameServer.SendPacket(new CharacterLoadSuccesPacket(loadSucces));
         }
-
-        
-
     }
 }

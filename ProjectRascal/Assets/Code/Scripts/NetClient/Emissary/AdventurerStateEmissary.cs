@@ -13,11 +13,27 @@ namespace Assets.Code.Scripts.NetClient.Emissary
     {
         #region Singleton
 
-        public static AdventurerStateEmissary instance;
+        private static AdventurerStateEmissary instance;
+
+        public static AdventurerStateEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<AdventurerStateEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<AdventurerStateEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion

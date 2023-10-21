@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using UnityEngine;
 
 public class MainThreadDispatcher : MonoBehaviour
@@ -15,7 +15,7 @@ public class MainThreadDispatcher : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
+        }*//**//*
     }
 
     public static void RunOnMainThread(System.Action action)
@@ -33,3 +33,4 @@ public class MainThreadDispatcher : MonoBehaviour
     }
 }
 
+*/

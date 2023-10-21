@@ -119,7 +119,7 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        public abstract void OnPacketReceived(PacketBase packet);
+        //public abstract void OnPacketReceived(PacketBase packet);
       
     }
 }

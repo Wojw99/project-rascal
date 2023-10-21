@@ -4846,7 +4846,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &300664912
 Transform:
   m_ObjectHideFlags: 0
@@ -4870,7 +4870,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300664911}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -7594,6 +7594,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -8080,6 +8090,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -8756,6 +8776,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -9142,7 +9172,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &634789533
 PrefabInstance:
@@ -9786,6 +9816,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -9858,6 +9898,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Torch (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
@@ -10016,6 +10066,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -11810,6 +11870,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -12839,50 +12909,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 562233566}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &897893975
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 897893977}
-  - component: {fileID: 897893976}
-  m_Layer: 0
-  m_Name: MainThreadDispatcher
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &897893976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897893975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a5378839c92277468312f7091af17b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &897893977
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897893975}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.274544, y: -7.5548515, z: 30.077805}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &903364405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 10418e3390b7cd34881e99c53d6386c7,
@@ -12973,7 +12999,7 @@ PrefabInstance:
     - target: {fileID: 4106398877608095282, guid: b65001baadb0f87459c763f327fd358f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4106398877608095282, guid: b65001baadb0f87459c763f327fd358f,
         type: 3}
@@ -13314,6 +13340,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4816711668515373858, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
       propertyPath: m_Color.b
@@ -13363,6 +13394,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
@@ -14112,6 +14148,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
       propertyPath: m_RootOrder
@@ -14277,6 +14323,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -14649,6 +14705,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -15430,6 +15496,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch
       objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
       propertyPath: m_RootOrder
@@ -15773,6 +15849,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Torch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
@@ -16742,7 +16823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1108029992
 Transform:
   m_ObjectHideFlags: 0
@@ -16766,7 +16847,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108029991}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -17414,6 +17495,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -18148,7 +18239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1200367569
 Transform:
   m_ObjectHideFlags: 0
@@ -18172,7 +18263,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200367568}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -18303,7 +18394,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1213679481
 PrefabInstance:
@@ -18412,7 +18503,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1224559934
 Transform:
   m_ObjectHideFlags: 0
@@ -18436,7 +18527,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1224559933}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -18999,6 +19090,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -19684,7 +19785,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1279644496
 MonoBehaviour:
@@ -21174,7 +21275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1371747589
 Transform:
   m_ObjectHideFlags: 0
@@ -21198,7 +21299,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371747588}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -21390,7 +21491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1376351701
 Transform:
   m_ObjectHideFlags: 0
@@ -21414,7 +21515,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376351700}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -25249,6 +25350,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -26811,6 +26922,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire
       objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
       propertyPath: m_RootOrder
@@ -27628,7 +27749,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1826005823
 Transform:
   m_ObjectHideFlags: 0
@@ -27652,7 +27773,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826005822}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -27977,6 +28098,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -30256,7 +30387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2010594954
 Transform:
   m_ObjectHideFlags: 0
@@ -30280,7 +30411,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2010594953}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -30363,6 +30494,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4816711668515373858, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
       propertyPath: m_Color.b
@@ -30407,6 +30543,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
@@ -30508,7 +30649,7 @@ MonoBehaviour:
   EntityPrefab: {fileID: 981675539}
   delayDuration: 8
   delayTimer: 0
-  enabled: 0
+  enableSpawn: 0
 --- !u!4 &2021460866
 Transform:
   m_ObjectHideFlags: 0
@@ -30523,7 +30664,7 @@ Transform:
   m_Children:
   - {fileID: 981675546}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: -19.889, y: 71.447, z: 35.162}
 --- !u!23 &2021460868
 MeshRenderer:
@@ -31461,6 +31602,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Torch (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4581588979572101060, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6910899708489070203, guid: 541892a17e020a447bd1df0bf404481e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7482753203588330782, guid: 541892a17e020a447bd1df0bf404481e,
         type: 3}
       propertyPath: m_RootOrder
@@ -31928,6 +32079,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fire (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 850644424315878635, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254203571443695721, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7459848676658838840, guid: 196a2b6ec9b162c429ec6b3c67a3dc5e,
         type: 3}
@@ -32835,6 +32996,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 379358831}
     m_Modifications:
+    - target: {fileID: 1172769160318642104, guid: 504a21115f78b59499a4bde60a9f57e6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5319136017548872081, guid: 504a21115f78b59499a4bde60a9f57e6,
         type: 3}
       propertyPath: m_Name

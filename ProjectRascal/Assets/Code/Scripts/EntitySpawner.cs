@@ -8,7 +8,7 @@ public class EntitySpawner : MonoBehaviour
 
     [SerializeField] private float delayDuration = 8f;
     [SerializeField] private float delayTimer;
-    [SerializeField] private bool enabled = false;
+    [SerializeField] private bool enableSpawn = false;
 
     //public int NumberOfAdventurers = 0; // Liczba przykładowych przygód
     private void Start()
@@ -20,7 +20,7 @@ public class EntitySpawner : MonoBehaviour
     {
         try
         {
-            if(enabled)
+            if(enableSpawn)
             {
                 delayTimer += Time.deltaTime;
 

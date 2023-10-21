@@ -16,23 +16,31 @@ public class NetworkTimeSyncEmissary : MonoBehaviour
 
     #region Singleton
 
-    public static NetworkTimeSyncEmissary instance;
+    private static NetworkTimeSyncEmissary instance;
+
+    public static NetworkTimeSyncEmissary Instance
+    {
+        get
+        {
+            if (instance == null)
+                if (FindObjectOfType<NetworkTimeSyncEmissary>() == null)
+                    instance = new GameObject("AdventurerStateEmissary").AddComponent<NetworkTimeSyncEmissary>();
+            return instance;
+        }
+    }
 
     private void Awake()
     {
-        instance = this;
-    }
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
 
-    private void Start()
-    {
-        StartCoroutine(SynchronizeTime());
+        DontDestroyOnLoad(gameObject);
     }
 
     #endregion
 
-
-
-    // 2nd option is getter
     public float GetNetworkLatency()
     {
         lock(this)
@@ -65,12 +73,7 @@ public class NetworkTimeSyncEmissary : MonoBehaviour
 
     private IEnumerator SendPingToServer()
     {
-        ClientSingleton client = null;
-        
-        yield return UnityTaskUtils.RunTaskWithResultAsync(() => ClientSingleton.GetInstanceAsync(), result =>
-        {
-            client = result;
-        });
+        ClientSingleton client = ClientSingleton.GetInstance();
 
         float startTime = Time.time;
 
@@ -96,10 +99,6 @@ public class NetworkTimeSyncEmissary : MonoBehaviour
 
         float pongEndTime = Time.time;
         Debug.Log($"Ping-pong to server: {(pongEndTime - startTime) * 1000 } ms.");
-
-
-
-        // return true; // Nie jesteś w stanie zwrócić wartości w korutynie, możesz obsłużyć to poprzez zmienne stanu
     }
 
     /*    private async Task <float> GetServerTime()

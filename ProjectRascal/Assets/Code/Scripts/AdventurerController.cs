@@ -45,18 +45,10 @@ namespace Assets.Code.Scripts
 
         private Coroutine movementCoroutine;
 
-        float lastTargetTransformTime = 0f;
-
         private void Awake()
         {
             adventurerCharacter = GetComponent<AdventurerCharacter>();
             humanAnimator = GetComponent<HumanAnimator>();
-            
-        }
-
-        private void Start()
-        {
-            
         }
 
         private void Update()
@@ -65,16 +57,12 @@ namespace Assets.Code.Scripts
             {
                 if (movementCoroutine == null)
                 {
-                    Debug.Log($"NetworkLatency =  {NetworkTimeSyncEmissary.instance.GetNetworkLatency() * 1000} ms.");
+                    Debug.Log($"NetworkLatency =  {NetworkTimeSyncEmissary.Instance.GetNetworkLatency() * 1000} ms.");
 
                     movementCoroutine = StartCoroutine(MoveTowardsPosition(targetPosition, 
-                        CalculateInterpolationTime(2 + NetworkTimeSyncEmissary.instance.GetNetworkLatency())));
+                        CalculateInterpolationTime(2 + NetworkTimeSyncEmissary.Instance.GetNetworkLatency())));
                 }
             }
-           /* else
-            {
-                humanAnimator.AnimateIdle();
-            }*/
         }
 
         public void InitializeData(AdventurerAttributesData attrData, TransformData transformData)
@@ -155,7 +143,6 @@ namespace Assets.Code.Scripts
         {
             float elapsedTime = 0f;
             Vector3 startingPosition = transform.position;
-
             humanAnimator.AnimateRunning();
             
             while (elapsedTime < time)
@@ -167,7 +154,6 @@ namespace Assets.Code.Scripts
                 yield return null;
             }
 
-            Debug.Log("WIELKI TEST WSZYSTKIEGO");
             movementCoroutine = null;
             transform.position = targetPosition; // Zapewnij dokładne ustawienie na koniec
             humanAnimator.AnimateIdle();
@@ -197,18 +183,11 @@ namespace Assets.Code.Scripts
 
         public void SetTargetTransform(Vector3 pos, Vector3 rot)
         {
-            //Debug.Log("SetTransform Called");
-
             if (movementCoroutine != null)
-            {
-                StopCoroutine(movementCoroutine);
                 movementCoroutine = null;
-            }
 
             this.targetPosition = pos;
             this.targetRotation = rot;
-
-            //this.adventurerState = AdventurerState.Running;
         }
 
         public void SetAdventurerState(AdventurerState state)

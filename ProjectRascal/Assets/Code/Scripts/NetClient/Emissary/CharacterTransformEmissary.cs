@@ -14,11 +14,27 @@ namespace Assets.Code.Scripts.NetClient.Emissary
     {
         #region Singleton
 
-        public static CharacterTransformEmissary instance;
+        private static CharacterTransformEmissary instance;
+
+        public static CharacterTransformEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<CharacterTransformEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<CharacterTransformEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -37,20 +53,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             OnCharacterTransformReceived?.Invoke();
         }
 
-        float GetInterpolationTime(int AdventurerVId)
+        public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, 
+            float posZ, float rotX, float rotY, float rotZ, AdventurerState adventurerState)
         {
-            // Send ping packet to measure network latency.
-
-            return 0.1f; // Przykładowa stała wartość
-        }
-
-        public async void CommitSendPlayerCharacterTransfer(int characterVId, float posX, float posY, float posZ,
-            float rotX, float rotY, float rotZ, AdventurerState adventurerState)
-        {
-            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
-
-            await client.GameServer.SendPacket(
-                new TransformPacket(characterVId, posX, posY, posZ, rotX, rotY, rotZ, adventurerState));
+            await ClientSingleton.GetInstance().GameServer.SendPacket(new TransformPacket
+                (characterVId, posX, posY, posZ, rotX, rotY, rotZ, adventurerState));
         }
     }
 }

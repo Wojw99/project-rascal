@@ -83,7 +83,6 @@
     <Compile Include="Assets\Code\Scripts\IDamageCharacter.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Base\ClientSingleton.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\Emissary\AdventurerTransformEmissary.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\dodanie\CharacterStateEmissaryOld.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\DamageDealerWizard.cs" />
     <Compile Include="Assets\Code\Scripts\EnemyController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
@@ -115,11 +114,11 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\UIWizard.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\Code\Scripts\NetClient\Utils\UnityTaskUtils.cs" />
     <Compile Include="Assets\L_FG_Assets_Pack1.0\Demo\cameraMove.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\Code\Scripts\AdventurerCharacter.cs" />
     <Compile Include="Assets\Code\Scripts\ScriptableObjects\WeaponSO.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\Emissary\dodanie\MovementEmissary.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\Code\Scripts\MainThreadDispatcher.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
@@ -144,7 +143,6 @@
     <Compile Include="Assets\Code\Scripts\DecorationController.cs" />
     <Compile Include="Assets\Code\Scripts\EntitySpawner.cs" />
     <Compile Include="Assets\Code\Scripts\DamageDealers\NecroSlashDD.cs" />
-    <Compile Include="Assets\Code\Scripts\NetClient\UnityTaskUtils.cs" />
     <Compile Include="Assets\Other\PlayerInputActions.cs" />
     <Compile Include="Assets\Code\Scripts\Wizards\VfxWizard.cs" />
     <Compile Include="Assets\Code\Scripts\NetClient\AdventurerLoadInfo.cs" />

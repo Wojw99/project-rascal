@@ -23,24 +23,34 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
         #region Singleton
 
-        public static AuthEmissary instance;
+        private static AuthEmissary instance;
 
-        private void Awake() {
-            instance = this;
+        public static AuthEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<AuthEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<AuthEmissary>();
+                return instance;
+            }
         }
 
-        private AuthEmissary() {}
+        private void Awake()
+        {
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
+        }
 
         #endregion
 
         public async Task LoginToServer(string login, string password)
         {
-            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
-
-            if(!Client.AuthServer.IsConnected)
-            {
-                await Client.ConnectToAuthServer();
-            }
+            ClientSingleton Client = ClientSingleton.GetInstance();
 
             if (Client.AuthServer.IsConnected)
             {

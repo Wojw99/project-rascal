@@ -156,21 +156,21 @@ namespace ServerApplication.GameService.Base
             // Send character states of currently connected players to new player.
             AdventurerLoadCollectionPacket adventurerLoadCollection = new AdventurerLoadCollectionPacket();
 
-            foreach (var character in ConnectedPlayers)
+            foreach (var adventurer in ConnectedPlayers)
             {
-                if (character.Key != playerConn.Id) // Except logged in player.
+                if (adventurer.Key != playerConn.Id) // Except logged in player.
                 {
                     AdventurerLoadPacket adventurerLoad = new AdventurerLoadPacket();
 
-                    adventurerLoad.AttributesPacket = new AttributesPacket(playerConn.CharacterObj.Vid, 
-                        playerConn.CharacterObj.Name, playerConn.CharacterObj.CurrentHealth, playerConn.CharacterObj.MaxHealth, 
-                        playerConn.CharacterObj.CurrentMana, playerConn.CharacterObj.MaxMana, playerConn.CharacterObj.MoveSpeed, 
-                        playerConn.CharacterObj.AttackSpeed, playerConn.CharacterObj.State);
+                    adventurerLoad.AttributesPacket = new AttributesPacket(adventurer.Value.CharacterObj.Vid,
+                        adventurer.Value.CharacterObj.Name, adventurer.Value.CharacterObj.CurrentHealth, adventurer.Value.CharacterObj.MaxHealth,
+                        adventurer.Value.CharacterObj.CurrentMana, adventurer.Value.CharacterObj.MaxMana, adventurer.Value.CharacterObj.MoveSpeed,
+                        adventurer.Value.CharacterObj.AttackSpeed, adventurer.Value.CharacterObj.State);
 
-                    adventurerLoad.TransformPacket = new TransformPacket(playerConn.CharacterObj.Vid, 
-                        playerConn.CharacterObj.PositionX, playerConn.CharacterObj.PositionY, playerConn.CharacterObj.PositionZ, 
-                        playerConn.CharacterObj.RotationX, playerConn.CharacterObj.RotationY, playerConn.CharacterObj.RotationZ,
-                        playerConn.CharacterObj.State);
+                    adventurerLoad.TransformPacket = new TransformPacket(adventurer.Value.CharacterObj.Vid,
+                        adventurer.Value.CharacterObj.PositionX, adventurer.Value.CharacterObj.PositionY, adventurer.Value.CharacterObj.PositionZ,
+                        adventurer.Value.CharacterObj.RotationX, adventurer.Value.CharacterObj.RotationY, adventurer.Value.CharacterObj.RotationZ,
+                        adventurer.Value.CharacterObj.State);
 
                     adventurerLoadCollection.PacketCollection.Add(adventurerLoad);
                 }

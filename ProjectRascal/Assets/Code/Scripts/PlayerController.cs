@@ -35,9 +35,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     
 
     private void Start() {
-        CharacterLoadEmissary.instance.OnCharacterLoadSucces += CharacterLoadSucces;
-        CharacterLoadEmissary.instance.OnCharacterLoadFailed += CharacterLoadFailed;
-        StartCoroutine(CharacterLoadEmissary.instance.CommitSendCharacterLoadRequest("gracz"));
+        CharacterLoadEmissary.Instance.OnCharacterLoadSucces += CharacterLoadSucces;
+        CharacterLoadEmissary.Instance.OnCharacterLoadFailed += CharacterLoadFailed;
+        StartCoroutine(CharacterLoadEmissary.Instance.CommitSendCharacterLoadRequest("gracz"));
     }
 
     private void CharacterLoadSucces()
@@ -48,20 +48,16 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         skillController = GetComponent<SkillController>();
 
-        //lookDirection = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        lookDirection = CharacterTransformEmissary.Instance.Rotation;
+        transform.position = CharacterTransformEmissary.Instance.Position;
 
-        lookDirection = CharacterTransformEmissary.instance.Rotation;
-        transform.position = CharacterTransformEmissary.instance.Position;
-
-        CharacterLoadEmissary.instance.CommitSendCharacterLoadSucces(true);
+        CharacterLoadEmissary.Instance.CommitSendCharacterLoadSucces(true);
         CharacterLoadSuccesFlag = true;
-        
     }
 
     private void CharacterLoadFailed()
     {
         CharacterLoadSuccesFlag = false;
-        // Message with info.
     }
 
     private void Update() {
@@ -92,11 +88,9 @@ public class PlayerController : MonoBehaviour, IDamagaController {
     {
         timeSinceLastPacket += Time.deltaTime;
 
-        //if (CharacterIsRunning || CharacterIsRotating)
-
         if (SendTransform && (timeSinceLastPacket >= packetSendInterval))//&& (CharacterIsRunning || CharacterIsRotating)
         {
-            CharacterTransformEmissary.instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId,
+            CharacterTransformEmissary.Instance.CommitSendPlayerCharacterTransfer(playerCharacter.VId,
             transform.position.x, transform.position.y, transform.position.z,
             transform.rotation.x, transform.rotation.y, transform.rotation.z, playerState);
 
@@ -315,13 +309,4 @@ public class PlayerController : MonoBehaviour, IDamagaController {
         }
         return Input.mousePosition;
     }
-
-    /*public AdventurerState PlayerState {
-        get { return playerState; }
-        set { playerState = value; }
-    }*/
-
-/*    public enum PlayerState {
-        Idle, Running, Casting
-    }*/
 }

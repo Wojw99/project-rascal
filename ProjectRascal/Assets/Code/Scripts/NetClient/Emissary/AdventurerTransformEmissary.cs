@@ -14,11 +14,27 @@ namespace Assets.Code.Scripts.NetClient.Emissary
     {
         #region Singleton
 
-        public static AdventurerTransformEmissary instance;
+        private static AdventurerTransformEmissary instance;
+
+        public static AdventurerTransformEmissary Instance
+        {
+            get
+            {
+                if (instance == null)
+                    if (FindObjectOfType<AdventurerTransformEmissary>() == null)
+                        instance = new GameObject("AdventurerStateEmissary").AddComponent<AdventurerTransformEmissary>();
+                return instance;
+            }
+        }
 
         private void Awake()
         {
-            instance = this;
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion
@@ -50,10 +66,6 @@ namespace Assets.Code.Scripts.NetClient.Emissary
                 Transform.Rotation.z = TransformPacket.RotZ;
                 Transform.adventurerState = TransformPacket.State;
                 OnAdventurerTransformChanged?.Invoke(TransformPacket.CharacterVId);
-            }
-            else
-            {
-                Debug.Log("Otrzymano pakiet pozycji aktualnego gracza - twojego");
             }
         }
 

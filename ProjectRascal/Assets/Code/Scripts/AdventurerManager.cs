@@ -17,9 +17,6 @@ namespace Assets.Code.Scripts
     {
         public GameObject AdventurerPrefab;
 
-        //private Dictionary<int, GameObject> Adventurers  = 
-        // new Dictionary<int, GameObject>();
-
         private Dictionary<int, AdventurerController> Adventurers =
             new Dictionary<int, AdventurerController>();
 
@@ -31,20 +28,17 @@ namespace Assets.Code.Scripts
 
         private void Start()
         {
-            AdventurerLoadEmissary.instance.OnNewAdventurerLoad += AddNewAdventurer;
+            AdventurerLoadEmissary.Instance.OnNewAdventurerLoad += AddNewAdventurer;
 
-            AdventurerStateEmissary.instance.OnAdventurerNameUpdate += ChangeAdventurerName;
-            AdventurerStateEmissary.instance.OnAdventurerCurrentHealthUpdate += ChangeAdventurerCurrentHealth;
-            AdventurerStateEmissary.instance.OnAdventurerMaxHealthUpdate += ChangeAdventurerMaxHealth;
-            AdventurerStateEmissary.instance.OnAdventurerCurrentManaUpdate += ChangeAdventurerCurrentMana;
-            AdventurerStateEmissary.instance.OnAdventurerMaxManaUpdate += ChangeAdventurerMaxMana;
+            AdventurerStateEmissary.Instance.OnAdventurerNameUpdate += ChangeAdventurerName;
+            AdventurerStateEmissary.Instance.OnAdventurerCurrentHealthUpdate += ChangeAdventurerCurrentHealth;
+            AdventurerStateEmissary.Instance.OnAdventurerMaxHealthUpdate += ChangeAdventurerMaxHealth;
+            AdventurerStateEmissary.Instance.OnAdventurerCurrentManaUpdate += ChangeAdventurerCurrentMana;
+            AdventurerStateEmissary.Instance.OnAdventurerMaxManaUpdate += ChangeAdventurerMaxMana;
 
-            AdventurerTransformEmissary.instance.OnAdventurerTransformChanged += ChangeAdventurerTransform;
-            AdventurerStateEmissary.instance.OnAdventurerStateUpdate += ChangeAdventurerState;
+            AdventurerTransformEmissary.Instance.OnAdventurerTransformChanged += ChangeAdventurerTransform;
+            AdventurerStateEmissary.Instance.OnAdventurerStateUpdate += ChangeAdventurerState;
         }
-
-        private float delayTimer = 0f;
-        private float delayDuration = 1f; 
 
         private void Update()
         {
@@ -63,10 +57,6 @@ namespace Assets.Code.Scripts
                     {
                         str = str + adventurer.Key.ToString() + " ";
                     }
-                }
-                else
-                {
-
                 }
             }
             /*delayTimer += Time.deltaTime;
@@ -89,37 +79,37 @@ namespace Assets.Code.Scripts
 
         private void AddNewAdventurer(int AdventurerVId)
         {
-            AdventurersLoadData.Enqueue((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId),
-                AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId)));  
+            AdventurersLoadData.Enqueue((AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId),
+                AdventurerTransformEmissary.Instance.GetAdventurerTransformData(AdventurerVId)));  
         }
         private void ChangeAdventurerName(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].adventurerCharacter.SetName(AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).Name);
+            Adventurers[AdventurerVId].adventurerCharacter.SetName(AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).Name);
         }
 
         private void ChangeAdventurerCurrentHealth(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].adventurerCharacter.SetCurrentHealth((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).CurrentHealth));
+            Adventurers[AdventurerVId].adventurerCharacter.SetCurrentHealth((AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).CurrentHealth));
         }
 
         private void ChangeAdventurerCurrentMana(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].adventurerCharacter.SetCurrentMana((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).CurrentMana));
+            Adventurers[AdventurerVId].adventurerCharacter.SetCurrentMana((AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).CurrentMana));
         }
 
         private void ChangeAdventurerMaxHealth(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].adventurerCharacter.SetMaxHealth((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).MaxHealth));
+            Adventurers[AdventurerVId].adventurerCharacter.SetMaxHealth((AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).MaxHealth));
         }
 
         private void ChangeAdventurerMaxMana(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].adventurerCharacter.SetMaxMana((AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).MaxMana));
+            Adventurers[AdventurerVId].adventurerCharacter.SetMaxMana((AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).MaxMana));
         }
 
         private void ChangeAdventurerTransform(int AdventurerVId)
         {
-            TransformData transform = AdventurerTransformEmissary.instance.GetAdventurerTransformData(AdventurerVId);
+            TransformData transform = AdventurerTransformEmissary.Instance.GetAdventurerTransformData(AdventurerVId);
             //Adventurers[AdventurerVId].SetTransform(transform.Position, transform.Rotation );
             Adventurers[AdventurerVId].SetTargetTransform(transform.Position, transform.Rotation);
             Adventurers[AdventurerVId].SetAdventurerState(transform.adventurerState);
@@ -127,7 +117,7 @@ namespace Assets.Code.Scripts
 
         private void ChangeAdventurerState(int AdventurerVId)
         {
-            Adventurers[AdventurerVId].SetAdventurerState(AdventurerStateEmissary.instance.GetAdventurerAttributes(AdventurerVId).State);
+            Adventurers[AdventurerVId].SetAdventurerState(AdventurerStateEmissary.Instance.GetAdventurerAttributes(AdventurerVId).State);
         }
 
         #endregion

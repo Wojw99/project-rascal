@@ -42,64 +42,29 @@ namespace NetworkCore.NetworkMessage
 
         public static PacketBase Deserialize(PacketType packetType, byte[] receivedData)
         {
-            switch (packetType)
+            return packetType switch
             {
-                case PacketType.LOGIN_REQUEST:
-                    return new ClientLoginRequestPacket(receivedData);
-
-                case PacketType.LOGIN_RESPONSE:
-                    return new ClientLoginResponsePacket(receivedData);
-
-                case PacketType.CHARACTER_LOAD_REQUEST:
-                    return new CharacterLoadRequestPacket(receivedData);
-
-                case PacketType.CHARACTER_LOAD_RESPONSE:
-                    return new CharacterLoadResponsePacket(receivedData);
-
-                case PacketType.CHARACTER_LOAD_SUCCES:
-                    return new CharacterLoadSuccesPacket(receivedData);
-
-                case PacketType.ADVENTURER_LOAD_PACKET:
-                    return new AdventurerLoadPacket(receivedData);
-
-                case PacketType.ADVENTURER_LOAD_COLLECTION_PACKET:
-                    return new AdventurerLoadCollectionPacket(receivedData);
-
-                case PacketType.ATTRIBUTES_PACKET:
-                    return new AttributesPacket(receivedData);
-
-                case PacketType.ATTRIBUTES_COLLECTION_PACKET: 
-                    return new AttributesCollectionPacket(receivedData);
-
-                case PacketType.ATTRIBUTES_UPDATE_PACKET:
-                    return new AttributesUpdatePacket(receivedData);
-
-                case PacketType.ATTRIBUTES_COLLECTION_UPDATE_PACKET:
-                    return new AttributesUpdateCollectionPacket(receivedData);
-
-                case PacketType.TRANSFORM_PACKET:
-                    return new TransformPacket(receivedData);
-
-                case PacketType.TRANSFORM_COLLECTION_PACKET:
-                    return new TransformCollectionPacket(receivedData);
-
-                case PacketType.CHARACTER_EXIT_PACKET:
-                    return new AdventurerExitPacket(receivedData);
-
-                case PacketType.CLIENT_DISCONNECT:
-                    return new ClientDisconnectPacket(receivedData);
-
-                case PacketType.PING_REQUEST:
-                    return new PingRequestPacket(receivedData);
-
-                case PacketType.PING_RESPONSE:
-                    return new PingResponsePacket(receivedData);
-
-                default:
-                    throw new ArgumentException("Uknown packet type");
-            }
+                PacketType.LOGIN_REQUEST => new ClientLoginRequestPacket(receivedData),
+                PacketType.LOGIN_RESPONSE => new ClientLoginResponsePacket(receivedData),
+                PacketType.CHARACTER_LOAD_REQUEST => new CharacterLoadRequestPacket(receivedData),
+                PacketType.CHARACTER_LOAD_RESPONSE => new CharacterLoadResponsePacket(receivedData),
+                PacketType.CHARACTER_LOAD_SUCCES => new CharacterLoadSuccesPacket(receivedData),
+                PacketType.ADVENTURER_LOAD_PACKET => new AdventurerLoadPacket(receivedData),
+                PacketType.ADVENTURER_LOAD_COLLECTION_PACKET => new AdventurerLoadCollectionPacket(receivedData),
+                PacketType.ATTRIBUTES_PACKET => new AttributesPacket(receivedData),
+                PacketType.ATTRIBUTES_COLLECTION_PACKET => new AttributesCollectionPacket(receivedData),
+                PacketType.ATTRIBUTES_UPDATE_PACKET => new AttributesUpdatePacket(receivedData),
+                PacketType.ATTRIBUTES_COLLECTION_UPDATE_PACKET => new AttributesUpdateCollectionPacket(receivedData),
+                PacketType.TRANSFORM_PACKET => new TransformPacket(receivedData),
+                PacketType.TRANSFORM_COLLECTION_PACKET => new TransformCollectionPacket(receivedData),
+                PacketType.CHARACTER_EXIT_PACKET => new AdventurerExitPacket(receivedData),
+                PacketType.CLIENT_DISCONNECT => new ClientDisconnectPacket(receivedData),
+                PacketType.PING_REQUEST => new PingRequestPacket(receivedData),
+                PacketType.PING_RESPONSE => new PingResponsePacket(receivedData),
+                _ => throw new ArgumentException("Unknown packet type"),
+            };
         }
-    
+
 
         public byte[] Serialize()
         {

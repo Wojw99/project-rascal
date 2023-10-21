@@ -16,58 +16,37 @@ namespace NetClient
 {
     public class ClientSingleton : TcpNetworkClient
     {
-        [SerializeField] public ServerPeer AuthServer { get; private set; }
-        [SerializeField] public ServerPeer GameServer { get; private set; }
+        public ServerPeer AuthServer { get; private set; }
+        public ServerPeer GameServer { get; private set; }
 
         #region Singleton
 
-        private static ClientSingleton Instance;
+        private static ClientSingleton instance;
 
         private ClientSingleton() 
         {
-            GameServer = new ServerPeer("127.0.0.1", 8050);
-            GameServer.Connect();
-            GameServer.StartRead();
-
-            AuthServer = new ServerPeer("127.0.0.1", 8051);
-            AuthServer.Connect();
-            AuthServer.StartRead();
-
             OnPacketSent += ShowPacketInfo;
             Start();
             StartUpdate(TimeSpan.FromMilliseconds(20));
             StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
+
+            GameServer = new ServerPeer(this, "127.0.0.1", 8051);
+            GameServer.Connect();
+            GameServer.StartRead();
+
+            AuthServer = new ServerPeer(this,"127.0.0.1", 8050);
+            AuthServer.Connect();
+            AuthServer.StartRead();
+
         }
 
         public static ClientSingleton GetInstance()
         { 
-            if(Instance == null)
-            {
-                Instance = new ClientSingleton();
+            if(instance == null)
+                instance = new ClientSingleton();
                 
-            }
-            return Instance;
+            return instance;
         }
-
-        /*public static async Task<ClientSingleton> GetInstanceAsync()
-        {
-            if (Instance == null)
-            {
-                Instance = new ClientSingleton();
-                Instance.Initialize();
-            }
-            return Instance;
-        }*/
-
-       /* private void Initialize()
-        {
-            Start();
-            StartUpdate(TimeSpan.FromMilliseconds(20));
-            StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
-
-            // Temporary
-            //await ConnectToGameServer();
-        }*/
 
         #endregion
 
@@ -76,20 +55,6 @@ namespace NetClient
             Debug.Log("[SEND] " + packetInfo);
         }
 
-/*        public async Task ConnectToAuthServer()
-        {
-            AuthServer = await CreateTcpServerConnection("127.0.0.1", 8050);
-            AuthServer.Connect();
-            AuthServer.StartRead();
-        }
-
-        public async Task ConnectToGameServer()
-        {
-            GameServer = await CreateTcpServerConnection("127.0.0.1", 8051);
-            GameServer.Connect();
-            GameServer.StartRead();
-        }*/
-
         public override async Task Update()
         {
 
@@ -97,9 +62,7 @@ namespace NetClient
 
         private bool MatchCharacterId(int CharacterVId)
         {
-            //Debug.Log("Sprawdzam id = " + CharacterVId + " z id = " + CharacterStateEmissary.instance.CharacterVId);
-            //Debug.Log("Wynik = " + (CharacterVId == CharacterStateEmissary.instance.CharacterVId));
-            return CharacterVId == CharacterStateEmissary.instance.CharacterVId;
+            return CharacterVId == CharacterStateEmissary.Instance.CharacterVId;
         }
 
         /// <summary>
@@ -119,21 +82,24 @@ namespace NetClient
                 #region Character
 
                 if (packet is CharacterLoadResponsePacket characterLoadResponsePacket)
-                {
-                    Debug.Log("CharacterLoadResponsePacket with CharacterVId = " + characterLoadResponsePacket.AttributesPacket.CharacterVId);
-                    await CharacterLoadEmissary.instance.ReceiveCharacterData(characterLoadResponsePacket);
-                }
+                    CharacterLoadEmissary.Instance.ReceiveCharacterData(characterLoadResponsePacket);
 
                 #endregion
 
                 #region Adventurer
 
                 else if (packet is AdventurerLoadPacket adventurerLoadPacket)
-                    AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(adventurerLoadPacket);
+                    AdventurerLoadEmissary.Instance.ReceiveNewAdventurerData(adventurerLoadPacket);
 
                 else if (packet is AdventurerLoadCollectionPacket adventurerLoadCollection)
+                {
+                    Debug.Log("Twoje VId = " + CharacterStateEmissary.Instance.CharacterVId);
                     foreach (var pck in adventurerLoadCollection.PacketCollection)
-                        AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(pck);
+                    {
+                        Debug.Log(pck.AttributesPacket.CharacterVId);
+                        AdventurerLoadEmissary.Instance.ReceiveNewAdventurerData(pck);
+                    }
+                }
 
                 #endregion
 
@@ -141,25 +107,25 @@ namespace NetClient
 
                 else if (packet is AttributesPacket attrPck)
                     if (MatchCharacterId(attrPck.CharacterVId))
-                        CharacterStateEmissary.instance.ReceiveAttributesData(attrPck);
-                    else AdventurerStateEmissary.instance.ReceiveAttributesData(attrPck);
+                        CharacterStateEmissary.Instance.ReceiveAttributesData(attrPck);
+                    else AdventurerStateEmissary.Instance.ReceiveAttributesData(attrPck);
 
                 else if (packet is AttributesCollectionPacket AttrCollectionPacket)
                     foreach (AttributesPacket pck in AttrCollectionPacket.PacketCollection)
                         if (MatchCharacterId(pck.CharacterVId))
-                            CharacterStateEmissary.instance.ReceiveAttributesData(pck);
-                        else AdventurerStateEmissary.instance.ReceiveAttributesData(pck);
+                            CharacterStateEmissary.Instance.ReceiveAttributesData(pck);
+                        else AdventurerStateEmissary.Instance.ReceiveAttributesData(pck);
 
                 else if (packet is AttributesUpdatePacket AttrUpdatePacket)
                     if (MatchCharacterId(AttrUpdatePacket.CharacterVId))
-                        CharacterStateEmissary.instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
-                    else AdventurerStateEmissary.instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
+                        CharacterStateEmissary.Instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
+                    else AdventurerStateEmissary.Instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
 
                 else if (packet is AttributesUpdateCollectionPacket AttrUpdateCollectionPacket)
                     foreach (AttributesUpdatePacket pck in AttrUpdateCollectionPacket.PacketCollection)
                         if (MatchCharacterId(pck.CharacterVId))
-                            CharacterStateEmissary.instance.ReceiveAttributesDataUpdate(pck);
-                        else AdventurerStateEmissary.instance.ReceiveAttributesDataUpdate(pck);
+                            CharacterStateEmissary.Instance.ReceiveAttributesDataUpdate(pck);
+                        else AdventurerStateEmissary.Instance.ReceiveAttributesDataUpdate(pck);
 
                 #endregion
 
@@ -169,30 +135,13 @@ namespace NetClient
                     if (MatchCharacterId(trsPck.CharacterVId))
                         Debug.Log("Wywoluje 1 - gracz");
                         //CharacterTransformEmissary.instance.ReceiveTransformationData(trsPck);
-                    else AdventurerTransformEmissary.instance.ReceiveTransformationData(trsPck);
+                    else AdventurerTransformEmissary.Instance.ReceiveTransformationData(trsPck);
 
                 else if (packet is TransformCollectionPacket TrsColletionPacket)
-                {
-                    //Debug.Log("JEST JEST JEST JEST JEST JEST JEST, Size = " + TrsColletionPacket.PacketCollection.Count);
                     foreach (TransformPacket pck in TrsColletionPacket.PacketCollection)
-                    {
-                        //Debug.Log(MatchCharacterId(pck.CharacterVId));
-                        if (MatchCharacterId(pck.CharacterVId))
-                        {
-                            Debug.Log("Wywoluje 1 - gracz");
-                            //CharacterTransformEmissary.instance.ReceiveTransformationData(pck);
-                            // trzeba poprawic gdyz serwer wysyla ten pakiet rowniez to gracza
-                        }
-                        else 
-                        {
-                           // Debug.Log("Wywoluje 2 - adventurer");
-                            AdventurerTransformEmissary.instance.ReceiveTransformationData(pck);
-                        }
-                    }
-                }
-
-
-            
+                        if (!MatchCharacterId(pck.CharacterVId))
+                            AdventurerTransformEmissary.Instance.ReceiveTransformationData(pck);
+     
                 #endregion
             }
             catch(Exception ex)
@@ -204,7 +153,7 @@ namespace NetClient
 
         public async Task RegisterNewAccount(string login, string password)
         {
-            await ConnectToAuthServer();
+            //await ConnectToAuthServer();
 
             if(AuthServer.IsConnected)
             {
