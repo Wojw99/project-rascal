@@ -34,9 +34,11 @@ namespace Client
             await Console.Out.WriteLineAsync("Trying to connect to server...");
             await ServerTcpSocket.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIpAddress), (int)serverTcpPort));
 
+            
+
             if (ServerTcpSocket.Connected)
             {
-                return new TcpPeer(this, ServerTcpSocket, Guid.NewGuid(), Owner.client);
+                return new ServerPeer(this, ServerTcpSocket, Guid.NewGuid(), Owner.client);
             }
             else
             {
@@ -56,6 +58,6 @@ namespace Client
 
         public abstract Task Update();
 
-        public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
+        //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

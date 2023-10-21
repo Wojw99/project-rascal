@@ -12,7 +12,7 @@ public interface IPeer
 
     bool IsConnected { get; }
 
-    Guid Id { get; }
+    Guid GUID { get; }
 
     Owner OwnerType { get; }
 
@@ -23,6 +23,4 @@ public interface IPeer
     void Disconnect();
 
     Task SendPacket(PacketBase packet);
-
-    //void StartReceive();
 }

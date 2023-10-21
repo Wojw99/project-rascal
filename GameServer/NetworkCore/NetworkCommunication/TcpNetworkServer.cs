@@ -53,7 +53,6 @@ namespace NetworkCore.NetworkCommunication
             // read from file and initialize attributes.
         }*/
 
-        // Start listening, setting IsRunning flag.
         public bool IsRunning()
         {
             return IsRunningFlag;
@@ -112,7 +111,7 @@ namespace NetworkCore.NetworkCommunication
 
         protected abstract Task OnClientDisconnect(IPeer clientPeer);
 
-        public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
+        //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
 
         protected abstract Task Update();
     }

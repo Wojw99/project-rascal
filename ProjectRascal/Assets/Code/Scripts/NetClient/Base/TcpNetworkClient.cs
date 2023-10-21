@@ -56,6 +56,6 @@ namespace NetClient
         }
 
         public abstract Task Update();
-        public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
+        //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

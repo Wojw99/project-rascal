@@ -29,8 +29,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             get
             {
                 if (instance == null)
-                    if (FindObjectOfType<CharacterLoadEmissary>() == null)
+                {
+                    instance = FindObjectOfType<CharacterLoadEmissary>();
+                    if (instance == null)
                         instance = new GameObject("AdventurerStateEmissary").AddComponent<CharacterLoadEmissary>();
+                }
                 return instance;
             }
         }
@@ -69,8 +72,8 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
             PacketBase packet = null;
 
-            yield return UnityTaskUtils.RunTaskWithResultAsync(async () => await client.WaitForResponsePacket(TimeSpan.FromMilliseconds(20),
-                       TimeSpan.FromSeconds(50), PacketType.CHARACTER_LOAD_RESPONSE), result =>
+            yield return UnityTaskUtils.RunTaskWithResultAsync(async () => await client._PacketHandler.WaitForResponsePacket(
+                       client.GameServer.GUID, PacketType.CHARACTER_LOAD_RESPONSE), result =>
             {
                 packet = result;
             });

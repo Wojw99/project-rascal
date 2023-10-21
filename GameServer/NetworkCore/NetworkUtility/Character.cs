@@ -104,6 +104,9 @@ namespace NetworkCore.NetworkData
             await Console.Out.WriteLineAsync($"RotationX = {RotationX}");
             await Console.Out.WriteLineAsync($"RotationY = {RotationY}");
             await Console.Out.WriteLineAsync($"RotationZ = {RotationZ}");
+            await Console.Out.WriteLineAsync($"MoveSpeed = {MoveSpeed}");
+            await Console.Out.WriteLineAsync($"AttackSpeed = {AttackSpeed}");
+            await Console.Out.WriteLineAsync($"State = {State}");
         }
     }
 }

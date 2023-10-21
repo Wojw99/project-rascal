@@ -20,8 +20,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             get
             {
                 if (instance == null)
-                    if (FindObjectOfType<AdventurerStateEmissary>() == null)
+                {
+                    instance = FindObjectOfType<AdventurerStateEmissary>();
+                    if (instance == null)
                         instance = new GameObject("AdventurerStateEmissary").AddComponent<AdventurerStateEmissary>();
+                }
                 return instance;
             }
         }

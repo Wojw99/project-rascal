@@ -76,11 +76,11 @@ namespace Client
         /// <remarks>
         /// ...
         /// </remarks>
-        public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
+        /*public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.Id}");
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.GUID}");
 
-           /* #region Character
+           *//* #region Character
 
             if (packet is CharacterLoadResponsePacket characterLoadResponsePacket)
                 CharacterLoadEmissary.instance.ReceiveCharacterData(characterLoadResponsePacket);
@@ -137,9 +137,9 @@ namespace Client
                         CharacterTransformEmissary.instance.ReceiveTransformationData(pck);
                     else AdventurerTransformEmissary.instance.ReceiveTransformationData(pck);
 
-            #endregion*/
+            #endregion*//*
 
-        }
+        }*/
 
         public async Task RegisterNewAccount(string login, string password)
         {

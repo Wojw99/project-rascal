@@ -17,6 +17,7 @@ namespace Assets.Code.Scripts.NetClient.Base
     public class ServerPeer : TcpPeer
     {
         private IPEndPoint ServerIpEndpoint;
+        private NetworkBase NetworkRef;
         
         /*public PacketReceived OnCharacterLoadResponsePacketReceived;
         public PacketReceived OnAdventurerExitPacketReceived;

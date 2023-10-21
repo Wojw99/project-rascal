@@ -6,8 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkCore", "NetworkCore\NetworkCore.csproj", "{5B8A5782-3C44-42CB-A896-0F7D5876D56B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApplication", "GameServer\ServerApplication.csproj", "{63E999F4-F083-459B-8361-98A77D3B088A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B8A5782-3C44-42CB-A896-0F7D5876D56B} = {5B8A5782-3C44-42CB-A896-0F7D5876D56B}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{D7287AEB-1491-4BA1-A6FA-A1941C5E980F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{D7287AEB-1491-4BA1-A6FA-A1941C5E980F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

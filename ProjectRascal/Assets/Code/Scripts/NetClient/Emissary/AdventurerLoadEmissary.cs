@@ -20,8 +20,11 @@ namespace Assets.Code.Scripts.NetClient.Emissary
             get
             {
                 if (instance == null)
-                    if (FindObjectOfType<AdventurerLoadEmissary>() == null)
+                {
+                    instance = FindObjectOfType<AdventurerLoadEmissary>();
+                    if (instance == null)
                         instance = new GameObject("AdventurerStateEmissary").AddComponent<AdventurerLoadEmissary>();
+                }
                 return instance;
             }
         }
@@ -41,6 +44,12 @@ namespace Assets.Code.Scripts.NetClient.Emissary
         public delegate void AdventurerLoad(int adventurerId);
 
         public event AdventurerLoad OnNewAdventurerLoad;
+
+        public void ReceiveNewAdventurerCollectionData(AdventurerLoadCollectionPacket packet)
+        {
+            foreach(var pck in packet.PacketCollection)
+                ReceiveNewAdventurerData(pck);
+        }
 
         public void ReceiveNewAdventurerData(AdventurerLoadPacket adventurerLoadPacket)
         {

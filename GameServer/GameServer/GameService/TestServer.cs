@@ -16,12 +16,11 @@ namespace ServerApplication.GameService
 {
     public class TestServer : TcpNetworkServer
     {
-        public World _World;
+        private World _World;
 
         private int ConnCounter = 0;
 
-        public int VidCounter { get; private set; } = 0; // by now is the way to create unique identifiers
-        // But note that in the future we must load that Vid's from database!
+        public int VidCounter { get; private set; } = 0;
 
         public TestServer(bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType, int tcpPort) 
@@ -29,6 +28,7 @@ namespace ServerApplication.GameService
         {
             _World = new World();
             OnPacketSent += showSentPacketInfo;
+            OnPacketReceived += ExaminePacket;
         }
 
         public void showSentPacketInfo(string packetInfo)
@@ -41,14 +41,14 @@ namespace ServerApplication.GameService
             await _World.Update();
         }
 
-        public override async Task OnPacketReceived(IPeer peer, PacketBase packet)
+        public async Task ExaminePacket(IPeer peer, PacketBase packet)
         {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.Id}");
+            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {peer.GUID}");
 
             // Check is received connection registered into PlayerConnection
             // note that we are registering all incoming connections into that Object
             // by now (in OnNewConnection method). So by now we dont need that especially.
-            if (peer is PlayerConnection playerConn)
+            if (peer is PlayerPeer playerConn)
             {
                 if (packet is CharacterLoadRequestPacket request)
                 {
@@ -62,7 +62,7 @@ namespace ServerApplication.GameService
                         playerConn.LoadCharacterFromDatabase(username, VidCounter++); // by now overloaded with unique identifiers from server app.
 
                         // send response with player object
-                        await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.CharacterObj));
+                        await playerConn.SendPacket(new CharacterLoadResponsePacket(playerConn.PlayerCharacter));
                         
                     }
                     else
@@ -90,7 +90,7 @@ namespace ServerApplication.GameService
                 else if(packet is TransformPacket movePacket)
                 {
                     //playerConn.SetAdventurerState(AdventurerState.Running);
-                    playerConn.SetPosition(movePacket);
+                    //playerConn.SetPosition(movePacket);
                 }
 
                 else if (packet is ClientDisconnectPacket clientDisconnect)
@@ -124,7 +124,7 @@ namespace ServerApplication.GameService
         {
             await Console.Out.WriteLineAsync($"[NEW CLIENT CONNECTION] received, with info: {clientSocket.RemoteEndPoint} ");
 
-            PlayerConnection playerConn = new PlayerConnection(this, clientSocket, connId, ownerType, ConnCounter++);
+            PlayerPeer playerConn = new PlayerPeer(this, _World, clientSocket, connId, ownerType);
             playerConn.Connect();
             playerConn.StartRead();
 
@@ -135,7 +135,7 @@ namespace ServerApplication.GameService
         {
             //await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {peer.PeerSocket.RemoteEndPoint}. ");
 
-            if (peer is PlayerConnection playerConnection)  // do przemyslenia
+            if (peer is PlayerPeer playerConnection)  // do przemyslenia
                 _World.RemovePlayer(playerConnection); // do przemyslenia
         }
     }

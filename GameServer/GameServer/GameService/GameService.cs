@@ -27,26 +27,12 @@ namespace ServerApplication.Game
                 Server.StartListen(); 
                 Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));
                 Server.StartUpdate(TimeSpan.FromMilliseconds(1));
-                await Task.Run(async () => await TestingOperationsTask(Server));
-
-                /*while (Server.IsRunning)
-                {
-                    var begin = current_time();
-                    Server.
-                    receive_from_clients(); // poll, accept, receive, decode, validate
-                    update(); // AI, simulate
-                    send_updates_clients();
-                    var elapsed = current_time() - begin;
-                    if (elapsed < tick)
-                    {
-                        sleep(tick - elapsed);
-                    }
-                }*/
-
+                //await Task.Run(async () => await TestingOperationsTask(Server));
 
                 while (true)
                 {
-                    await Console.Out.WriteLineAsync(".");
+                    Thread.Sleep(5000);
+                    await Console.Out.WriteLineAsync("Serwer dziala...");
                 }
             }
             catch(Exception ex)
@@ -56,7 +42,7 @@ namespace ServerApplication.Game
             }
         }
 
-        public static async Task TestingOperationsTask(TestServer Server)
+        /*public static async Task TestingOperationsTask(TestServer Server)
         {
             while(true)
             {
@@ -73,9 +59,9 @@ namespace ServerApplication.Game
                     try
                     {
                         await Server._World.ShowConnectedPlayers();
-                        PlayerConnection playerRef = Server._World.GetPlayerObj(playerChoice);
+                        PlayerPeer playerRef = Server._World.GetPlayerObj(playerChoice);
                         await Console.Out.WriteLineAsync($"You choose char with id = {playerChoice}:");
-                        await playerRef.CharacterObj.Show();
+                        await playerRef.PlayerCharacter.Show();
 
                         await Console.Out.WriteLineAsync("[1] Change Name");
                         await Console.Out.WriteLineAsync("[2] Add + 10 Health");
@@ -93,10 +79,10 @@ namespace ServerApplication.Game
                                     playerRef.SetName(newName);
                                     break;
                                 case 2:
-                                    playerRef.SetMaxHealth(playerRef.CharacterObj.MaxHealth + 10);
+                                    playerRef.SetMaxHealth(playerRef.PlayerCharacter.MaxHealth + 10);
                                     break;
                                 case 3:
-                                    playerRef.SetMaxMana(playerRef.CharacterObj.MaxMana + 10);
+                                    playerRef.SetMaxMana(playerRef.PlayerCharacter.MaxMana + 10);
                                     break;
 
                             }
@@ -111,6 +97,6 @@ namespace ServerApplication.Game
                     }
                 }
             }
-        }
+        }*/
     }
 }

@@ -14,9 +14,7 @@ namespace NetworkCore.NetworkCommunication
 {
     public abstract class NetworkBase
     {
-        //private readonly object IncomingLock = new object();
-
-        //private readonly object OutgoingLock = new object();
+        public PacketHandler _PacketHandler;
         private ConcurrentQueue<OwnedPacket> qPacketsIn { get; set; } 
             = new ConcurrentQueue<OwnedPacket>();
 
@@ -34,57 +32,49 @@ namespace NetworkCore.NetworkCommunication
 
         public UInt32 OutPacketCounter { get; private set; } = 0;
 
-        //public string PacketSentInfo { get; private set; } = string.Empty;
 
         public delegate void PacketSentInfo(string newPacketInfo);
-        public event PacketSentInfo OnPacketSent;
+        public delegate Task PacketReceived(IPeer Peer, PacketBase packet);
 
-        public abstract Task OnPacketReceived(IPeer Peer, PacketBase packet);
+        public event PacketSentInfo? OnPacketSent;
+        public event PacketReceived? OnPacketReceived;
 
-        protected NetworkBase()
-        {
-        }
+        //public abstract Task OnPacketReceived(IPeer Peer, PacketBase packet);
+
+        protected NetworkBase() { _PacketHandler = new PacketHandler(); }
 
         public async Task SendOutgoingPacket(OwnedPacket receiver)
         {
             byte[] dataToSend = receiver.PeerPacket.Serialize();
             await receiver.Peer.PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
             OnPacketSent?.Invoke(receiver.PeerPacket.GetInfo());
-            
-            //await Console.Out.WriteLineAsync("Pomyslnie wyslano");
-            //await Console.Out.WriteLineAsync($"[SEND] packed with type: {receiver.PeerPacket.TypeId} from peer with Guid: {receiver.Peer.Id}");
         }
 
         public void StartPacketProcessing(UInt32 maxIncomingPacketCount, UInt32 maxOutgoingPacketCount, TimeSpan packetProcessInterval)
         {
-            //var processIncomingTask = Task.Run(ProcessIncomingPackets(maxIncomingPacketCount, packetProcessInterval));
-            //var processOutgoingTask = Task.Run(ProcessOutgoingPackets(maxOutgoingPacketCount, packetProcessInterval));
-
             var processIncomingTask = Task.Run(() => ProcessIncomingPackets(maxIncomingPacketCount, packetProcessInterval));
             var processOutgoingTask = Task.Run(() => ProcessOutgoingPackets(maxOutgoingPacketCount, packetProcessInterval));
         }
 
         private protected async Task ProcessIncomingPackets(UInt32 maxIncomingPacketCount, TimeSpan packetProcessInterval)
         {
-            while (IsRunningFlag)
+            while (IsRunningFlag) 
             {
-                
                 UInt32 packetCount = 0;
 
-                while (packetCount < maxIncomingPacketCount && !qPacketsIn.IsEmpty)
+                while (packetCount < maxIncomingPacketCount && !qPacketsIn.IsEmpty) 
                 {
-                    if (qPacketsIn.TryDequeue(out var ownedPacket))
+                    if (qPacketsIn.TryDequeue(out var ownedPacket)) 
                     {
-                        await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
-
+                        if(OnPacketReceived != null)
+                            await OnPacketReceived?.Invoke(ownedPacket.Peer, ownedPacket.PeerPacket);
+                        
+                        //await OnPacketReceived(ownedPacket.Peer, ownedPacket.PeerPacket);
                         packetCount++;
                     }
                 }
 
                 InPacketCounter += packetCount;
-
-
-                //await Task.Delay(PacketProcessInterval);
                 Thread.Sleep(packetProcessInterval);
             }
         }
@@ -105,8 +95,6 @@ namespace NetworkCore.NetworkCommunication
                 }
 
                 OutPacketCounter += packetCount;
-
-                //await Task.Delay(PacketProcessInterval);
                 Thread.Sleep(packetProcessInterval);
             }
         }

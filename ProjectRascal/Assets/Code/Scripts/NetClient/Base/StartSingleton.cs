@@ -20,8 +20,11 @@ namespace Assets.Code.Scripts.NetClient.Base
             get
             {
                 if (instance == null)
-                    if (FindObjectOfType<StartSingleton>() == null)
+                {
+                    instance = FindObjectOfType<StartSingleton>();
+                    if (instance == null)
                         instance = new GameObject("AdventurerStateEmissary").AddComponent<StartSingleton>();
+                }
                 return instance;
             }
         }

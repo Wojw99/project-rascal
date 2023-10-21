@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace NetworkCore.NetworkCommunication
 {
-    public abstract class TcpPeer : IPeer
+    public class TcpPeer : IPeer
     {
         public bool IsProxy => false;
 
         public bool IsConnected { get; private set; }
 
-        public Guid Id { get; private set; }
+        public Guid GUID { get; private set; }
 
         public Owner OwnerType { get; private set; }
 
@@ -28,15 +28,12 @@ namespace NetworkCore.NetworkCommunication
 
         private NetworkBase NetworkRef { get; set; } // storing reference to NetworkServer or NetworkClient
 
-        public delegate void PacketReceived(PacketBase packet);
-
         public TcpPeer(NetworkBase networkBase, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
-            
             NetworkRef = networkBase;
             PeerSocket = peerSocket;
-            Id = peerId;
+            GUID = peerId;
             OwnerType = ownerType;
         }
 
@@ -105,21 +102,10 @@ namespace NetworkCore.NetworkCommunication
                     // On 4 index in array is packet type
                     PacketType receivedPacketType = (PacketType)packetBuffer[4];
 
-                    // Load the derivative packet by type and correct packet.
-                    PacketBase recognizedPacket = PacketBase.Deserialize(receivedPacketType, packetBuffer);
-
-                    // Assign complete packet to queue (complete mean to create derivative from base).
-
-                    if (recognizedPacket.IsResponse)
-                        NetworkRef.AddToResponsePacketsCollection(this, recognizedPacket);
-
-                    else
-                        NetworkRef.AddToIncomingPacketQueue(this, recognizedPacket);
+                    NetworkRef._PacketHandler.AddPacket(new OwnedPacket { Peer = this, 
+                        PeerPacket = PacketBase.CreatePacketFromType(receivedPacketType, packetBuffer)});
                 }
             }
         }
-
-        //public abstract void OnPacketReceived(PacketBase packet);
-      
     }
 }

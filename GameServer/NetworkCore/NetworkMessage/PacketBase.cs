@@ -40,7 +40,7 @@ namespace NetworkCore.NetworkMessage
             }
         }
 
-        public static PacketBase Deserialize(PacketType packetType, byte[] receivedData)
+        public static PacketBase CreatePacketFromType(PacketType packetType, byte[] receivedData)
         {
             return packetType switch
             {
@@ -270,7 +270,7 @@ namespace NetworkCore.NetworkMessage
                 packetData[4] = packetType;
                 Array.Copy(SlicedPacketData, 0, packetData, 5, SlicedPacketData.Length);
 
-                return Deserialize((PacketType)packetType, packetData);
+                return CreatePacketFromType((PacketType)packetType, packetData);
 
             }
             catch(Exception ex)
