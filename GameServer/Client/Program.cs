@@ -20,13 +20,36 @@ namespace Client
         static TransformPacket transformPacket = new TransformPacket(-1);
         static async Task Main(string[] args)
         {
-            if(await CommitSendCharacterLoadRequest("gracz"))
+            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
+
+            PingRequestPacket packet = new PingRequestPacket();
+            Stopwatch stopwatch = new Stopwatch();
+
+            while(true)
+            {
+                stopwatch.Start();
+                packet.Serialize();
+                stopwatch.Stop();
+
+                Console.WriteLine($"Czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                stopwatch.Reset();
+
+
+                stopwatch.Start();
+                await Client.GameServer.SendPacket(packet); // serializuje oraz wysyła
+                stopwatch.Stop();
+                Console.WriteLine($"Czas serializacji + czas wysłania: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                stopwatch.Reset();
+                await Task.Delay(3);
+            }
+
+            /*if(await CommitSendCharacterLoadRequest("gracz"))
             {
                 while (true)
                 {
                     await TestingOperationsTask();
                 }
-            }
+            }*/
         }
 
         public static async Task<bool> CommitSendCharacterLoadRequest(string authToken)

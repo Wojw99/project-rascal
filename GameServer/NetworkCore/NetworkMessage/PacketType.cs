@@ -9,6 +9,7 @@ namespace NetworkCore.NetworkMessage
         // AUTHORIZATION
         LOGIN_REQUEST = 0x1,
         LOGIN_RESPONSE = 0x2,
+        LOGIN_REQUEST_COLLECTION = 0x3,
 
         // CHARACTER LOAD
         CHARACTER_LOAD_REQUEST = 0x10, // Client-side request to load his character object.

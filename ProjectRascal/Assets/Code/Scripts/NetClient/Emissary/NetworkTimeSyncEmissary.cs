@@ -67,49 +67,53 @@ public class NetworkTimeSyncEmissary : MonoBehaviour
 
     private IEnumerator SendPingToServer()
     {
-        ClientSingleton client = ClientSingleton.GetInstance();
-
-        float startTime = Time.time;
-
-        yield return UnityTaskUtils.RunTaskAsync(async () => await client.GameServer.SendPacket(new PingRequestPacket()));
-
-        float pingEndTime = Time.time;
-
-        // Oblicz czas trwania pinga
-        float pingDuration = (pingEndTime - startTime) * 1000;
-        Debug.Log($"Ping to server: {pingDuration} ms");
-
-        yield return UnityTaskUtils.RunTaskAsync(async () =>
+        while(true)
         {
-            try
+
+            ClientSingleton client = ClientSingleton.GetInstance();
+
+            float startTime = Time.time;
+
+            yield return UnityTaskUtils.RunTaskAsync(async () => await client.GameServer.SendPacket(new PingRequestPacket()));
+
+            float pingEndTime = Time.time;
+
+            // Oblicz czas trwania pinga
+            float pingDuration = (pingEndTime - startTime) * 1000;
+            Debug.Log($"Ping to server: {pingDuration} ms");
+
+            yield return UnityTaskUtils.RunTaskAsync(async () =>
             {
-                await client._PacketHandler.WaitForResponsePacket(client.GameServer.GUID, PacketType.PING_RESPONSE);
-            }
-            catch (TimeoutException ex)
+                try
+                {
+                    await client._PacketHandler.WaitForResponsePacket(client.GameServer.GUID, PacketType.PING_RESPONSE);
+                }
+                catch (TimeoutException ex)
+                {
+                    Debug.LogWarning(ex);
+                }
+            });
+
+            float pongEndTime = Time.time;
+            float pingPongDuration = (pongEndTime - startTime) * 1000;
+            Debug.Log($"Ping-pong to server: {pingPongDuration} ms");
+
+            // Oblicz network latency jako połowę czasu trwania ping-ponga
+            float networkLatency = pingPongDuration / 2;
+            Debug.Log($"Network Latency: {networkLatency} ms");
+
+            // Aktualizuj network latency w swojej klasie
+            lock (this)
             {
-                Debug.LogWarning(ex);
+                NetworkLatency = networkLatency;
             }
-        });
 
-        float pongEndTime = Time.time;
-        float pingPongDuration = (pongEndTime - startTime) * 1000;
-        Debug.Log($"Ping-pong to server: {pingPongDuration} ms");
+            // Odczekaj przed wysłaniem kolejnego pinga (dostosuj częstotliwość)
+            yield return new WaitForSeconds(SyncFrequency);
 
-        // Oblicz network latency jako połowę czasu trwania ping-ponga
-        float networkLatency = pingPongDuration / 2;
-        Debug.Log($"Network Latency: {networkLatency} ms");
-
-        // Aktualizuj network latency w swojej klasie
-        lock (this)
-        {
-            NetworkLatency = networkLatency;
+            // Ponownie uruchom korutynę
+           // StartCoroutine(SendPingToServer());
         }
-
-        // Odczekaj przed wysłaniem kolejnego pinga (dostosuj częstotliwość)
-        yield return new WaitForSeconds(SyncFrequency);
-
-        // Ponownie uruchom korutynę
-        StartCoroutine(SendPingToServer());
     }
 
     /*    public void StartSynchronize()

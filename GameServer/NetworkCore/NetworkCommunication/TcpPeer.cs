@@ -72,39 +72,27 @@ namespace NetworkCore.NetworkCommunication
 
         private async Task ReadIncomingData()
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                while (IsConnected)
-                { 
-                    memoryStream.SetLength(0);
+            while (IsConnected)
+            { 
+                // Receive first 4 bytes to read packet size.
+                byte[] packetSizeInBytes = await PacketBase.ReceiveDataFromSocket(PeerSocket, 4);
+                int packetSize = BitConverter.ToInt32(packetSizeInBytes);
 
-                    byte[] packetSizeBytes = new byte[sizeof(int)];
-                    int bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetSizeBytes), SocketFlags.None);
+                // Receive other bytes by: (packetSize) - (size_which_we_arleady_received)
+                byte[] packetData = await PacketBase.ReceiveDataFromSocket(PeerSocket, packetSize - sizeof(int));
 
-                    int packetSize = BitConverter.ToInt32(packetSizeBytes, 0);
+                // Connect both into one array.
+                Memory<byte> combinedDataMemory = new byte[packetSize];
+                packetSizeInBytes.CopyTo(combinedDataMemory);
+                packetData.CopyTo(combinedDataMemory.Slice(sizeof(int)));
+                byte[] resultPacket = combinedDataMemory.ToArray();
 
-                    byte[] packetData = new byte[packetSize - sizeof(int)];
+                // Get packet type.
+                PacketType type = PacketBase.GetPacketTypeFromBytes(resultPacket);
 
-                    bytesRead = await PeerSocket.ReceiveAsync(new ArraySegment<byte>(packetData), SocketFlags.None);
-
-                    if (bytesRead <= 0)
-                    {
-                        await Console.Out.WriteLineAsync("No data received");
-                        continue;
-                    }
-
-                    Memory<byte> combinedDataMemory = new byte[packetSize];
-                    packetSizeBytes.CopyTo(combinedDataMemory);
-                    packetData.CopyTo(combinedDataMemory.Slice(sizeof(int)));
-
-                    byte[] packetBuffer = combinedDataMemory.ToArray();
-
-                    // On 4 index in array is packet type
-                    PacketType receivedPacketType = (PacketType)packetBuffer[4];
-
-                    NetworkRef._PacketHandler.AddPacket(new OwnedPacket { Peer = this, 
-                        PeerPacket = PacketBase.CreatePacketFromType(receivedPacketType, packetBuffer)});
-                }
+                //Add packet to PacketHandler.
+                NetworkRef._PacketHandler.AddPacket(new OwnedPacket { Peer = this, 
+                    PeerPacket = PacketBase.CreatePacketFromType(type, resultPacket)});
             }
         }
     }

@@ -6,15 +6,14 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NetworkCore.NetworkMessage
 {
     public abstract class PacketBase
     {
         public PacketType TypeId { get; set; }
-
         public bool IsResponse { get; set; }
-
         public PacketBase(PacketType typeId, bool isResponse) { TypeId = typeId; IsResponse = isResponse; }
 
         public PacketBase(byte[] data)
@@ -39,6 +38,55 @@ namespace NetworkCore.NetworkMessage
                 }
             }
         }
+
+        public static PacketType GetPacketTypeFromBytes(byte[] data)
+        {
+            return (PacketType)data[4];
+        }
+
+        public static int GetPacketSizeFromBytes(byte[] data)
+        {
+            return BitConverter.ToInt32(data, 0);
+        }
+
+        public static async Task <byte[]> ReceiveDataFromSocket(Socket socket, int expectedSize)
+        {
+            byte[] data = new byte[expectedSize];
+            int totalBytesReceived = 0;
+            
+            while(totalBytesReceived < expectedSize)
+            {
+                totalBytesReceived += await socket.ReceiveAsync(new ArraySegment<byte>(data), SocketFlags.None);
+
+                // if (bytesReadFromSocket == 0)
+                    // handle error
+            }
+            return data;
+        }
+
+        /*public static PacketBase Deserialize(byte[] data)
+        {
+            
+            using (MemoryStream MemStream = new MemoryStream(data))
+            using (BinaryReader reader = new BinaryReader(MemStream))
+            {
+                int totalSize = reader.ReadInt32();
+                TypeId = (PacketType)reader.ReadByte();
+                IsResponse = reader.ReadBoolean();
+
+                foreach (var property in GetType().GetProperties())
+                {
+                    var serializationAttribute = property.GetCustomAttribute<SerializationAttribute>();
+
+                    if (serializationAttribute != null)
+                    {
+                        byte serializationTypeByte = reader.ReadByte();
+                        SerializationType serializationType = (SerializationType)serializationTypeByte;
+                        ReadSetValue(property, reader, serializationType);
+                    }
+                }
+            }
+        }*/
 
         public static PacketBase CreatePacketFromType(PacketType packetType, byte[] receivedData)
         {
