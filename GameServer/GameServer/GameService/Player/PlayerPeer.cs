@@ -17,8 +17,6 @@ namespace ServerApplication.GameService.Player
 {
     public class PlayerPeer : TcpPeer
     {
-        private TestServer ServerRef { get; set; }
-
         private World WorldRef { get; set; }
 
         public Character PlayerCharacter { get; set; }
@@ -29,20 +27,19 @@ namespace ServerApplication.GameService.Player
 
         private readonly object stateLock = new object();
 
-        public PlayerPeer(TestServer serverRef, World worldRef, Socket peerSocket, Guid peerId,
-            Owner ownerType) : base(serverRef, peerSocket, peerId, ownerType)
+        public PlayerPeer(PacketHandler packetHandler, World worldRef, Socket peerSocket, Guid peerId,
+            Owner ownerType) : base(packetHandler, peerSocket, peerId, ownerType)
         {
-            ServerRef = serverRef;
             WorldRef = worldRef;
             PlayerCharacter = new Character();
             CharacterStateUpdate = new AttributesUpdatePacket(-1);
             CharacterTransform = new TransformPacket(-1);
 
-            ServerRef._PacketHandler.AddHandler(this.GUID, typeof(CharacterLoadRequestPacket), ReceiveLoadRequest);
-            ServerRef._PacketHandler.AddHandler(this.GUID, typeof(CharacterLoadSuccesPacket), ReceiveLoadStatus);
-            ServerRef._PacketHandler.AddHandler(this.GUID, typeof(TransformPacket), ReceiveTransform);
-            ServerRef._PacketHandler.AddHandler(this.GUID, typeof(ClientDisconnectPacket), ReceiveDisconnect);
-            ServerRef._PacketHandler.AddHandler(this.GUID, typeof(PingRequestPacket), ReceivePingRequest);
+            PacketHandlerRef.AddHandler(this.GUID, typeof(CharacterLoadRequestPacket), ReceiveLoadRequest);
+            PacketHandlerRef.AddHandler(this.GUID, typeof(CharacterLoadSuccesPacket), ReceiveLoadStatus);
+            PacketHandlerRef.AddHandler(this.GUID, typeof(TransformPacket), ReceiveTransform);
+            PacketHandlerRef.AddHandler(this.GUID, typeof(ClientDisconnectPacket), ReceiveDisconnect);
+            PacketHandlerRef.AddHandler(this.GUID, typeof(PingRequestPacket), ReceivePingRequest);
 
         }
 

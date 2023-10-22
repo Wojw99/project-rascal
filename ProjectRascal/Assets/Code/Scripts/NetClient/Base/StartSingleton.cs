@@ -42,11 +42,5 @@ namespace Assets.Code.Scripts.NetClient.Base
         }
 
         #endregion
-
-        /*private IEnumerator StartServers()
-        {
-            yield return UnityTaskUtils.RunTaskAsync(() => ClientSingleton.GetInstance().GameServer.ConnectToServer());
-            //yield return UnityTaskUtils.RunTaskAsync(() => ClientSingleton.GetInstance().AuthServer.ConnectToServer());
-        }*/
     }
 }

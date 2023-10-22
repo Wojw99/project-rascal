@@ -26,12 +26,18 @@ namespace NetworkCore.NetworkCommunication
 
         public Socket PeerSocket { get; private set; }
 
-        private NetworkBase NetworkRef { get; set; } // storing reference to NetworkServer or NetworkClient
+        public PacketHandler PacketHandlerRef { get; private set; } // storing reference to NetworkServer or NetworkClient
 
-        public TcpPeer(NetworkBase networkBase, Socket peerSocket, Guid peerId, 
+        public delegate void PacketSentInfo(string info);
+        public delegate void PacketReceivedInfo(string info);
+
+        public event PacketSentInfo? OnPacketSent;
+        public event PacketReceivedInfo? OnPacketReceived;
+
+        public TcpPeer(PacketHandler packetHandler, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
-            NetworkRef = networkBase;
+            PacketHandlerRef = packetHandler;
             PeerSocket = peerSocket;
             GUID = peerId;
             OwnerType = ownerType;
@@ -65,8 +71,9 @@ namespace NetworkCore.NetworkCommunication
         {
             if(IsConnected)
             {
-                await NetworkRef.SendOutgoingPacket(new OwnedPacket { Peer = this, PeerPacket = packet });
-                //NetworkRef.AddToOutgoingPacketQueue(this, packet);
+                byte[] dataToSend = packet.Serialize();
+                await PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
+                OnPacketSent?.Invoke(packet.GetInfo());
             }
         }
 
@@ -87,12 +94,15 @@ namespace NetworkCore.NetworkCommunication
                 packetData.CopyTo(combinedDataMemory.Slice(sizeof(int)));
                 byte[] resultPacket = combinedDataMemory.ToArray();
 
-                // Get packet type.
+                // Get packet type and create packet (deserialize).
                 PacketType type = PacketBase.GetPacketTypeFromBytes(resultPacket);
+                PacketBase packet = PacketBase.CreatePacketFromType(type, resultPacket);
 
-                //Add packet to PacketHandler.
-                NetworkRef._PacketHandler.AddPacket(new OwnedPacket { Peer = this, 
-                    PeerPacket = PacketBase.CreatePacketFromType(type, resultPacket)});
+                OnPacketReceived?.Invoke(packet.GetInfo());
+
+                //Add owned packet to PacketHandler.
+                PacketHandlerRef.AddPacket(new OwnedPacket { Peer = this, 
+                    PeerPacket = packet});
             }
         }
     }

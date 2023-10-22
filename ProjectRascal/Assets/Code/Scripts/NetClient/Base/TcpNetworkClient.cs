@@ -12,50 +12,47 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace NetClient
 {
-    public abstract class TcpNetworkClient : NetworkBase
+    public abstract class TcpNetworkClient 
     {
-        public void StartUpdate(TimeSpan interval)
+        public PacketHandler _PacketHandler { get; private set; }
+
+        // SerializeField in this case doesn't work
+        [SerializeField] protected bool IsRunning { get; private set; }
+        [SerializeField] protected TimeSpan UpdateDelay { get; private set; }
+
+        public TcpNetworkClient() 
+        { 
+            _PacketHandler = new PacketHandler();
+            IsRunning = true;
+            UpdateDelay = TimeSpan.FromMilliseconds(5);
+            StartUpdate();
+        }
+        private void StartUpdate()
         {
             Task handleUpdate = Task.Run(async () =>
             {
-                while (IsRunningFlag)
+                while (IsRunning)
                 {
                     await Update();
-                    await Task.Delay(interval);
+                    await Task.Delay(UpdateDelay);
                 }
             });
         }
 
-        /*ublic async Task <TcpPeer> CreateTcpServerConnection(string serverIpAddress, int serverTcpPort)
-        {
-            Socket ServerTcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            await Console.Out.WriteLineAsync("Trying to connect to server...");
-            await ServerTcpSocket.ConnectAsync(new IPEndPoint(IPAddress.Parse(serverIpAddress), (int)serverTcpPort));
-
-            if(ServerTcpSocket.Connected)
-            {
-                return new TcpPeer(this, ServerTcpSocket, Guid.NewGuid(), Owner.client);
-            }
-            else
-            {
-                throw new Exception($"Cannot connect to server, with IP: {serverIpAddress}, PORT: {serverTcpPort}");
-            }
-        }*/
-
         public void Start()
         {
-            IsRunningFlag = true;
+            IsRunning = true;
         }
 
         public void Stop()
         {
-            IsRunningFlag = false;
+            IsRunning = false;
         }
 
         public abstract Task Update();
-        //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }

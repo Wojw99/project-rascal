@@ -1,4 +1,4 @@
-﻿using NetworkCore.NetworkCommunication;
+﻿/*using NetworkCore.NetworkCommunication;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace NetworkCore.NetworkUtility
             //await Console.Out.WriteLineAsync($"Outgoing Packet Queue size:{ServerRef.qPacketsOut.Count}");
         }
 
-       /* public static async Task <long>SendPingRequest(TcpPeer serverPeer)
+       *//* public static async Task <long>SendPingRequest(TcpPeer serverPeer)
         {
             Stopwatch Watch = new Stopwatch();
             Watch.Start();
@@ -45,6 +45,7 @@ namespace NetworkCore.NetworkUtility
             Watch.Stop();
             await Console.Out.WriteLineAsync($"Pinged peer with time = {Watch.ElapsedMilliseconds} ms.");
             Watch.Reset();
-        }*/
+        }*//*
     }
 }
+*/

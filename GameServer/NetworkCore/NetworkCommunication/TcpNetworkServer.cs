@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NetworkCore.NetworkCommunication
 {
-    public abstract class TcpNetworkServer : NetworkBase
+    public abstract class TcpNetworkServer
     {
         protected bool AllowPhysicalClients { get; }
 
@@ -27,9 +27,11 @@ namespace NetworkCore.NetworkCommunication
 
         protected Socket TcpSocket { get; }
 
+        protected PacketHandler _PacketHandler { get; private set; }
+        protected bool Listening { get; private set; }
+
         protected TcpNetworkServer (bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType, int tcpPort)
-            : base()
         {
             AllowPhysicalClients = allowPhysicalClients;
             MaxClients = maxClients;
@@ -37,6 +39,8 @@ namespace NetworkCore.NetworkCommunication
             ServerName = serverName;
             _ServerType = serverType;
             _ServerProtocolType = ServerProtocolType.protocol_tcp;
+            _PacketHandler = new PacketHandler();
+            Listening = false;
 
             // Create Socket
             TcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -53,14 +57,10 @@ namespace NetworkCore.NetworkCommunication
             // read from file and initialize attributes.
         }*/
 
-        public bool IsRunning()
-        {
-            return IsRunningFlag;
-        }
         public void StartListen()
         {
             TcpSocket.Listen(10); // we can assign that in WaitForTcpClientConnection()
-            IsRunningFlag = true;
+            Listening = true;
             Console.WriteLine($"Server, with GUID: {ServerId}, Name: {ServerName} started on TCP port.");
             Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
         }
@@ -69,7 +69,7 @@ namespace NetworkCore.NetworkCommunication
         {
             Task handleUpdate = Task.Run(async () =>
             {
-                while(IsRunningFlag)
+                while(Listening)
                 {
                     await Update();
                     await Task.Delay(interval);
@@ -77,20 +77,15 @@ namespace NetworkCore.NetworkCommunication
             }); 
         }
 
-        public async Task Stop()
+        public void Stop()
         {
-            IsRunningFlag = false;
+            Listening = false;
             TcpSocket.Close(); 
-        }
-
-        public async Task Ping()
-        {
-
         }
 
         private async Task WaitForTcpClientConnection()
         {
-            while(IsRunningFlag)
+            while(Listening)
             {
                 if (TcpSocket != null)
                 {
@@ -110,8 +105,6 @@ namespace NetworkCore.NetworkCommunication
         protected abstract Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType);
 
         protected abstract Task OnClientDisconnect(IPeer clientPeer);
-
-        //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
 
         protected abstract Task Update();
     }

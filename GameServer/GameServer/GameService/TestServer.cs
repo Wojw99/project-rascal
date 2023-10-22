@@ -27,8 +27,8 @@ namespace ServerApplication.GameService
             : base(allowPhysicalClients, maxClients, publicIpAdress, serverName, serverType, tcpPort)
         {
             _World = new World();
-            OnPacketSent += showSentPacketInfo;
-            OnPacketReceived += ExaminePacket;
+            //OnPacketSent += showSentPacketInfo;
+            //OnPacketReceived += ExaminePacket;
         }
 
         public void showSentPacketInfo(string packetInfo)
@@ -124,7 +124,7 @@ namespace ServerApplication.GameService
         {
             await Console.Out.WriteLineAsync($"[NEW CLIENT CONNECTION] received, with info: {clientSocket.RemoteEndPoint} ");
 
-            PlayerPeer playerConn = new PlayerPeer(this, _World, clientSocket, connId, ownerType);
+            PlayerPeer playerConn = new PlayerPeer(_PacketHandler, _World, clientSocket, connId, ownerType);
             playerConn.Connect();
             playerConn.StartRead();
 

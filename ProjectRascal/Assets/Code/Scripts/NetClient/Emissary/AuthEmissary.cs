@@ -61,8 +61,7 @@ namespace Assets.Code.Scripts.NetClient.Emissary
 
                 try
                 {
-                    PacketBase packet = await Client.WaitForResponsePacket(TimeSpan.FromMilliseconds(100),
-                        TimeSpan.FromSeconds(20), PacketType.LOGIN_RESPONSE);
+                    PacketBase packet = await Client._PacketHandler.WaitForResponsePacket(Client.AuthServer.GUID, PacketType.LOGIN_RESPONSE);
 
                     if (packet is ClientLoginResponsePacket loginResponse)
                     {

@@ -1,4 +1,14 @@
-﻿using NetworkCore.NetworkMessage;
+﻿
+/*namespace NetworkCore.NetworkCommunication
+{
+    public abstract class NetworkBase
+    {
+        protected PacketHandler _PacketHandler { get; private set; } = new PacketHandler();
+        protected bool IsRunningFlag { get; private set; }
+    }
+}*/
+
+/*using NetworkCore.NetworkMessage;
 using NetworkCore.NetworkConfig;
 using System;
 using System.Collections.Concurrent;
@@ -133,3 +143,4 @@ namespace NetworkCore.NetworkCommunication
         }
     }
 }
+*/

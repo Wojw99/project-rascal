@@ -1,4 +1,4 @@
-﻿// Move that class to NetworkCore project.
+﻿/*// Move that class to NetworkCore project.
 
 using NetworkCore.NetworkData;
 using NetworkCore.NetworkMessage;
@@ -61,3 +61,4 @@ namespace Client
         //public override abstract Task OnPacketReceived(IPeer clientPeer, PacketBase packet);
     }
 }
+*/
