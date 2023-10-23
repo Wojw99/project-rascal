@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,3 +12,4 @@ namespace NetworkCore.NetworkConfig
         public const int DEFAULT_PACKET_PROCESS_INTERVAL_MS = 50;
     }
 }
+*/

@@ -1,87 +1,73 @@
 ﻿using System;
 using System.Diagnostics;
-using NetworkCore.NetworkCommunication;
-using NetworkCore.NetworkUtility;
-using NetworkCore.Packets;
-//using BinaryPack.Attributes;
-//using BinaryPack;
-//using BinaryPack.Enums;
 using System.Reflection;
-using NetworkCore.NetworkMessage;
-using MemoryPack;
-
-[MemoryPackable]
-public partial class ClientLoginRequestPacketFromLib
-{
-    public string Login { get; set; }
-
-    public string Password { get; set; }
-
-    public ClientLoginRequestPacketFromLib(string login, string password) 
-    { 
-        Login = login;
-        Password = password;
-    }
-
-}
-
-[MemoryPackable]
-public partial class ClientLoginRequestCollectionPacketFromLib
-{
-    public List<ClientLoginRequestPacketFromLib> PacketList { get; set; }
-
-    public ClientLoginRequestCollectionPacketFromLib()
-    {
-        PacketList = new List<ClientLoginRequestPacketFromLib>();
-    }
-
-}
-
-public class ClientLoginRequestPacket : PacketBase
-{
-    [Serialization(Type: SerializationType.type_string)]
-    public string Login { get; private set; }
-
-    [Serialization(Type: SerializationType.type_string)]
-    public string Password { get; private set; }
-
-    public ClientLoginRequestPacket(string login, string password) : base(PacketType.LOGIN_REQUEST, false)
-    {
-        Login = login;
-        Password = password;
-    }
-
-    public ClientLoginRequestPacket(byte[] data) : base(data) { }
-    public override string GetInfo()
-    {
-        return "LOGIN REQUEST PACKET, " + base.GetInfo();
-    }
-}
-
-public class ClientLoginRequestCollectionPacket : PacketBase
-{
-    [Serialization(Type: SerializationType.type_subPacketList)]
-    public List <ClientLoginRequestPacket> PacketList { get; private set; }
-
-    public ClientLoginRequestCollectionPacket() : base(PacketType.LOGIN_REQUEST_COLLECTION, false)
-    {
-        PacketList = new List<ClientLoginRequestPacket>();
-    }
-
-    public ClientLoginRequestCollectionPacket(byte[] data) : base(data) { }
-    public override string GetInfo()
-    {
-        return "LOGIN REQUEST PACKET, " + base.GetInfo();
-    }
-}
+using PerformanceTests.Test;
 
 namespace PerformanceTests
 {
+   // Last test on 10 million count:
+   // Sum method 1 = 33147,57929850525 ms, 33,14757929850525 s.
+   // Sum method 2 = 45320,16210527336 ms, 45,32016210527336 s.
     internal class Program
     {
         static void Main(string[] args)
         {
+            //StandardPacket standardPacket = new StandardPacket();
+            //standardPacket.Test = 12;
+
+            //byte[] data = PacketSerializerType.Serialize(standardPacket);
+
+            //StandardPacket packet = PacketSerializerType.Deserialize<StandardPacket>(data);
+
             Stopwatch stopwatch = new Stopwatch();
+            double sumMethod1 = 0;
+            double sumMethod2 = 0;
+            int count = 1;
+            //Thread.Sleep(5000);
+
+            TestPacket packet = new TestPacket();
+            TestPacket2 packet2 = new TestPacket2();
+            byte[] data;
+            byte[] data2;
+
+            for (int i = 0; i < count; i++)
+            {
+                //TransformPacket packet = new TransformPacket(1, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+                
+
+                //Console.WriteLine("SPOSOB 1 (TransformPacket)");
+
+                stopwatch.Start();
+                data = PacketSerializer.Serialize(packet);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumMethod1 += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+
+                stopwatch.Start();
+                var desPacket = PacketSerializer.Deserialize<TestPacket>(data);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumMethod1 += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+
+                //******************************************************************************************
+
+                //TransformPacket2 packet2 = new TransformPacket2(1, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+                
+
+                //Console.WriteLine("SPOSOB 2 (TransformPacket2)");
+
+            }
+
+            Console.WriteLine($"Ilosc operacji = {count}");
+            Console.WriteLine($"Suma metody 1 = {sumMethod1} ms, {sumMethod1/1000} s.");
+            Console.WriteLine($"Suma metody 2 = {sumMethod2} ms, {sumMethod2/1000} s.");
+
+
+            /*Stopwatch stopwatch = new Stopwatch();
             
             ClientLoginRequestPacket MyLoginReq = new ClientLoginRequestPacket("login", "password");
             ClientLoginRequestPacketFromLib HisLoginReq = new ClientLoginRequestPacketFromLib("login", "password");
@@ -127,7 +113,7 @@ namespace PerformanceTests
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login1", "password1"));
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login2", "password2"));
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login3", "password3"));
-            hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login4", "password4"));
+            hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login4", "password4"));*/
 
 
             /*stopwatch.Start();
@@ -145,18 +131,18 @@ namespace PerformanceTests
             }
 
             stopwatch.Reset();*/
-/*
-            stopwatch.Start();
-            var hisData = MemoryPackSerializer.Serialize(hisPacket);
-            stopwatch.Stop();
-            Console.WriteLine($"Czas serializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms");
+            /*
+                        stopwatch.Start();
+                        var hisData = MemoryPackSerializer.Serialize(hisPacket);
+                        stopwatch.Stop();
+                        Console.WriteLine($"Czas serializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms");
 
-            stopwatch.Reset();
+                        stopwatch.Reset();
 
-            stopwatch.Start();
-            var loaded = MemoryPackSerializer.Deserialize<ClientLoginRequestPacketFromLib>(hisData);
-            stopwatch.Stop();
-            Console.WriteLine($"Czas deserializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms"); */
+                        stopwatch.Start();
+                        var loaded = MemoryPackSerializer.Deserialize<ClientLoginRequestPacketFromLib>(hisData);
+                        stopwatch.Stop();
+                        Console.WriteLine($"Czas deserializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms"); */
 
             /*  Server.StartListen();
               Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));

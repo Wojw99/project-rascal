@@ -1,4 +1,5 @@
-﻿using NetworkCore.Packets;
+﻿using MemoryPack;
+using NetworkCore.Packets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,17 +65,18 @@ namespace NetworkCore.NetworkMessage
             return data;
         }
 
-        /*public static PacketBase Deserialize(byte[] data)
+        public static PacketBase Deserialize<T>(byte[] data) where T : PacketBase, new()
         {
-            
             using (MemoryStream MemStream = new MemoryStream(data))
             using (BinaryReader reader = new BinaryReader(MemStream))
             {
+                T packet = new T();
+                
                 int totalSize = reader.ReadInt32();
-                TypeId = (PacketType)reader.ReadByte();
-                IsResponse = reader.ReadBoolean();
+                packet.TypeId = (PacketType)reader.ReadByte();
+                packet.IsResponse = reader.ReadBoolean();
 
-                foreach (var property in GetType().GetProperties())
+                foreach (var property in packet.GetType().GetProperties())
                 {
                     var serializationAttribute = property.GetCustomAttribute<SerializationAttribute>();
 
@@ -82,36 +84,45 @@ namespace NetworkCore.NetworkMessage
                     {
                         byte serializationTypeByte = reader.ReadByte();
                         SerializationType serializationType = (SerializationType)serializationTypeByte;
-                        ReadSetValue(property, reader, serializationType);
+                        packet.ReadSetValue(property, reader, serializationType);
                     }
                 }
-            }
-        }*/
 
-        public static PacketBase CreatePacketFromType(PacketType packetType, byte[] receivedData)
-        {
-            return packetType switch
-            {
-                PacketType.LOGIN_REQUEST => new ClientLoginRequestPacket(receivedData),
-                PacketType.LOGIN_RESPONSE => new ClientLoginResponsePacket(receivedData),
-                PacketType.CHARACTER_LOAD_REQUEST => new CharacterLoadRequestPacket(receivedData),
-                PacketType.CHARACTER_LOAD_RESPONSE => new CharacterLoadResponsePacket(receivedData),
-                PacketType.CHARACTER_LOAD_SUCCES => new CharacterLoadSuccesPacket(receivedData),
-                PacketType.ADVENTURER_LOAD_PACKET => new AdventurerLoadPacket(receivedData),
-                PacketType.ADVENTURER_LOAD_COLLECTION_PACKET => new AdventurerLoadCollectionPacket(receivedData),
-                PacketType.ATTRIBUTES_PACKET => new AttributesPacket(receivedData),
-                PacketType.ATTRIBUTES_COLLECTION_PACKET => new AttributesCollectionPacket(receivedData),
-                PacketType.ATTRIBUTES_UPDATE_PACKET => new AttributesUpdatePacket(receivedData),
-                PacketType.ATTRIBUTES_COLLECTION_UPDATE_PACKET => new AttributesUpdateCollectionPacket(receivedData),
-                PacketType.TRANSFORM_PACKET => new TransformPacket(receivedData),
-                PacketType.TRANSFORM_COLLECTION_PACKET => new TransformCollectionPacket(receivedData),
-                PacketType.CHARACTER_EXIT_PACKET => new AdventurerExitPacket(receivedData),
-                PacketType.CLIENT_DISCONNECT => new ClientDisconnectPacket(receivedData),
-                PacketType.PING_REQUEST => new PingRequestPacket(receivedData),
-                PacketType.PING_RESPONSE => new PingResponsePacket(receivedData),
-                _ => throw new ArgumentException("Unknown packet type"),
-            };
+                return packet;
+            }
         }
+
+        public byte[] Serialize<T>(T obj) where T : class
+        {
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            using (MemoryStream MemStream = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(MemStream))
+            {
+                foreach (PropertyInfo property in properties)
+                {
+                    SerializationAttribute attribute = property.GetCustomAttribute<SerializationAttribute>();
+                    if (attribute != null)
+                    {
+                        Object value = property.GetValue(obj);
+                        
+                        if (value == null)
+                        {
+                            writer.Write((byte)SerializationType.type_null);
+                            writer.Write((byte)0x0);
+                        }
+                        else
+                        {
+                            writer.Write((byte)attribute.Type);
+                            WriteField(writer, value, attribute.Type);
+                        }
+                    }
+                }
+
+                return MemStream.ToArray();
+            }
+        }
+
 
 
         public byte[] Serialize()
@@ -423,6 +434,31 @@ namespace NetworkCore.NetworkMessage
         public virtual string GetInfo()
         {
             return CalculateTotalSize().ToString();
+        }
+
+        public static PacketBase CreatePacketFromType(PacketType packetType, byte[] receivedData)
+        {
+            return packetType switch
+            {
+                PacketType.LOGIN_REQUEST => new ClientLoginRequestPacket(receivedData),
+                PacketType.LOGIN_RESPONSE => new ClientLoginResponsePacket(receivedData),
+                PacketType.CHARACTER_LOAD_REQUEST => new CharacterLoadRequestPacket(receivedData),
+                PacketType.CHARACTER_LOAD_RESPONSE => new CharacterLoadResponsePacket(receivedData),
+                PacketType.CHARACTER_LOAD_SUCCES => new CharacterLoadSuccesPacket(receivedData),
+                PacketType.ADVENTURER_LOAD_PACKET => new AdventurerLoadPacket(receivedData),
+                PacketType.ADVENTURER_LOAD_COLLECTION_PACKET => new AdventurerLoadCollectionPacket(receivedData),
+                PacketType.ATTRIBUTES_PACKET => new AttributesPacket(receivedData),
+                PacketType.ATTRIBUTES_COLLECTION_PACKET => new AttributesCollectionPacket(receivedData),
+                PacketType.ATTRIBUTES_UPDATE_PACKET => new AttributesUpdatePacket(receivedData),
+                PacketType.ATTRIBUTES_COLLECTION_UPDATE_PACKET => new AttributesUpdateCollectionPacket(receivedData),
+                PacketType.TRANSFORM_PACKET => new TransformPacket(receivedData),
+                PacketType.TRANSFORM_COLLECTION_PACKET => new TransformCollectionPacket(receivedData),
+                PacketType.CHARACTER_EXIT_PACKET => new AdventurerExitPacket(receivedData),
+                PacketType.CLIENT_DISCONNECT => new ClientDisconnectPacket(receivedData),
+                PacketType.PING_REQUEST => new PingRequestPacket(receivedData),
+                PacketType.PING_RESPONSE => new PingResponsePacket(receivedData),
+                _ => throw new ArgumentException("Unknown packet type"),
+            };
         }
 
     }

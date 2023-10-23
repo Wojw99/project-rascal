@@ -26,8 +26,8 @@ namespace NetClient
 
         private ClientSingleton() 
         {
-            GameServer = new ServerPeer(_PacketHandler, "127.0.0.1", 8051);
-            AuthServer = new ServerPeer(_PacketHandler,"127.0.0.1", 8050);
+            GameServer = new ServerPeer(_PacketHandler, "192.168.5.6", 8051);
+            AuthServer = new ServerPeer(_PacketHandler, "192.168.5.6", 8050);
 
             AddHandlers();
             

@@ -1,5 +1,4 @@
 ﻿using NetworkCore.NetworkCommunication;
-using NetworkCore.NetworkConfig;
 using NetworkCore.NetworkMessage;
 using System;
 using System.Collections.Concurrent;

@@ -20,7 +20,7 @@ namespace ServerApplication.Game
         {
             try
             {
-                TestServer Server = new TestServer(true, 120, "127.0.0.1", "Game Server", ServerType.world_server, 8051);
+                TestServer Server = new TestServer(true, 120, "192.168.5.6", "Game Server", ServerType.world_server, 8051);
 
                 //ServerMonitor Monitor = new ServerMonitor(Server);
 
@@ -32,8 +32,8 @@ namespace ServerApplication.Game
 
                 while (true)
                 {
-                    Thread.Sleep(5000);
-                    await Console.Out.WriteLineAsync("Serwer dziala...");
+                    ConsoleKeyInfo keyInfo = Console.ReadKey();
+                    
                 }
             }
             catch(Exception ex)

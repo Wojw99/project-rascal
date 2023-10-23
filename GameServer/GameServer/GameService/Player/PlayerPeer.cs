@@ -51,7 +51,7 @@ namespace ServerApplication.GameService.Player
                 string username = "some_username_from_token";
 
                 // load player object by username
-                LoadCharacterFromDatabase(username, 1); // by now overloaded with unique identifiers from server app.
+                LoadCharacterFromDatabase(username, WorldRef.IdCounter++); // by now overloaded with unique identifiers from server app.
 
                 // send response with player object
                 await SendPacket(new CharacterLoadResponsePacket(PlayerCharacter));
@@ -188,51 +188,6 @@ namespace ServerApplication.GameService.Player
                 WorldRef.AddNewCharacterStateUpdate(GUID, CharacterStateUpdate);
             }
         }
-
-      /*  public void SetTransform(float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
-        {
-            lock (stateLock)
-            {
-                PlayerCharacter.PositionX = posX;
-                PlayerCharacter.PositionY = posY;
-                PlayerCharacter.PositionZ = posZ;
-                PlayerCharacter.RotationX = rotX;
-                PlayerCharacter.RotationY = rotY;
-                PlayerCharacter.RotationZ = rotZ;
-
-                CharacterTransform.PosX = posX;
-                CharacterTransform.PosY = posY;
-                CharacterTransform.PosZ = posZ;
-                CharacterTransform.RotX = rotX;
-                CharacterTransform.RotY = rotY;
-                CharacterTransform.RotZ = rotZ;
-
-                WorldRef.AddNewCharacterTransform(GUID, CharacterTransform);
-            }
-        }
-
-        public void SetPosition(TransformPacket packet)
-        {
-            lock (stateLock)
-            {
-                PlayerCharacter.PositionX = packet.PosX;
-                PlayerCharacter.PositionY = packet.PosY;
-                PlayerCharacter.PositionZ = packet.PosZ;
-                PlayerCharacter.RotationX = packet.RotX;
-                PlayerCharacter.RotationY = packet.RotY;
-                PlayerCharacter.RotationZ = packet.RotZ;
-
-                CharacterTransform.PosX = packet.PosX;
-                CharacterTransform.PosY = packet.PosY;
-                CharacterTransform.PosZ = packet.PosZ;
-                CharacterTransform.RotX = packet.RotX;
-                CharacterTransform.RotY = packet.RotY;
-                CharacterTransform.RotZ = packet.RotZ;
-                CharacterTransform.State = packet.State; //AdventurerState.Running;
-
-                WorldRef.AddNewCharacterTransform(GUID, CharacterTransform);
-            }
-        }*/
 
         // Change names - now we have additonal enum AdventurerState
         public void OnCharactedStateSend()

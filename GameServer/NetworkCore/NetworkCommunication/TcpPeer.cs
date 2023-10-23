@@ -1,5 +1,4 @@
-﻿using NetworkCore.NetworkConfig;
-using NetworkCore.NetworkMessage;
+﻿using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
 using System;
 using System.Collections.Concurrent;
@@ -96,6 +95,7 @@ namespace NetworkCore.NetworkCommunication
 
                 // Get packet type and create packet (deserialize).
                 PacketType type = PacketBase.GetPacketTypeFromBytes(resultPacket);
+                
                 PacketBase packet = PacketBase.CreatePacketFromType(type, resultPacket);
 
                 OnPacketReceived?.Invoke(packet.GetInfo());
@@ -105,5 +105,7 @@ namespace NetworkCore.NetworkCommunication
                     PeerPacket = packet});
             }
         }
+
+        
     }
 }

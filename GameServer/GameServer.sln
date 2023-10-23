@@ -12,10 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApplication", "GameSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{D7287AEB-1491-4BA1-A6FA-A1941C5E980F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{CC3703FE-A832-4649-9C14-97A39EAADE9D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5B8A5782-3C44-42CB-A896-0F7D5876D56B} = {5B8A5782-3C44-42CB-A896-0F7D5876D56B}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{CC3703FE-A832-4649-9C14-97A39EAADE9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
