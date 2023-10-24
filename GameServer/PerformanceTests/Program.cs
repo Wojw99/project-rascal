@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Reflection;
 using PerformanceTests.Test;
 
@@ -12,63 +13,17 @@ namespace PerformanceTests
     {
         static void Main(string[] args)
         {
-            //StandardPacket standardPacket = new StandardPacket();
-            //standardPacket.Test = 12;
+            MesaureSerializingTime(1000);
 
-            //byte[] data = PacketSerializerType.Serialize(standardPacket);
+            Console.WriteLine("Tera pomiar:");
 
-            //StandardPacket packet = PacketSerializerType.Deserialize<StandardPacket>(data);
+            MesaureSerializingTime(100000);
+            MesaureSerializingTime2(100000);
 
-            Stopwatch stopwatch = new Stopwatch();
-            double sumMethod1 = 0;
-            double sumMethod2 = 0;
-            int count = 1;
-            //Thread.Sleep(5000);
-
-            TestPacket packet = new TestPacket();
-            TestPacket2 packet2 = new TestPacket2();
-            byte[] data;
-            byte[] data2;
-
-            for (int i = 0; i < count; i++)
-            {
-                //TransformPacket packet = new TransformPacket(1, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-                
-
-                //Console.WriteLine("SPOSOB 1 (TransformPacket)");
-
-                stopwatch.Start();
-                data = PacketSerializer.Serialize(packet);
-                stopwatch.Stop();
-                //Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
-                sumMethod1 += (double)stopwatch.Elapsed.TotalMilliseconds;
-
-                stopwatch.Reset();
-
-                stopwatch.Start();
-                var desPacket = PacketSerializer.Deserialize<TestPacket>(data);
-                stopwatch.Stop();
-                //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
-                sumMethod1 += (double)stopwatch.Elapsed.TotalMilliseconds;
-
-                stopwatch.Reset();
-
-                //******************************************************************************************
-
-                //TransformPacket2 packet2 = new TransformPacket2(1, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-                
-
-                //Console.WriteLine("SPOSOB 2 (TransformPacket2)");
-
-            }
-
-            Console.WriteLine($"Ilosc operacji = {count}");
-            Console.WriteLine($"Suma metody 1 = {sumMethod1} ms, {sumMethod1/1000} s.");
-            Console.WriteLine($"Suma metody 2 = {sumMethod2} ms, {sumMethod2/1000} s.");
-
+            #region notUsed
 
             /*Stopwatch stopwatch = new Stopwatch();
-            
+
             ClientLoginRequestPacket MyLoginReq = new ClientLoginRequestPacket("login", "password");
             ClientLoginRequestPacketFromLib HisLoginReq = new ClientLoginRequestPacketFromLib("login", "password");
 
@@ -81,7 +36,7 @@ namespace PerformanceTests
 
             stopwatch.Start();
             PacketBase deserializedPacket = new ClientLoginRequestPacket(data);
-            if(deserializedPacket is ClientLoginRequestPacket request)
+            if (deserializedPacket is ClientLoginRequestPacket request)
             {
 
             }
@@ -113,10 +68,10 @@ namespace PerformanceTests
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login1", "password1"));
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login2", "password2"));
             hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login3", "password3"));
-            hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login4", "password4"));*/
+            hisPacket.PacketList.Add(new ClientLoginRequestPacketFromLib("login4", "password4"));
 
 
-            /*stopwatch.Start();
+            stopwatch.Start();
             byte[] myData = myPacket.Serialize();
             stopwatch.Stop();
             Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
@@ -130,32 +85,101 @@ namespace PerformanceTests
 
             }
 
-            stopwatch.Reset();*/
-            /*
-                        stopwatch.Start();
-                        var hisData = MemoryPackSerializer.Serialize(hisPacket);
-                        stopwatch.Stop();
-                        Console.WriteLine($"Czas serializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms");
+            stopwatch.Reset();
 
-                        stopwatch.Reset();
+            stopwatch.Start();
+            var hisData = MemoryPackSerializer.Serialize(hisPacket);
+            stopwatch.Stop();
+            Console.WriteLine($"Czas serializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms");
 
-                        stopwatch.Start();
-                        var loaded = MemoryPackSerializer.Deserialize<ClientLoginRequestPacketFromLib>(hisData);
-                        stopwatch.Stop();
-                        Console.WriteLine($"Czas deserializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms"); */
+            stopwatch.Reset();
 
-            /*  Server.StartListen();
-              Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));
-              Server.StartUpdate(TimeSpan.FromMilliseconds(1));
-              //await Task.Run(async () => await TestingOperationsTask(Server));
+            stopwatch.Start();
+            var loaded = MemoryPackSerializer.Deserialize<ClientLoginRequestPacketFromLib>(hisData);
+            stopwatch.Stop();
+            Console.WriteLine($"Czas deserializacji biblioteki: {stopwatch.Elapsed.TotalMilliseconds} ms");
 
-              while (true)
-              {
-                  Thread.Sleep(5000);
-                  await Console.Out.WriteLineAsync("Serwer dziala...");
-              }*/
+            Server.StartListen();
+            Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));
+            Server.StartUpdate(TimeSpan.FromMilliseconds(1));
+            //await Task.Run(async () => await TestingOperationsTask(Server));
 
+            while (true)
+            {
+                Thread.Sleep(5000);
+                await Console.Out.WriteLineAsync("Serwer dziala...");
+            }*/
 
+            #endregion notUsed
+        }
+
+        private static void MesaureSerializingTime(int count)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            double sumSerialization = 0;
+            double sumDeserialization = 0;
+            Thread.Sleep(1000);
+
+            TestPacket packet = new TestPacket();
+            byte[] data;
+
+            for (int i = 0; i < count; i++)
+            {
+                stopwatch.Start();
+                data = PacketSerializer.Serialize(packet);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumSerialization += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+
+                stopwatch.Start();
+                var desPacket = PacketSerializer.Deserialize<TestPacket>(data);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumDeserialization += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+            }
+            Console.WriteLine("TEST PACKET: ");
+            Console.WriteLine($"Ilosc operacji = {count}");
+            Console.WriteLine($"Suma serializacja = {sumSerialization} ms, {sumSerialization / 1000} s.");
+            Console.WriteLine($"Suma deserializacja = {sumDeserialization} ms, {sumDeserialization / 1000} s.");
+        }
+
+        private static void MesaureSerializingTime2(int count)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            double sumSerialization = 0;
+            double sumDeserialization = 0;
+            Thread.Sleep(1000);
+
+            SimpleTestPacket packet = new SimpleTestPacket();
+            byte[] data;
+
+            for (int i = 0; i < count; i++)
+            {
+                stopwatch.Start();
+                data = PacketSerializer.Serialize(packet);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumSerialization += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+
+                stopwatch.Start();
+                var desPacket = PacketSerializer.Deserialize<SimpleTestPacket>(data);
+                stopwatch.Stop();
+                //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
+                sumDeserialization += (double)stopwatch.Elapsed.TotalMilliseconds;
+
+                stopwatch.Reset();
+            }
+
+            Console.WriteLine("SIMPLE TEST PACKET: ");
+            Console.WriteLine($"Ilosc operacji = {count}");
+            Console.WriteLine($"Suma serializacja = {sumSerialization} ms, {sumSerialization / 1000} s.");
+            Console.WriteLine($"Suma deserializacja = {sumDeserialization} ms, {sumDeserialization / 1000} s.");
         }
     }
 }

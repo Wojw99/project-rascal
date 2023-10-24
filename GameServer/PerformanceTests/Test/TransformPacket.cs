@@ -10,25 +10,37 @@ namespace PerformanceTests.Test
     {
         public int test { get; set; }
 
-        public TransformPacket transform { get; set; }
+        //public TransformPacket transform { get; set; }
 
-        public TestPacket() { test = 125; transform = new TransformPacket(); }
+        public List<TransformPacket> packets { get; set; }
 
+        public TestPacket() { 
+            test = 125; 
+            packets = new List<TransformPacket>();
+            packets.Add(new TransformPacket());
+            //transform = new TransformPacket();
+            //packets = new List<TransformPacket>();
+        }
     }
+
+    public class SimpleTestPacket
+    {
+        public int test { get; set; }
+
+        public SimpleTestPacket()
+        {
+            test = 125;
+        }
+    }
+
     public partial class TransformPacket 
     {
         public int CharacterVId { get; set; }
-
         public float PosX { get; set; } 
-
         public float PosY { get; set; } 
-
         public float PosZ { get; set; } 
-
         public float RotX { get; set; }
-
         public float RotY { get; set; }
-
         public float RotZ { get; set; }
 
 

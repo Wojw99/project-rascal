@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,62 +20,55 @@ namespace PerformanceTests.Test
 {
     public static class PacketSerializer
     {
+        public static byte[] Serialize<T>(T obj) where T : class, new()
+        {
+            using (MemoryStream MemStream = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(MemStream))
+            {
+                foreach (PropertyInfo property in obj.GetType().GetProperties())
+                {
+                    object? value = property.GetValue(obj);
+
+                    // if value == null -> write 1
+                    writer.Write((byte)(value == null ? 1 : 0));
+
+                    if (value != null)
+                        WriteField(writer, value);
+                }
+                return MemStream.ToArray();
+            }
+        }
+
         public static T Deserialize<T>(byte[] data) where T : class, new()
         {
-            PropertyInfo[] properties = typeof(T).GetProperties();
             T obj = new T();
-            
             using (MemoryStream MemStream = new MemoryStream(data))
             using (BinaryReader reader = new BinaryReader(MemStream))
             {
-                foreach (PropertyInfo property in properties)
+                foreach (PropertyInfo property in obj.GetType().GetProperties())
                 {
                     // Check is field a null.
                     if(reader.ReadByte() != 1)
-                        SetObjectPropertyValue(property, reader, obj);
+                    {
+                        property.SetValue(obj, PacketSerializer.ReadField(reader, property.PropertyType));
+                    }
                 }
 
                 return obj;
             }
         }
 
-        public static byte[] Serialize<T>(T obj) where T : class, new()
+        private static void WriteField(BinaryWriter writer, object value)
         {
-            PropertyInfo[] properties = obj.GetType().GetProperties();
+            Type type = value.GetType();
 
-            using (MemoryStream MemStream = new MemoryStream())
-            using (BinaryWriter writer = new BinaryWriter(MemStream))
-            {
-                foreach (PropertyInfo property in properties)
-                {
-                    WriteField(writer, property, obj);  
-                }
-
-                return MemStream.ToArray();
-            }
-        }
-
-        private static void WriteField<T>(BinaryWriter writer, PropertyInfo property, T obj)
-        {
-            if (property == null)
-            {
-                throw new ArgumentNullException($"Property = {property} cannot be null.");
-            }
-            
-            object? value = property.GetValue(obj);
-
-            // if value is null set write "1".
-            writer.Write((byte)(value == null ? 1 : 0));
-
-            if (value == null) {
+            if (type.IsGenericType) { // Subclass
+                WriteGenericField(writer, value);
                 return;
             }
-
-            Type type = property.PropertyType;
-
-            if (type.IsClass) { // Subclass
-                writer.Write(PacketSerializer.CalculateTotalSize(value));
-                writer.Write(PacketSerializer.Serialize(value));
+            else if(type.IsClass)
+            {
+                WriteClass(writer, value);
                 return;
             }
             else if (type == typeof(int)) {
@@ -123,88 +119,138 @@ namespace PerformanceTests.Test
             }
         }
 
-        private static void SetObjectPropertyValue<T>(PropertyInfo property, BinaryReader reader, T obj)
+        private static object ReadField(BinaryReader reader, Type type)
         {
-            Type type = property.PropertyType;
-            
-            if (type.IsClass)
+            if (type.IsGenericType)
             {
-                int size = reader.ReadInt32();
-                byte[] data = reader.ReadBytes(size);
-                
-                //property.SetValue(obj, PacketSerializer.Deserialize<>(data));
-                property.SetValue(obj, PacketSerializer.DeserializeSubClass(data, type));
+                return ReadGenericField(reader, type);
+            }
+            else if(type.IsClass)
+            {
+                return ReadClass(reader, type);
             }
             else if (type == typeof(int))
             {
-                property.SetValue(obj, reader.ReadInt32());
-                return;
+                return reader.ReadInt32();
             }
             else if (type == typeof(short))
             {
-                property.SetValue(obj, reader.ReadInt16());
-                return;
+                return reader.ReadInt16();
             }
             else if (type == typeof(long))
             {
-                property.SetValue(obj, reader.ReadInt64());
-                return;
+                return reader.ReadInt64();
             }
             else if (type == typeof(uint))
             {
-                property.SetValue(obj, reader.ReadUInt32());
-                return;
+                return reader.ReadUInt32();
             }
             else if (type == typeof(ushort))
             {
-                property.SetValue(obj, reader.ReadUInt16());
-                return;
+                return reader.ReadUInt16();
             }
             else if (type == typeof(ulong))
             {
-                property.SetValue(obj, reader.ReadUInt64());
-                return;
+                return reader.ReadUInt64();
             }
             else if (type == typeof(float))
             {
-                property.SetValue(obj, reader.ReadSingle());
-                return;
+                return reader.ReadSingle();
             }
             else if (type == typeof(double))
             {
-                property.SetValue(obj, reader.ReadDouble());
-                return;
+                return reader.ReadDouble();
             }
             else if (type == typeof(string))
             {
                 int strLength = reader.ReadInt32();
                 byte[] utf8Bytes = reader.ReadBytes(strLength);
                 string strValue = Encoding.UTF8.GetString(utf8Bytes);
-                property.SetValue(obj, strValue);
-                return;
+                return strValue;
             }
             else if (type == typeof(bool))
             {
-                property.SetValue(obj, reader.ReadBoolean());
-                return;
+                return reader.ReadBoolean();
             }
-            else if (type == typeof(Type))
+            else
             {
-
-                return;
-            }
-            else {
                 throw new InvalidOperationException($"Unsupported serialization type: {type}");
             }
         }
 
-        private static object DeserializeSubClass(byte[] data, Type type)
+        private static void WriteGenericField(BinaryWriter writer, object value)
         {
-           /* if(!type.IsGenericType && !(type.GetGenericTypeDefinition() == typeof(Nullable<>))) {
-                throw new InvalidOperationException($"type = {type} does not meet the generic type.");  
-            }*/
+            if (value == null)
+                throw new ArgumentNullException($"Argument 'value' = {value} was null.");
 
-            //Type genericArgumentType = Activator.CreateInstance(type).GetType();
+            Type genericType = value.GetType().GetGenericTypeDefinition();
+
+            // idk it have sense
+            if (!(genericType.IsGenericType))
+                throw new ArgumentException($"Argument 'genericType' = {genericType} was not generic type.");
+
+            if (genericType == typeof(List<>)) {
+                var list = (IList)value;
+
+                writer.Write(list.Count);
+
+                foreach (object item in list) {
+                    WriteField(writer, item);
+                }
+                return;
+            }
+            else {
+                WriteClass(writer, value);
+                return;
+            }
+        }
+
+        private static object ReadGenericField(BinaryReader reader, Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException($"Argument 'type' = {type} was null.");
+
+            Type genericType = type.GetGenericTypeDefinition();
+
+            if (!(type.IsGenericType))
+                throw new ArgumentException($"Argument 'type' = {type} was not generic type.");
+
+            if (genericType == typeof(List<>))
+            {
+                int listCount = reader.ReadInt32();
+                Type elementType = type.GetGenericArguments()[0];
+                IList list = (IList)Activator.CreateInstance(type);
+
+                if (list == null)
+                    throw new InvalidOperationException($"Cannot create a list.");
+
+                for (int i = 0; i < listCount; i++)
+                    list.Add(ReadField(reader, elementType));
+
+                return list;
+            }
+            else
+            {
+                return ReadClass(reader, type);
+            }
+        }
+
+        private static void WriteClass(BinaryWriter writer, object value)
+        {
+            if(!(value.GetType().IsClass))
+                throw new ArgumentException($"Argument 'value' = {value} was not a class.");
+
+            writer.Write(PacketSerializer.CalculateTotalSize(value));
+            writer.Write(PacketSerializer.Serialize(value));
+        }
+
+        private static object ReadClass(BinaryReader reader, Type type)
+        {
+            if (!(type.IsClass))
+                throw new ArgumentException($"Argument 'type' = {type} was not a class.");
+
+            int size = reader.ReadInt32();
+            byte[] data = reader.ReadBytes(size);
 
 #pragma warning disable CS8602
             MethodInfo deserializeMethod = typeof(PacketSerializer)
@@ -220,6 +266,35 @@ namespace PerformanceTests.Test
             return deserializedValue;
         }
 
+        private static int GetGenericTypeObjectSize(object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException($"Argument 'obj' = {obj} was null.");
+
+            Type genericType = obj.GetType().GetGenericTypeDefinition();
+
+            // idk it have sense
+            if (!(genericType.IsGenericType))
+                throw new ArgumentException($"Argument 'genericType' = {genericType} was not generic type.");
+
+            if (genericType == typeof(List<>))
+            {
+                var list = (IList)obj;
+                int totalSize = 0;
+
+                foreach(object item in list )
+                {
+                    totalSize += GetFieldSize(item);
+                }
+
+                return totalSize;
+            }
+            else
+            {
+                return CalculateTotalSize(obj);
+            }
+        }
+
         public static int CalculateTotalSize <T>(T obj) where T: class, new()
         {
             int totalSize = 0;
@@ -233,45 +308,75 @@ namespace PerformanceTests.Test
                 {
                     Type type = property.PropertyType;
 
-                    if (type.IsClass) { 
-                        totalSize += CalculateTotalSize(value);
-                    }
-                    else if (type == typeof(int)) {
-                        totalSize += sizeof(int);
-                    }
-                    else if (type == typeof(short)) {
-                        totalSize += sizeof(short);
-                    }
-                    else if (type == typeof(long)) {
-                        totalSize += sizeof(long);
-                    }
-                    else if (type == typeof(ushort)) {
-                        totalSize += sizeof(ushort);
-                    }
-                    else if (type == typeof(uint)) {
-                        totalSize += sizeof(uint);
-                    }
-                    else if (type == typeof(ulong)) {
-                        totalSize += sizeof(ulong);
-                    }
-                    else if (type == typeof(float)) {
-                        totalSize += sizeof(float);
-                    }
-                    else if (type == typeof(double)) {
-                        totalSize += sizeof(double);
-                    }
-                    else if (type == typeof(string)) {
-                        string strValue = (string)value;
-                        totalSize += sizeof(int) + Encoding.UTF8.GetByteCount(strValue); // Rozmiar stringa (int) + bajty tekstu
-                    }
-                    else if (type == typeof(bool)) {
-                        totalSize += sizeof(bool);
-                    }
-                    else {
-                        throw new InvalidOperationException($"Unsupported serialization type: {type}");
-                    }
+                    totalSize += GetFieldSize(value);
                 }
             }
+            return totalSize;
+        }
+
+        private static int GetFieldSize(object value)
+        {
+            if (value == null)
+                throw new ArgumentNullException($"value = {value} was null.");
+
+            int totalSize = 0;
+
+            Type type = value.GetType();
+
+            if (type.IsGenericType)
+            {
+                totalSize += GetGenericTypeObjectSize(value);
+            }
+            if (type.IsClass)
+            {
+                totalSize += CalculateTotalSize(value);
+            }
+            else if (type == typeof(int))
+            {
+                totalSize += sizeof(int);
+            }
+            else if (type == typeof(short))
+            {
+                totalSize += sizeof(short);
+            }
+            else if (type == typeof(long))
+            {
+                totalSize += sizeof(long);
+            }
+            else if (type == typeof(ushort))
+            {
+                totalSize += sizeof(ushort);
+            }
+            else if (type == typeof(uint))
+            {
+                totalSize += sizeof(uint);
+            }
+            else if (type == typeof(ulong))
+            {
+                totalSize += sizeof(ulong);
+            }
+            else if (type == typeof(float))
+            {
+                totalSize += sizeof(float);
+            }
+            else if (type == typeof(double))
+            {
+                totalSize += sizeof(double);
+            }
+            else if (type == typeof(string))
+            {
+                string strValue = (string)value;
+                totalSize += sizeof(int) + Encoding.UTF8.GetByteCount(strValue); // Rozmiar stringa (int) + bajty tekstu
+            }
+            else if (type == typeof(bool))
+            {
+                totalSize += sizeof(bool);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unsupported serialization type: {type}");
+            }
+
             return totalSize;
         }
     }
