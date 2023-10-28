@@ -6,13 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkCore", "NetworkCore\NetworkCore.csproj", "{5B8A5782-3C44-42CB-A896-0F7D5876D56B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerApplication", "GameServer\ServerApplication.csproj", "{63E999F4-F083-459B-8361-98A77D3B088A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5B8A5782-3C44-42CB-A896-0F7D5876D56B} = {5B8A5782-3C44-42CB-A896-0F7D5876D56B}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{D7287AEB-1491-4BA1-A6FA-A1941C5E980F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "PerformanceTests\PerformanceTests.csproj", "{CC3703FE-A832-4649-9C14-97A39EAADE9D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryPackTest", "MemoryPackTest\MemoryPackTest.csproj", "{353E50E3-4A94-42A4-8209-B2AC801FDC44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +71,18 @@ Global
 		{CC3703FE-A832-4649-9C14-97A39EAADE9D}.Release|x64.Build.0 = Release|Any CPU
 		{CC3703FE-A832-4649-9C14-97A39EAADE9D}.Release|x86.ActiveCfg = Release|Any CPU
 		{CC3703FE-A832-4649-9C14-97A39EAADE9D}.Release|x86.Build.0 = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|x64.Build.0 = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Debug|x86.Build.0 = Debug|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|x64.ActiveCfg = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|x64.Build.0 = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|x86.ActiveCfg = Release|Any CPU
+		{353E50E3-4A94-42A4-8209-B2AC801FDC44}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PerformanceTests.Test
+namespace PerformanceTests.Test.old
 {
     public static class PacketSerializer2
     {
@@ -50,7 +50,7 @@ namespace PerformanceTests.Test
                     SerializationAttribute attribute = property.GetCustomAttribute<SerializationAttribute>();
                     if (attribute != null)
                     {
-                        Object value = property.GetValue(obj);
+                        object value = property.GetValue(obj);
 
                         if (value == null)
                         {
@@ -191,26 +191,26 @@ namespace PerformanceTests.Test
                     break;
 
                 case SerializationType.type_subPacketList:
-                   /* int ListCount = readerRef.ReadInt32();
-                    List<PacketBase> packetList = new List<PacketBase>();
+                    *//* int ListCount = readerRef.ReadInt32();
+                     List<PacketBase> packetList = new List<PacketBase>();
 
-                    for (int i = 0; i < ListCount; i++)
-                    {
-                        packetList.Add(ReadSubPacket(readerRef));
-                    }
+                     for (int i = 0; i < ListCount; i++)
+                     {
+                         packetList.Add(ReadSubPacket(readerRef));
+                     }
 
-                    // @ reflection of list type @ maybe is better method 
+                     // @ reflection of list type @ maybe is better method 
 
-                    Type listType = property.PropertyType;
-                    Type elementType = listType.GetGenericArguments()[0];
+                     Type listType = property.PropertyType;
+                     Type elementType = listType.GetGenericArguments()[0];
 
-                    var typedList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-                    foreach (var subPacket in packetList)
-                    {
-                        typedList.GetType().GetMethod("Add").Invoke(typedList, new object[] { subPacket });
-                    }
+                     var typedList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+                     foreach (var subPacket in packetList)
+                     {
+                         typedList.GetType().GetMethod("Add").Invoke(typedList, new object[] { subPacket });
+                     }
 
-                    property.SetValue(value, typedList); // Ustaw wartość właściwości*/
+                     property.SetValue(value, typedList); // Ustaw wartość właściwości*//*
 
                     break;
 
@@ -221,21 +221,21 @@ namespace PerformanceTests.Test
 
         private static void WriteSubPacket<T>(BinaryWriter writerRef, T packetClass) where T : class, new()
         {
-            writerRef.Write(PacketSerializer2.CalculateTotalSize<T>(packetClass));
-            byte[] testData = PacketSerializer2.Serialize<T>(packetClass);
+            writerRef.Write(CalculateTotalSize(packetClass));
+            byte[] testData = Serialize(packetClass);
             writerRef.Write(testData);
             Console.WriteLine("test");
         }
 
-        private static T ReadSubPacket<T>(BinaryReader readerRef, T packetClass) where T: class, new()
+        private static T ReadSubPacket<T>(BinaryReader readerRef, T packetClass) where T : class, new()
         {
 
             int packetSize = BitConverter.ToInt32(readerRef.ReadBytes(4), 0);
-            byte[]data = readerRef.ReadBytes(packetSize);
-            return PacketSerializer2.Deserialize<T>(data);
+            byte[] data = readerRef.ReadBytes(packetSize);
+            return Deserialize<T>(data);
         }
 
-        public static int CalculateTotalSize <T>(T packetClass) where T: class, new()
+        public static int CalculateTotalSize<T>(T packetClass) where T : class, new()
         {
             int totalSize = sizeof(byte); // TypeId
             totalSize += sizeof(int);
@@ -249,7 +249,7 @@ namespace PerformanceTests.Test
                 {
                     totalSize += sizeof(byte); // Serialization type byte
 
-                    Object value = property.GetValue(packetClass);
+                    object value = property.GetValue(packetClass);
 
                     if (value == null)
                     {
@@ -301,11 +301,11 @@ namespace PerformanceTests.Test
                                 break;
 
                             case SerializationType.type_subPacket:
-                                totalSize += PacketSerializer2.CalculateTotalSize<T>((T)value);
+                                totalSize += CalculateTotalSize((T)value);
                                 break;
 
                             case SerializationType.type_subPacketList:
-                                /*//List<PacketBase> listValue = (List<PacketBase>)value;
+                                *//*//List<PacketBase> listValue = (List<PacketBase>)value;
                                 List<PacketBase> listValue = ((IEnumerable<PacketBase>)value).ToList();
 
                                 totalSize += 4; // saved list count size (sizeof(int))
@@ -313,7 +313,7 @@ namespace PerformanceTests.Test
                                 foreach (var listItem in listValue)
                                 {
                                     totalSize += listItem.CalculateTotalSize();
-                                }*/
+                                }*//*
                                 break;
 
                             default:
@@ -337,5 +337,6 @@ namespace PerformanceTests.Test
     // **********************************************************************************************************
 
 
-    
+
 }
+*/

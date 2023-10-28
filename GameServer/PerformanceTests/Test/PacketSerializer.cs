@@ -22,18 +22,36 @@ namespace PerformanceTests.Test
     {
         public static byte[] Serialize<T>(T obj) where T : class, new()
         {
+            var attr = obj.GetType().GetCustomAttribute<BinarySerializable>();
+
+            if (attr == null)
+                throw new ArgumentException("Cannot serialize object without BinarySerializable attribute.");
+            
             using (MemoryStream MemStream = new MemoryStream())
             using (BinaryWriter writer = new BinaryWriter(MemStream))
             {
-                foreach (PropertyInfo property in obj.GetType().GetProperties())
+                if (attr.Type == SerializationType.Default)
                 {
-                    object? value = property.GetValue(obj);
+                    foreach (PropertyInfo property in obj.GetType().GetProperties())
+                    {
+                        object? value = property.GetValue(obj);
 
-                    // if value == null -> write 1
-                    writer.Write((byte)(value == null ? 1 : 0));
+                        // if value == null -> write 1
+                        writer.Write((byte)(value == null ? 1 : 0));
 
-                    if (value != null)
-                        WriteField(writer, value);
+                        if (value != null)
+                            WriteField(writer, value);
+                    }
+                }
+                else if(attr.Type == SerializationType.Collection)
+                {
+                    Console.WriteLine();
+                    foreach (PropertyInfo property in obj.GetType().GetProperties())
+                    {
+                        
+                        var value = property.GetValue(obj);
+                        Console.WriteLine("asd");
+                    }
                 }
                 return MemStream.ToArray();
             }

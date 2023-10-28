@@ -27,8 +27,8 @@ namespace ServerApplication.GameService.Player
 
         private readonly object stateLock = new object();
 
-        public PlayerPeer(PacketHandler packetHandler, World worldRef, Socket peerSocket, Guid peerId,
-            Owner ownerType) : base(packetHandler, peerSocket, peerId, ownerType)
+        public PlayerPeer(PacketHandler packetHandler, PacketSender packetSender, World worldRef, Socket peerSocket, Guid peerId,
+            Owner ownerType) : base(packetHandler, packetSender, peerSocket, peerId, ownerType)
         {
             WorldRef = worldRef;
             PlayerCharacter = new Character();
@@ -43,7 +43,7 @@ namespace ServerApplication.GameService.Player
 
         }
 
-        public async void ReceiveLoadRequest(CharacterLoadRequestPacket packet)
+        private async void ReceiveLoadRequest(CharacterLoadRequestPacket packet)
         {
             if (packet.AuthToken == "gracz")
             {
@@ -54,31 +54,31 @@ namespace ServerApplication.GameService.Player
                 LoadCharacterFromDatabase(username, WorldRef.IdCounter++); // by now overloaded with unique identifiers from server app.
 
                 // send response with player object
-                await SendPacket(new CharacterLoadResponsePacket(PlayerCharacter));
+                RequestSendPacket(new CharacterLoadResponsePacket(PlayerCharacter));
 
             }
             else
             {
                 // CharacterLoadResponsePacket Succes is false by default.
-                await SendPacket(new CharacterLoadResponsePacket());
+                RequestSendPacket(new CharacterLoadResponsePacket());
 
                 //disconnet Connection
                 Disconnect();
             }
         }
 
-        public async void ReceiveLoadStatus(CharacterLoadSuccesPacket packet)
+        private async void ReceiveLoadStatus(CharacterLoadSuccesPacket packet)
         {
             if (packet.Succes == true)
             {
                 // In that method we also run OnCharacterLoad(), which simply sends to new connected
                 // player current states of all players.
-                await WorldRef.AddNewPlayer(this);
+                await WorldRef.AddNewPlayerAsync(this);
 
             }
         }
 
-        public void ReceiveTransform(TransformPacket packet)
+        private void ReceiveTransform(TransformPacket packet)
         {
             PlayerCharacter.PositionX = packet.PosX;
             PlayerCharacter.PositionY = packet.PosY;
@@ -98,7 +98,7 @@ namespace ServerApplication.GameService.Player
             WorldRef.AddNewCharacterTransform(GUID, CharacterTransform);
         }
 
-        public async void ReceiveDisconnect(ClientDisconnectPacket packet)
+        private async void ReceiveDisconnect(ClientDisconnectPacket packet)
         {
             //await Console.Out.WriteLineAsync($"[CLIENT CONNECTION CLOSED], with info: {playerConn.PeerSocket.RemoteEndPoint}. ");
 
@@ -107,23 +107,23 @@ namespace ServerApplication.GameService.Player
                 // save player state into database
             }
 
-            await WorldRef.RemovePlayer(this); // delete from world
+            WorldRef.RemovePlayer(this); // delete from world
             Disconnect(); // disconnect from server
         }
 
-        public async void ReceivePingRequest(PingRequestPacket packet)
+        private async void ReceivePingRequest(PingRequestPacket packet)
         {
-            await SendPacket(new PingResponsePacket());
+            RequestSendPacket(new PingResponsePacket());
         }
-        
-        public void LoadCharacterFromDatabase(string username, int UniqueId)
+
+        private void LoadCharacterFromDatabase(string username, int UniqueId)
         {
             PlayerCharacter = new Character(UniqueId, "nowy gracz", 10, 10, 10, 10, 0, 0, 0, 0, 0, 0, 5, 5, AdventurerState.Idle);
             CharacterTransform.CharacterVId = UniqueId;
             CharacterStateUpdate.CharacterVId = UniqueId;
         }
 
-        public void PlayerAttack()
+        private void PlayerAttack()
         {
 
         }

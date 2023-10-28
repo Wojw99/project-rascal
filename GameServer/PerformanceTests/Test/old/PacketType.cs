@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PerformanceTests.Test
+namespace PerformanceTests.Test.old
 {
     public enum PacketType
     {

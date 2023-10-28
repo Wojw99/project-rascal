@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Reflection;
 using PerformanceTests.Test;
+using MemoryPack;
+
 
 namespace PerformanceTests
 {
@@ -13,12 +15,12 @@ namespace PerformanceTests
     {
         static void Main(string[] args)
         {
+            MesaureSerializingTime(100);
+
+            Console.WriteLine("MOJE ROZWIAZANIE");
+
             MesaureSerializingTime(1000);
 
-            Console.WriteLine("Tera pomiar:");
-
-            MesaureSerializingTime(100000);
-            MesaureSerializingTime2(100000);
 
             #region notUsed
 
@@ -118,9 +120,13 @@ namespace PerformanceTests
             Stopwatch stopwatch = new Stopwatch();
             double sumSerialization = 0;
             double sumDeserialization = 0;
-            Thread.Sleep(1000);
 
-            TestPacket packet = new TestPacket();
+            TransformList packet = new TransformList();
+            packet.Add(new TransformPacket());
+            packet.Add(new TransformPacket());
+            packet.Add(new TransformPacket());
+
+            Thread.Sleep(1000);
             byte[] data;
 
             for (int i = 0; i < count; i++)
@@ -134,7 +140,7 @@ namespace PerformanceTests
                 stopwatch.Reset();
 
                 stopwatch.Start();
-                var desPacket = PacketSerializer.Deserialize<TestPacket>(data);
+                var desPacket = PacketSerializer.Deserialize<TransformList>(data);
                 stopwatch.Stop();
                 //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
                 sumDeserialization += (double)stopwatch.Elapsed.TotalMilliseconds;
@@ -149,18 +155,23 @@ namespace PerformanceTests
 
         private static void MesaureSerializingTime2(int count)
         {
+            // 
             Stopwatch stopwatch = new Stopwatch();
             double sumSerialization = 0;
             double sumDeserialization = 0;
+
+            TransformList transformList = new TransformList();
+            transformList.Add(new TransformPacket());
+
             Thread.Sleep(1000);
 
-            SimpleTestPacket packet = new SimpleTestPacket();
             byte[] data;
 
             for (int i = 0; i < count; i++)
             {
+                
                 stopwatch.Start();
-                data = PacketSerializer.Serialize(packet);
+                data = MemoryPackSerializer.Serialize(transformList);
                 stopwatch.Stop();
                 //Console.WriteLine($"Mój czas serializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
                 sumSerialization += (double)stopwatch.Elapsed.TotalMilliseconds;
@@ -168,7 +179,7 @@ namespace PerformanceTests
                 stopwatch.Reset();
 
                 stopwatch.Start();
-                var desPacket = PacketSerializer.Deserialize<SimpleTestPacket>(data);
+                var desPacket = MemoryPackSerializer.Deserialize<TransformList>(data);
                 stopwatch.Stop();
                 //Console.WriteLine($"Mój czas deserializacji: {stopwatch.Elapsed.TotalMilliseconds} ms");
                 sumDeserialization += (double)stopwatch.Elapsed.TotalMilliseconds;
@@ -176,7 +187,7 @@ namespace PerformanceTests
                 stopwatch.Reset();
             }
 
-            Console.WriteLine("SIMPLE TEST PACKET: ");
+            Console.WriteLine("TEST PACKET (EXT LIBRARY): ");
             Console.WriteLine($"Ilosc operacji = {count}");
             Console.WriteLine($"Suma serializacja = {sumSerialization} ms, {sumSerialization / 1000} s.");
             Console.WriteLine($"Suma deserializacja = {sumDeserialization} ms, {sumDeserialization / 1000} s.");

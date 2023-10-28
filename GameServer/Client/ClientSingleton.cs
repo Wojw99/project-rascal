@@ -1,154 +1,158 @@
 ﻿using NetworkCore.NetworkCommunication;
 using NetworkCore.NetworkMessage;
 using NetworkCore.Packets;
-using NetworkCore.NetworkData;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 
 namespace Client
 {
     public class ClientSingleton : TcpNetworkClient
     {
-        public TcpPeer AuthServer { get; private set; }
-        public TcpPeer GameServer { get; private set; }
+        public ServerPeer AuthServer { get; private set; }
+        public ServerPeer GameServer { get; private set; }
 
         #region Singleton
 
-        private static ClientSingleton Instance;
+        private static ClientSingleton instance;
 
-        private ClientSingleton() { }
-
-        public static async Task<ClientSingleton> GetInstanceAsync()
+        private ClientSingleton() : base()
         {
-            if (Instance == null)
-            {
-                Instance = new ClientSingleton();
-                await Instance.Initialize();
-            }
-            return Instance;
+            GameServer = new ServerPeer(_PacketHandler, _PacketSender, "127.0.0.1", 8051);
+            AuthServer = new ServerPeer(_PacketHandler, _PacketSender, "127.0.0.1", 8050);
+
+            AddHandlers();
+
+            _PacketSender.OnPacketSent += ShowSentPacketInfo;
+            _PacketHandler.OnPacketReceived += ShowReceivedPacketInfo;
+            GameServer.Connect();
+            GameServer.StartRead();
+
+            AuthServer.Connect();
+            AuthServer.StartRead();
+
+            GameServer.ConnectToServer();
+            //AuthServer.ConnectToServer();
+
+            Start();
+            StartUpdate();
+            //NetworkTimeSyncEmissary.Instance.StartSynchronize();
         }
 
-        private async Task Initialize()
+        public static ClientSingleton GetInstance()
         {
-            Start();
-            StartUpdate(TimeSpan.FromMilliseconds(20));
-            StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(20));
+            if (instance == null)
+                instance = new ClientSingleton();
 
-            // Temporary
-            await ConnectToGameServer();
+            return instance;
         }
 
         #endregion
 
-        public async Task ConnectToAuthServer()
+        private void ShowSentPacketInfo(string info)
         {
-            AuthServer = await CreateTcpServerConnection("127.0.0.1", 8050);
-            AuthServer.Connect();
-            AuthServer.StartRead();
+            Console.WriteLine("[SEND] " + info);
         }
 
-        public async Task ConnectToGameServer()
+        private void ShowReceivedPacketInfo(string info)
         {
-            GameServer = await CreateTcpServerConnection("127.0.0.1", 8051);
-            GameServer.Connect();
-            GameServer.StartRead();
+            Console.WriteLine("[RECEIVED] " + info);
+
         }
 
         public override async Task Update()
         {
+            /*Stopwatch watch = new Stopwatch();
 
+            watch.Start();
+            GameServer.RequestSendPacket(new PingRequestPacket());
+            watch.Stop();
+            await Console.Out.WriteLineAsync($"Ping= {watch.ElapsedMilliseconds} ms.");
+            
+            watch.Restart();
+            await _PacketHandler.WaitForResponsePacket(GameServer.GUID, PacketType.PING_RESPONSE);
+            watch.Stop();
+            await Console.Out.WriteLineAsync($"Ping-Pong = {watch.ElapsedMilliseconds} ms.");*/
         }
 
-        /*private bool MatchCharacterId(int CharacterVId)
+        public void AddHandlers()
         {
-            return CharacterVId == CharacterStateEmissary.instance.CharacterVId;
-        }*/
+            /*#region Character
 
-        /// <summary>
-        /// This method redirects packets from servers to the appropriate emissaries.
-        /// </summary>
-        /// <param name="serverPeer">Server connection peer. </param>
-        /// <param name="packet">Arrived packet. </param>
-        /// <remarks>
-        /// ...
-        /// </remarks>
-        /*public override async Task OnPacketReceived(IPeer serverPeer, PacketBase packet)
-        {
-            await Console.Out.WriteLineAsync($"[RECEIVED] new packed with type: {packet.TypeId} from peer with Guid: {serverPeer.GUID}");
-
-           *//* #region Character
-
-            if (packet is CharacterLoadResponsePacket characterLoadResponsePacket)
-                CharacterLoadEmissary.instance.ReceiveCharacterData(characterLoadResponsePacket);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(CharacterLoadResponsePacket),
+                new Action<CharacterLoadResponsePacket>((packet) =>
+                CharacterLoadEmissary.Instance.ReceiveCharacterData(packet)));
 
             #endregion
 
             #region Adventurer
 
-            else if (packet is AdventurerLoadPacket adventurerLoadPacket)
-                AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(adventurerLoadPacket);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AdventurerLoadPacket),
+                new Action<AdventurerLoadPacket>((packet) =>
+                AdventurerLoadEmissary.Instance.ReceiveNewAdventurerData(packet)));
 
-            else if (packet is AdventurerLoadCollectionPacket adventurerLoadCollection)
-                foreach (var pck in adventurerLoadCollection.PacketCollection)
-                    AdventurerLoadEmissary.instance.ReceiveNewAdventurerData(pck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AdventurerLoadCollectionPacket),
+                new Action<AdventurerLoadCollectionPacket>((packet) =>
+                AdventurerLoadEmissary.Instance.ReceiveNewAdventurerCollectionData(packet)));
 
             #endregion
 
             #region Attributes
 
-            else if (packet is AttributesPacket attrPck)
-                if (MatchCharacterId(attrPck.CharacterVId))
-                    CharacterStateEmissary.instance.ReceiveAttributesData(attrPck);
-                else AdventurerStateEmissary.instance.ReceiveAttributesData(attrPck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AttributesCollectionPacket),
+                new Action<AttributesCollectionPacket>((packet) => {
+                    foreach (AttributesPacket pck in packet.PacketCollection)
+                        if (MatchCharacterId(pck.CharacterVId))
+                            CharacterStateEmissary.Instance.ReceiveAttributesData(pck);
+                        else AdventurerStateEmissary.Instance.ReceiveAttributesData(pck);
+                }));
 
-            else if (packet is AttributesCollectionPacket AttrCollectionPacket)
-                foreach (AttributesPacket pck in AttrCollectionPacket.PacketCollection)
-                    if (MatchCharacterId(pck.CharacterVId))
-                        CharacterStateEmissary.instance.ReceiveAttributesData(pck);
-                    else AdventurerStateEmissary.instance.ReceiveAttributesData(pck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AttributesPacket),
+                new Action<AttributesPacket>((packet) => {
+                    if (MatchCharacterId(packet.CharacterVId))
+                        CharacterStateEmissary.Instance.ReceiveAttributesData(packet);
+                    else AdventurerStateEmissary.Instance.ReceiveAttributesData(packet);
+                }));
 
-            else if (packet is AttributesUpdatePacket AttrUpdatePacket)
-                if (MatchCharacterId(AttrUpdatePacket.CharacterVId))
-                    CharacterStateEmissary.instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
-                else AdventurerStateEmissary.instance.ReceiveAttributesDataUpdate(AttrUpdatePacket);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AttributesUpdateCollectionPacket),
+                new Action<AttributesUpdateCollectionPacket>((packet) => {
+                    foreach (AttributesUpdatePacket pck in packet.PacketCollection)
+                        if (MatchCharacterId(pck.CharacterVId))
+                            CharacterStateEmissary.Instance.ReceiveAttributesDataUpdate(pck);
+                        else AdventurerStateEmissary.Instance.ReceiveAttributesDataUpdate(pck);
+                }));
 
-            else if (packet is AttributesUpdateCollectionPacket AttrUpdateCollectionPacket)
-                foreach (AttributesUpdatePacket pck in AttrUpdateCollectionPacket.PacketCollection)
-                    if (MatchCharacterId(pck.CharacterVId))
-                        CharacterStateEmissary.instance.ReceiveAttributesDataUpdate(pck);
-                    else AdventurerStateEmissary.instance.ReceiveAttributesDataUpdate(pck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(AttributesUpdatePacket),
+                new Action<AttributesUpdatePacket>((packet) => {
+                    if (MatchCharacterId(packet.CharacterVId))
+                        CharacterStateEmissary.Instance.ReceiveAttributesDataUpdate(packet);
+                    else AdventurerStateEmissary.Instance.ReceiveAttributesDataUpdate(packet);
+                }));
 
             #endregion
 
             #region Transform
 
-            else if (packet is TransformPacket trsPck)
-                if (MatchCharacterId(trsPck.CharacterVId))
-                    CharacterTransformEmissary.instance.ReceiveTransformationData(trsPck);
-                else AdventurerTransformEmissary.instance.ReceiveTransformationData(trsPck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(TransformPacket),
+                new Action<TransformPacket>((packet) => {
+                    if (MatchCharacterId(packet.CharacterVId))
+                        Debug.Log("Wywoluje 1 - gracz");
+                    else AdventurerTransformEmissary.Instance.ReceiveTransformationData(packet);
+                }));
 
-            else if (packet is TransformCollectionPacket TrsColletionPacket)
-                foreach (TransformPacket pck in TrsColletionPacket.PacketCollection)
-                    if (MatchCharacterId(pck.CharacterVId))
-                        CharacterTransformEmissary.instance.ReceiveTransformationData(pck);
-                    else AdventurerTransformEmissary.instance.ReceiveTransformationData(pck);
+            _PacketHandler.AddHandler(GameServer.GUID, typeof(TransformCollectionPacket),
+                new Action<TransformCollectionPacket>((packet) => {
+                    if (packet is TransformCollectionPacket TrsColletionPacket)
+                        foreach (TransformPacket pck in TrsColletionPacket.PacketCollection)
+                            if (!MatchCharacterId(pck.CharacterVId))
+                                AdventurerTransformEmissary.Instance.ReceiveTransformationData(pck);
+                }));
 
-            #endregion*//*
-
+            #endregion
         }*/
-
-        public async Task RegisterNewAccount(string login, string password)
-        {
-            await ConnectToAuthServer();
-
-            if (AuthServer.IsConnected)
-            {
-
-            }
         }
     }
 }

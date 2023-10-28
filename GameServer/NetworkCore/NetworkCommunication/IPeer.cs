@@ -21,5 +21,5 @@ public interface IPeer
 
     void Disconnect();
 
-    Task SendPacket(PacketBase packet);
+    void RequestSendPacket(PacketBase packet);
 }

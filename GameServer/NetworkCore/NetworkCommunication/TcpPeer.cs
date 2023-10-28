@@ -26,17 +26,13 @@ namespace NetworkCore.NetworkCommunication
         public Socket PeerSocket { get; private set; }
 
         public PacketHandler PacketHandlerRef { get; private set; } // storing reference to NetworkServer or NetworkClient
+        public PacketSender PacketSenderRef { get; private set; }
 
-        public delegate void PacketSentInfo(string info);
-        public delegate void PacketReceivedInfo(string info);
-
-        public event PacketSentInfo? OnPacketSent;
-        public event PacketReceivedInfo? OnPacketReceived;
-
-        public TcpPeer(PacketHandler packetHandler, Socket peerSocket, Guid peerId, 
+        public TcpPeer(PacketHandler packetHandler, PacketSender packetSender, Socket peerSocket, Guid peerId, 
             Owner ownerType)
         {
             PacketHandlerRef = packetHandler;
+            PacketSenderRef = packetSender;
             PeerSocket = peerSocket;
             GUID = peerId;
             OwnerType = ownerType;
@@ -46,7 +42,7 @@ namespace NetworkCore.NetworkCommunication
         {
             if(IsConnected == true)
             {
-                Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingData());
+                Task handleReadIncomingTcpData = Task.Run(async () => await ReadIncomingDataAsync());
             }
         }
 
@@ -66,17 +62,15 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        public async Task SendPacket(PacketBase packet)
+        public void RequestSendPacket(PacketBase packet)
         {
             if(IsConnected)
             {
-                byte[] dataToSend = packet.Serialize();
-                await PeerSocket.SendAsync(new ArraySegment<byte>(dataToSend), SocketFlags.None);
-                OnPacketSent?.Invoke(packet.GetInfo());
+                PacketSenderRef.EnqueuePacket(this, packet);
             }
         }
 
-        private async Task ReadIncomingData()
+        private async Task ReadIncomingDataAsync()
         {
             while (IsConnected)
             { 
@@ -98,14 +92,10 @@ namespace NetworkCore.NetworkCommunication
                 
                 PacketBase packet = PacketBase.CreatePacketFromType(type, resultPacket);
 
-                OnPacketReceived?.Invoke(packet.GetInfo());
-
                 //Add owned packet to PacketHandler.
                 PacketHandlerRef.AddPacket(new OwnedPacket { Peer = this, 
                     PeerPacket = packet});
             }
         }
-
-        
     }
 }

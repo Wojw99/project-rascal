@@ -20,9 +20,25 @@ namespace Client
         static TransformPacket transformPacket = new TransformPacket(-1);
         static async Task Main(string[] args)
         {
-            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
+            ClientSingleton Client = ClientSingleton.GetInstance();
+            
+            while(true)
+            {
+                Stopwatch watch = new Stopwatch();
 
-            PingRequestPacket packet = new PingRequestPacket();
+                watch.Start();
+                Client.GameServer.RequestSendPacket(new PingRequestPacket());
+                watch.Stop();
+                await Console.Out.WriteLineAsync($"Ping= {watch.ElapsedMilliseconds} ms.");
+
+                watch.Restart();
+                await Client._PacketHandler.WaitForResponsePacket(Client.GameServer.GUID, PacketType.PING_RESPONSE);
+                watch.Stop();
+                await Console.Out.WriteLineAsync($"Ping-Pong = {watch.ElapsedMilliseconds} ms.");
+                Thread.Sleep(1);
+            }
+
+           /* PingRequestPacket packet = new PingRequestPacket();
             Stopwatch stopwatch = new Stopwatch();
 
             while(true)
@@ -36,12 +52,12 @@ namespace Client
 
 
                 stopwatch.Start();
-                await Client.GameServer.SendPacket(packet); // serializuje oraz wysyła
+                Client.GameServer.RequestSendPacket(packet); // serializuje oraz wysyła
                 stopwatch.Stop();
                 Console.WriteLine($"Czas serializacji + czas wysłania: {stopwatch.Elapsed.TotalMilliseconds} ms");
                 stopwatch.Reset();
                 await Task.Delay(3);
-            }
+            }*/
 
             /*if(await CommitSendCharacterLoadRequest("gracz"))
             {
@@ -54,12 +70,12 @@ namespace Client
 
         public static async Task<bool> CommitSendCharacterLoadRequest(string authToken)
         {
-            ClientSingleton Client = await ClientSingleton.GetInstanceAsync();
+            ClientSingleton Client = ClientSingleton.GetInstance();
 
-            await Client.GameServer.SendPacket(new CharacterLoadRequestPacket(authToken));
+            Client.GameServer.RequestSendPacket(new CharacterLoadRequestPacket(authToken));
 
-            PacketBase packet = await Client.WaitForResponsePacket(TimeSpan.FromMilliseconds(20),
-                TimeSpan.FromSeconds(50), PacketType.CHARACTER_LOAD_RESPONSE);
+            PacketBase packet = await Client._PacketHandler.WaitForResponsePacket(
+                Client.GameServer.GUID, PacketType.CHARACTER_LOAD_RESPONSE);
 
             if (packet is CharacterLoadResponsePacket res)
             {
@@ -77,14 +93,14 @@ namespace Client
 
         public static async void CommitSendCharacterLoadSucces(bool loadSucces)
         {
-            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
-            await client.GameServer.SendPacket(new CharacterLoadSuccesPacket(loadSucces));
+            ClientSingleton client = ClientSingleton.GetInstance();
+            client.GameServer.RequestSendPacket(new CharacterLoadSuccesPacket(loadSucces));
         }
 
         public static async void CommitSendPlayerCharacterTransfer()
         {
-            ClientSingleton client = await ClientSingleton.GetInstanceAsync();
-            await client.GameServer.SendPacket(transformPacket);
+            ClientSingleton client = ClientSingleton.GetInstance();
+            client.GameServer.RequestSendPacket(transformPacket);
 
         }
 

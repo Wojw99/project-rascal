@@ -20,12 +20,11 @@ namespace ServerApplication.Game
         {
             try
             {
-                TestServer Server = new TestServer(true, 120, "192.168.5.6", "Game Server", ServerType.world_server, 8051);
+                TestServer Server = new TestServer(true, 120, "127.0.0.1", "Game Server", ServerType.world_server, 8051);
 
                 //ServerMonitor Monitor = new ServerMonitor(Server);
 
-                Server.StartListen(); 
-                Server.StartUpdate(TimeSpan.FromMilliseconds(1));
+                Server.Start(); 
                 
                 //Server.StartPacketProcessing(50, 50, TimeSpan.FromMilliseconds(1));
                 //await Task.Run(async () => await TestingOperationsTask(Server));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MemoryPack;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -6,12 +7,31 @@ using System.Xml.Linq;
 
 namespace PerformanceTests.Test
 {
-    public class TestPacket
+    /*[MemoryPackable]
+    public partial class Test
+    {
+        public int test { get; set; }
+
+        public List<TransformPacket> TransformCollection { get; set; }
+
+        public Test() 
+        {
+            test = 125;
+            TransformCollection= new List<TransformPacket>();
+            TransformCollection.Add(new TransformPacket());
+        }
+    }*/
+
+    
+
+
+
+/*    public partial class TestPacket
     {
         public int test { get; set; }
 
         //public TransformPacket transform { get; set; }
-
+        
         public List<TransformPacket> packets { get; set; }
 
         public TestPacket() { 
@@ -21,7 +41,7 @@ namespace PerformanceTests.Test
             //transform = new TransformPacket();
             //packets = new List<TransformPacket>();
         }
-    }
+    }*/
 
     public class SimpleTestPacket
     {
@@ -33,6 +53,10 @@ namespace PerformanceTests.Test
         }
     }
 
+    [BinarySerializable(SerializationType.Collection)]
+    public partial class TransformList : List<TransformPacket> { }
+
+    [BinarySerializable]
     public partial class TransformPacket 
     {
         public int CharacterVId { get; set; }
@@ -42,19 +66,6 @@ namespace PerformanceTests.Test
         public float RotX { get; set; }
         public float RotY { get; set; }
         public float RotZ { get; set; }
-
-
-        public TransformPacket(int characterVId, float posX, float posY, float posZ, 
-            float rotX, float rotY, float rotZ) 
-        {
-            CharacterVId = characterVId;
-            PosX = posX;
-            PosY = posY;
-            PosZ = posZ;
-            RotX = rotX;
-            RotY = rotY;
-            RotZ = rotZ;
-        }
 
         public TransformPacket() {
             CharacterVId = 1;

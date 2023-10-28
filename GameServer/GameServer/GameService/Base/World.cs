@@ -33,27 +33,39 @@ namespace ServerApplication.GameService.Base
 
         public int EnemyCount { get { return Enemies.Count; } }
 
+        #region main
+        
         public World() { }
 
-        public async Task Update()
+        public void Update()
         {
-            if(CharactersTransforms.Count > 0)
+           HandleSendCharacterTransformsAsync();
+           HandleSendCharacterAttributesUpdatesAsync();
+        }
+
+        #endregion
+
+        #region private
+
+        private void HandleSendCharacterTransformsAsync()
+        {
+            if (CharactersTransforms.Count > 0)
             {
                 TransformCollectionPacket transformsPacket = new TransformCollectionPacket();
 
                 foreach (var transform in CharactersTransforms)
-                {
                     transformsPacket.PacketCollection.Add(transform.Value);
-                }
 
                 // Send transform to all players.
-                foreach (var player in ConnectedPlayers.Values)
-                    await player.SendPacket(transformsPacket);
+                SendPacketToConnectedPlayers(transformsPacket);
 
                 // Clear Transforms to not send duplicates.
                 CharactersTransforms.Clear();
             }
+        }
 
+        private void HandleSendCharacterAttributesUpdatesAsync()
+        {
             if (CharactersStatesUpdated.Count > 0)
             {
                 AttributesUpdateCollectionPacket statesPacket = new AttributesUpdateCollectionPacket();
@@ -63,8 +75,7 @@ namespace ServerApplication.GameService.Base
                     statesPacket.PacketCollection.Add(characterState.Value);
 
                 // Sending player states updates to all players.
-                foreach (var player in ConnectedPlayers.Values)
-                    await player.SendPacket(statesPacket);
+                SendPacketToConnectedPlayers(statesPacket);
 
                 // Calling method OnChacterStateSend() which clearing player packet object
                 // (setting all values of his state packet to null). We calling it after packet send,
@@ -76,6 +87,24 @@ namespace ServerApplication.GameService.Base
                 CharactersStatesUpdated.Clear();
             }
         }
+
+        private void SendPacketToConnectedPlayers(Guid exceptedPeerId, PacketBase packet)
+        {
+            foreach (var player in ConnectedPlayers)
+                if(player.Key != exceptedPeerId)
+                    player.Value.RequestSendPacket(packet);
+        }
+
+        private void SendPacketToConnectedPlayers(PacketBase packet)
+        {
+            foreach (var player in ConnectedPlayers)
+                    player.Value.RequestSendPacket(packet);
+        }
+
+        #endregion
+
+        #region public
+
         public void AddNewCharacterStateUpdate(Guid ConnId, AttributesUpdatePacket updatedState)
         {
             CharactersStatesUpdated[ConnId] = updatedState;
@@ -116,14 +145,7 @@ namespace ServerApplication.GameService.Base
             return ConnectedPlayers[playerGuid];
         }
 
-        public async Task SendPacketToConnectedPlayers(Guid senderPeerId, PacketBase packet)
-        {
-            foreach (var receiver in ConnectedPlayers)
-                if (receiver.Key != senderPeerId)
-                    await receiver.Value.SendPacket(packet);
-        }
-
-        public async Task AddNewPlayer(PlayerPeer playerConn)
+        public async Task AddNewPlayerAsync(PlayerPeer playerConn)
         {
             if(!ConnectedPlayers.TryAdd(playerConn.GUID, playerConn))
                 throw new InvalidOperationException($"Failed to add player with id {playerConn.GUID}.");
@@ -151,7 +173,7 @@ namespace ServerApplication.GameService.Base
                 }
             }
 
-            await playerConn.SendPacket(adventurerLoadCollection); // Send packet to one.
+            playerConn.RequestSendPacket(adventurerLoadCollection); // Send packet to one.
 
             // Next step is to send a full state of currently logged character to others.
 
@@ -167,10 +189,10 @@ namespace ServerApplication.GameService.Base
                 playerConn.PlayerCharacter.RotationX, playerConn.PlayerCharacter.RotationY, playerConn.PlayerCharacter.RotationZ,
                 playerConn.PlayerCharacter.State);
 
-            await this.SendPacketToConnectedPlayers(playerConn.GUID, adventurerLoadPacket); // Send packet to all.
+            SendPacketToConnectedPlayers(playerConn.GUID, adventurerLoadPacket); // Send packet to all.
         }
 
-        public async Task RemovePlayer(PlayerPeer playerConn) 
+        public void RemovePlayer(PlayerPeer playerConn) 
         {
             if (!ConnectedPlayers.TryRemove(playerConn.GUID, out PlayerPeer removedPlayer)) // idk we need object of removed player.
                 throw new InvalidOperationException($"Failed to remove player with id {playerConn.GUID}.");
@@ -178,7 +200,9 @@ namespace ServerApplication.GameService.Base
             // Send packet to all players to remove player character from their collections.
             foreach (var player in ConnectedPlayers)
                 if (playerConn.GUID != player.Key)
-                    await player.Value.SendPacket(new AdventurerExitPacket(playerConn.PlayerCharacter.Vid));
+                    player.Value.RequestSendPacket(new AdventurerExitPacket(playerConn.PlayerCharacter.Vid));
         }
+
+        #endregion
     }
 }

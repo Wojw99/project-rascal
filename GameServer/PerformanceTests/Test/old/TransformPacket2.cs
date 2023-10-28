@@ -1,10 +1,10 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Linq;
 
-namespace PerformanceTests.Test
+namespace PerformanceTests.Test.old
 {
     public class TestPacket2
     {
@@ -15,19 +15,19 @@ namespace PerformanceTests.Test
 
     }
 
-    public partial class TransformPacket2 
+    public partial class TransformPacket2
     {
         [Serialization(Type: SerializationType.type_Int32)]
         public int CharacterVId { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosX { get; set; } 
+        public float PosX { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosY { get; set; } 
+        public float PosY { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
-        public float PosZ { get; set; } 
+        public float PosZ { get; set; }
 
         [Serialization(Type: SerializationType.type_float)]
         public float RotX { get; set; }
@@ -38,8 +38,8 @@ namespace PerformanceTests.Test
         [Serialization(Type: SerializationType.type_float)]
         public float RotZ { get; set; }
 
-        public TransformPacket2(int characterVId, float posX, float posY, float posZ, 
-            float rotX, float rotY, float rotZ) 
+        public TransformPacket2(int characterVId, float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ)
         {
             CharacterVId = characterVId;
             PosX = posX;
@@ -50,7 +50,8 @@ namespace PerformanceTests.Test
             RotZ = rotZ;
         }
 
-        public TransformPacket2() {
+        public TransformPacket2()
+        {
             CharacterVId = 0;
             PosX = 0f;
             PosY = 0f;
@@ -61,3 +62,4 @@ namespace PerformanceTests.Test
         }
     }
 }
+*/

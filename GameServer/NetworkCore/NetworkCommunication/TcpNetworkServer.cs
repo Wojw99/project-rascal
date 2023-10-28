@@ -28,7 +28,11 @@ namespace NetworkCore.NetworkCommunication
         protected Socket TcpSocket { get; }
 
         protected PacketHandler _PacketHandler { get; private set; }
-        protected bool Listening { get; private set; }
+        protected PacketSender _PacketSender { get; private set; }
+        //protected bool Listening { get; private set; }
+
+        protected CancellationTokenSource CancellationSource = new CancellationTokenSource();
+        private List<Task> ListeningTasks = new List<Task>();
 
         protected TcpNetworkServer (bool allowPhysicalClients, int maxClients, string publicIpAdress,
             string serverName, ServerType serverType, int tcpPort)
@@ -40,52 +44,48 @@ namespace NetworkCore.NetworkCommunication
             _ServerType = serverType;
             _ServerProtocolType = ServerProtocolType.protocol_tcp;
             _PacketHandler = new PacketHandler();
-            Listening = false;
+            _PacketSender = new PacketSender();
 
             // Create Socket
             TcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             TcpSocket.Bind(new IPEndPoint(IPAddress.Parse(publicIpAdress), tcpPort));
         }
 
-        /*protected TcpNetworkServer(string configFileName)
-        {
-            // read from file and initialize attributes.
-        }
-
-        public void InitFromFile(string configFileName)
-        {
-            // read from file and initialize attributes.
-        }*/
-
-        public void StartListen()
+        public void Start()
         {
             TcpSocket.Listen(10); // we can assign that in WaitForTcpClientConnection()
-            Listening = true;
             Console.WriteLine($"Server, with GUID: {ServerId}, Name: {ServerName} started on TCP port.");
-            Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
-        }
 
-        public void StartUpdate(TimeSpan interval)
-        {
+            Task handleWaitForTcpConnection = Task.Run(async () => await WaitForTcpClientConnection());
+
+            for (int i = 0; i < Environment.ProcessorCount; i++)
+            {
+                ListeningTasks.Add(Task.Run(WaitForTcpClientConnection, CancellationSource.Token));
+            }
+
             Task handleUpdate = Task.Run(async () =>
             {
-                while(Listening)
+                while (!CancellationSource.Token.IsCancellationRequested)
                 {
-                    await Update();
-                    await Task.Delay(interval);
+                    await OnServerTickUpdate();
+                    await Task.Delay(1);
                 }
-            }); 
+            });
+
+            OnServerStarted();
         }
 
         public void Stop()
         {
-            Listening = false;
-            TcpSocket.Close(); 
+            TcpSocket.Close();
+
+            CancellationSource.Cancel();
+            Task.WhenAll(ListeningTasks).Wait();
         }
 
         private async Task WaitForTcpClientConnection()
         {
-            while(Listening)
+            while (!CancellationSource.Token.IsCancellationRequested)
             {
                 if (TcpSocket != null)
                 {
@@ -93,7 +93,7 @@ namespace NetworkCore.NetworkCommunication
 
                     await Console.Out.WriteLineAsync($"New TCP connection received, info: {tcpClientSocket.RemoteEndPoint}");
 
-                    await OnNewConnection(tcpClientSocket, Guid.NewGuid(), Owner.server);
+                    await OnClientConnect(tcpClientSocket, Guid.NewGuid(), Owner.server);
                 }
                 else
                 {
@@ -102,10 +102,12 @@ namespace NetworkCore.NetworkCommunication
             }
         }
 
-        protected abstract Task OnNewConnection(Socket clientSocket, Guid connId, Owner ownerType);
+        protected abstract Task OnClientConnect(Socket clientSocket, Guid connId, Owner ownerType);
 
         protected abstract Task OnClientDisconnect(IPeer clientPeer);
 
-        protected abstract Task Update();
+        protected abstract Task OnServerTickUpdate();
+
+        protected abstract Task OnServerStarted();
     }
 }
