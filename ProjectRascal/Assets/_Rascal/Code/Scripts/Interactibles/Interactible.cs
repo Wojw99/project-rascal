@@ -12,6 +12,8 @@ public class Interactible : MonoBehaviour
 
     protected void ParentStart() {
         HideActionText();
+        nameTextMesh.text = StringsWizard.Instance.GetText("object");
+        actionTextMesh.text = StringsWizard.Instance.GetText("talk");
     }
 
     protected void InstantiateAtParentLocation(GameObject gameObject) {

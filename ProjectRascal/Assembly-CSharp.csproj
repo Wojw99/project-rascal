@@ -140,6 +140,7 @@
      <Compile Include="Assets\_Rascal\Code\Scripts\Interactibles\Potion.cs" />
      <Compile Include="Assets\ExplosiveLLC\RPG Character Mecanim Animation Pack FREE\Code\Lookups\AnimatorWeapon.cs" />
      <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Core\IgnoredCollider.cs" />
+     <Compile Include="Assets\_Rascal\Code\Scripts\VisibilityHandler.cs" />
      <Compile Include="Assets\_Rascal\Other\PlayerInputActions.cs" />
      <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Examples\PlayerMachineDebug.cs" />
      <Compile Include="Assets\ExplosiveLLC\RPG Character Mecanim Animation Pack FREE\Code\Actions\EmptyContext.cs" />
@@ -175,6 +176,7 @@
      <Compile Include="Assets\_Rascal\Code\Scripts\Interactibles\InteractibleCanvas.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+     <Compile Include="Assets\_Rascal\Code\Scripts\AbyssSource.cs" />
      <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Core\BSPTree.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />

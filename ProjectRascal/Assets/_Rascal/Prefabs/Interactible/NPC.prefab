@@ -3112,6 +3112,7 @@ GameObject:
   - component: {fileID: 7394113946892830919}
   - component: {fileID: 1532600575642532562}
   - component: {fileID: 5286899325862371962}
+  - component: {fileID: 3579529668704260087}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -3196,6 +3197,20 @@ MonoBehaviour:
   actionTextMesh: {fileID: 5951523748400525984}
   dummyVisual: {fileID: 4275483702970449334}
   npcSO: {fileID: 0}
+--- !u!114 &3579529668704260087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4899989739816525836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd4f6be865512d74fbb33f92c4b7c94b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiredGameVariable: 0
+  activatedGameVariable: 0
 --- !u!1 &4906271535415735926
 GameObject:
   m_ObjectHideFlags: 0

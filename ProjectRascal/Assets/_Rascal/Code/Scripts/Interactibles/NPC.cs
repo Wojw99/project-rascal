@@ -9,7 +9,6 @@ public class NPC : Interactible
 
     [Header("Content")]
     [SerializeField] private NpcSO npcSO;
-    [SerializeField] private UnityEvent onDialogEnd;
 
     private bool dialogShowed = false;
 
@@ -29,7 +28,7 @@ public class NPC : Interactible
             Destroy(gameObject);
         }
 
-        onDialogEnd.Invoke();
+        GetComponent<VisibilityHandler>()?.OnInteractionEnd();
     }
 
     private void SetupModel() {

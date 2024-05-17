@@ -3,5 +3,9 @@
     "letterGrondContent" : "Tobias,\n\nNic mnie nie obchodzą ci archeolodzy i ich miłosne perypetie. Jeśli się ich pozbędziemy, nagroda za odnalezienie Szczeliny przypadnie tylko nam. Zabij Rona. Ja zajmę się Hektorem, jak już doprowadzi mnie do Szczeliny.\n\nGrond.",
     "talk" : "[E] Rozmawiaj",
     "read" : "[E] Czytaj",
-    "letter" : "List"
+    "letter" : "List",
+    "object" : "Obiekt",
+    "draw" : "Zaczerpnij",
+    "corpse" : "Zwłoki",
+    "skeleton" : "Szkielet"
 }

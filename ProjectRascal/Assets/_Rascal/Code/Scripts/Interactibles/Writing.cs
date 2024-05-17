@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Writing : Interactible
 {
@@ -25,6 +26,8 @@ public class Writing : Interactible
         if(dialogAfterReading) {
             EventWizard.instance.PlayDialog(dialogKey);
         }
+
+        GetComponent<VisibilityHandler>()?.OnInteractionEnd();
     }
 
     public override void Interact(GameObject other) {
