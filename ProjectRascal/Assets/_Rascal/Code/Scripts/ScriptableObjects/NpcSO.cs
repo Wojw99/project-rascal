@@ -15,5 +15,5 @@ public class NpcSO : ScriptableObject
     public bool showDialogAfter = true;
     public string dialogAfterKey;
     public bool spawnEnemyAfter = false;
-    public EnemySO enemySO;
+    public GameObject enemyPrefab;
 }

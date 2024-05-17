@@ -3125,7 +3125,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4899989739816525836}
-  m_LocalRotation: {x: -0, y: 0.99954075, z: -0, w: -0.030303834}
+  m_LocalRotation: {x: 0, y: 0.99954075, z: -0, w: -0.030302903}
   m_LocalPosition: {x: 34.57, y: -0.000002861023, z: 9.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3171,10 +3171,7 @@ MonoBehaviour:
   nameTextMesh: {fileID: 8804578300569612921}
   actionTextMesh: {fileID: 5951523748400525984}
   dummyVisual: {fileID: 4275483702970449334}
-  enemyPrefab: {fileID: 2561772758235600693, guid: 9ea6571838511754ba55c92b1237e7c5,
-    type: 3}
   npcSO: {fileID: 11400000, guid: 57d97b4c86e6c8547929156d811a44d4, type: 2}
-  enemySO: {fileID: 11400000, guid: fb60e00ea4daf094bb9e576a4735bc77, type: 2}
 --- !u!1 &4906271535415735926
 GameObject:
   m_ObjectHideFlags: 0

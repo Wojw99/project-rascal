@@ -6,6 +6,7 @@ using System;
 
 public class Interactible : MonoBehaviour
 {
+    [Header("UI Elements")]
     [SerializeField] protected TextMeshProUGUI nameTextMesh;
     [SerializeField] protected TextMeshProUGUI actionTextMesh;
 

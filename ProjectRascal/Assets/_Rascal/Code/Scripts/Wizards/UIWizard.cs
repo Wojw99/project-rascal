@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UIWizard : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class UIWizard : MonoBehaviour
     [SerializeField] private Image faceImage;
     [SerializeField] private GameObject messageContainer;
 
+    public event Action WrittingHide;
+
     private void Start() {
         hpBarSprite.fillAmount = 1;
         mpBarSprite.fillAmount = 1;
@@ -63,6 +66,7 @@ public class UIWizard : MonoBehaviour
 
     public void HideWriting() {
         writingContainer.SetActive(false);
+        WrittingHide?.Invoke();
     }
 
     public void UpdateHpBar(float current, float max) {
@@ -75,5 +79,9 @@ public class UIWizard : MonoBehaviour
 
     public void UpdateGold(string current) {
         goldTextMesh.text = current;
+    }
+
+    private void OnDestroy() {
+        WrittingHide = null;
     }
 }

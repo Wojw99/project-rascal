@@ -23,12 +23,6 @@ public class EnemyController : MonoBehaviour, IDamagaController
         weaponDD = GetComponentInChildren<WeaponDD>();
     }
 
-    public void UpdateAnimatorAndWeapon() {
-        humanAnimator = GetComponent<HumanAnimator>();
-        weaponDD = GetComponentInChildren<WeaponDD>();
-        
-    }
-
     private void Update() {
         if(HandleDeath()) return;
         HandleRotation();

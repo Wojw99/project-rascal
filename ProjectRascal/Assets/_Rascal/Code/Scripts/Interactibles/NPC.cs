@@ -5,27 +5,26 @@ using UnityEngine;
 public class NPC : Interactible
 {
     [SerializeField] private GameObject dummyVisual;
-    [SerializeField] private GameObject enemyPrefab;
 
-    [Header("Scriptable Objects")]
+    [Header("Content")]
     [SerializeField] private NpcSO npcSO;
-    [SerializeField] private EnemySO enemySO;
 
     private bool dialogShowed = false;
+    private bool isInteracting = false;
 
     private void Start() {
         ParentStart();
         SetupModel();
         nameTextMesh.text = StringsWizard.Instance.GetActorName(npcSO.nameTextKey);
         actionTextMesh.text = StringsWizard.Instance.GetText(npcSO.actionTextKey);
-        EventWizard.instance.DialogEnd += OnDialogEnd;
+        
     }
 
     private void OnDialogEnd() {
+        EventWizard.instance.DialogEnd -= OnDialogEnd;
         dialogShowed = true;
         if(npcSO.spawnEnemyAfter) {
-            var enemy = Instantiate(enemyPrefab, transform.position, transform.rotation);
-            enemy.GetComponent<EnemyCharacter>()?.SetupWithNewData(enemySO);
+            Instantiate(npcSO.enemyPrefab, transform.position, transform.rotation);
             Destroy(transform.gameObject);
         }
     }
@@ -46,10 +45,8 @@ public class NPC : Interactible
                 EventWizard.instance.PlayDialog(npcSO.dialogKey);
             } else if(dialogShowed && npcSO.showDialogAfter) {
                 EventWizard.instance.PlayDialog(npcSO.dialogAfterKey);
-            } 
+            }
+            EventWizard.instance.DialogEnd += OnDialogEnd; 
         }
-    }
-    private void OnDestroy() {
-        EventWizard.instance.DialogEnd -= OnDialogEnd;
     }
 }

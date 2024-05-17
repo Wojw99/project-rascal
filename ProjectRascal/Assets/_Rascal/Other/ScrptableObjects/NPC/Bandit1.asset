@@ -20,4 +20,5 @@ MonoBehaviour:
   showDialogAfter: 1
   dialogAfterKey: bandit
   spawnEnemyAfter: 1
-  enemySO: {fileID: 0}
+  enemyPrefab: {fileID: 8262461782541617668, guid: aa09162bd9ce36e41b64c973422ba312,
+    type: 3}

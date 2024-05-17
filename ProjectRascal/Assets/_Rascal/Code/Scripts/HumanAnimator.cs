@@ -15,7 +15,7 @@ public class HumanAnimator : MonoBehaviour
 
     private void Start()
     {
-        animator = GetComponentInChildren<Animator>();
+        GetAnimator();
         // navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
@@ -24,67 +24,81 @@ public class HumanAnimator : MonoBehaviour
         // UpdateSpeed();
     }
 
+    public void GetAnimator()
+    {
+        animator = GetComponentInChildren<Animator>();
+        if (animator == null) {
+            animator = GetComponent<Animator>();
+        }
+    }
+
+    public void UpdateAnimator(Animator animator)
+    {
+        this.animator = animator;
+        Debug.Log("Animator updated" + animator);
+    }
+
     public void AnimateAttack2Handed() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Attack2Handed");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Attack2Handed");
     }
 
     public void AnimateBuffMagicArmor() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("BuffMagicArmor");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("BuffMagicArmor");
     }
 
     public void AnimateSurprise() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Surprise");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Surprise");
     }
 
     public void AnimateGesture1() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Gesture1");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Gesture1");
     }
 
     public void AnimateDeath() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Death");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Death");
     }
 
     public void AnimateGetHit() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("GetHit");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("GetHit");
     }
 
     public void AnimateMeleeAttack() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Attack");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Attack");
     }
 
     public void AnimateGathering() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Gathering");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Gathering");
     }
 
     public void AnimateSpellCast2() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("SpellCast2");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("SpellCast2");
     }
 
     public void AnimateCastingLoop() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("CastingLoop");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("CastingLoop");
     }
 
     public void AnimateBuff() {
-        animator.SetFloat("Speed", 0f);
-        animator.SetTrigger("Buff");
+        animator?.SetFloat("Speed", 0f);
+        animator?.SetTrigger("Buff");
     }
 
     public void AnimateRunning() {
-        animator.SetFloat("Speed", 1f, .1f, Time.deltaTime);
+        animator?.SetFloat("Speed", 1f, .1f, Time.deltaTime);
     }
 
     public void AnimateIdle() {
-        animator.SetFloat("Speed", 0f, .1f, Time.deltaTime);
+        animator?.SetFloat("Speed", 0f, .1f, Time.deltaTime);
     }
 
     // private void UpdateSpeed() {
