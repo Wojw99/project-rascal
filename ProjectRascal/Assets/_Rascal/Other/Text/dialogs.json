@@ -1,0 +1,80 @@
+{
+    "rascal1" : [
+        "m;rascal;Gdzie ja jestem...?",
+        "m;rascal;Nic nie pamiętam.",
+        "m;rascal;Może tamten facet będzie coś wiedział."
+    ],
+    "bandit" : [
+        "m;bandit;Kim... czym ty do cholery jesteś?",
+        "m;rascal;Jeśli mam być szczery, to sam nie wiem.",
+        "m;bandit;Giń, pieprzony upiorze!"
+    ],
+    "banditAfter" : [
+        "m;rascal;\"Upiór\", powiadasz? Może być."
+    ],
+    "rascal2" : [
+        "m;rascal;Kimkolwiek jest ten Ron, czekają go kłopoty. Pójdę do tej wioski i na wszelki wypadek go ostrzegę. Może przy okazji ktoś mi to wszystko wytłumaczy."
+    ],
+    "villager" : [
+        "m;villager;Kim jesteś?",
+        "m;rascal;Po prostu nazywaj mnie Upiorem, jeśli chcesz. Możesz mi wyjaśnić, co tu się stało?",
+        "m;villager;Bandyci! Mówili, że są jakąś ekspedycją. Zatrzymali się tu na kilka dni, aby zbadać znaleźć jakąś Szczelinę czy coś takiego. A kiedy już ją znaleźli... wtedy... wtedy...",
+        "m;rascal;Spokojnie. Nie musisz mówić, jeśli nie chcesz.",
+        "m;villager;Zaczęli mordować. Tak po prostu. Na wszystkich bogów... dlaczego nas to spotkało...?",
+        "m;rascal;Co to za Szczelina, której szukali?",
+        "m;villager;Ci dwaj archeolodzy mówili, że to przejście do świata umarłych. Do Otchłanii.",
+        "m;rascal;Świat umarłych, powiadasz? I co, ci archeolodzy chcieli tam wejść? Po co?",
+        "m;villager;Nie wiem. Nie powiedzieli.",
+        "m;rascal;Jeden z nich miał na imię Ron, tak? Podobno zatrzymali się w jakieś chacie, tu w wiosce. Gdzie to?",
+        "m;villager;Na północ stąd, na skraju bagien. Dawniej mieszkał tam nasz stary znachor, ale odkąd umarł, chata stała pusta.",
+        "m;rascal;Dziękuję za informacje. Bywaj.",
+        "m;villager;Panie... widziałem, jak walczysz z tymi bandytami? Powiedz... przysłał cię król? Jesteś tu, aby wymierzyć sprawiedliwość?",
+        "m;rascal;Sam chciałbym to wiedzieć."
+    ],
+    "villager2" : [
+        "m;villager2;Randa Thynmuato!",
+        "m;rascal;Co? Możesz powtórzyć?",
+        "m;villager2;Randa Thynmuato. Stary znachor mówił, że przybędziesz, aby ochronić Otchłań, gdy nadejdzie taka potrzeba. Tak powiadają legendy. Dziś mało kto pamięta.",
+        "m;rascal;Rozumiem... Nie, właściwie to nic tu nie rozumiem. Powiedz mi więcej o tym Randa Thynmuato.",
+        "m;villager2;Mściciel. Obrońca. \"Narodzi się, gdy przedwieczna ciemność stanie w szranki z ogniem ludzkiej pychy\", tak mówi legenda. \"Ten, który żyje, ale nie może umrzeć. Ten, który jest, ale nie może być. Ten, który patrzy.\""
+    ],
+    "spirit" : [
+        "m;rascal;Nie... to... to niemożliwe... NIE! IZABELO, NIE!!! NIEEE!!!",
+        "m;spirit;Teraz już rozumiesz. Wspomnienia wróciły. Prawda, Ron?",
+        "m;rascal;Dlaczego mnie zdradził?! Był moim przyjacielem! Miał mi pomóc uratować Izabelę!",
+        "m;spirit;Dobrze wiesz, że już za późno, aby ją uratować.",
+        "m;rascal;To nieprawda. Otchłań! Wciąż mogę tam wejść i sprowadzić Izabelę.",
+        "m;spirit;Teraz już oboje nie żyjecie, Ron. A nawet gdybyś żył... to by nie zadziałało.",
+        "m;rascal;Dlaczego Hektor mnie zdradził?!",
+        "m;spirit;W tej chwili istotne jest tylko to, że Otchłań jest w zagrożeniu. Żaden człowiek nie ma prawa otworzyć jej bram. Znajdź Hektora i wszystkich innych, którzy pragną ją zbezcześcić. I zabij ich. Nie oszczędzaj nikogo.",
+        "m;rascal;Z przyjemnością.",
+        "m;spirit;Zdobądź wiedzę, uwolnij swój potencjał. Opanuj moce Otchłanii.",
+        "m;rascal;Kim ty właściwie jesteś? Czym ja się stałem? NIE, zaczekaj!"
+    ],
+    "grond" : [
+        "m;grond;Zwiadowcy mi o tobie donieśli. Więc legendy mówią prawdę?",
+        "m;rascal;ZDRAJCA!",
+        "m;grond;Nie wiem, czym jesteś, ani dlaczego uważasz mnie za zdrajcę. Ale dzięki, że pozbyłeś się moich ludzi. Zaoszczędziłeś mi problemu z podziałem łupów.",
+        "m;rascal;ZGINIESZ!"
+    ],
+    "hektor" : [
+        "m;hektor;Czym jesteś?",
+        "m;rascal;Najwyraźniej stałem się tym, co chcieliśmy okiełznać.",
+        "m;hektor;Znam ten głos... Ron? To ty?",
+        "m;rascal;Dlaczego? Dlaczego to zrobiłeś...? Liczyłeś na nagrodę za odnalezienie Szczeliny? Chciałeś tych pieniędzy tylko dla siebie?! Pluję na to, Hektor! Mówiłem ci, robię to tylko dla Izabeli!",
+        "m;hektor;Ja...",
+        "m;rascal;DLACZEGO?!",
+        "m;hektor;Ja ją kocham, Ron. Tak samo jak ty. Zawsze ją kochałem.",
+        "m;rascal;Więc... ty... ty chciałeś mnie zabić, aby móc być z nią...",
+        "m;hektor;Wszystko ci wyjaśnię! NIE! Zostaw ten miecz!"
+    ],
+    "spirit2" : [
+        "m;spirit;Wypełniłeś swoje zadanie.",
+        "m;rascal;I co mi po tym...? I tak nic już mi nie pozostało. To koniec.",
+        "m;spirit;Więc zrozumiałeś.",
+        "m;rascal;W głowie cały czas pojawiają mi się nowe obrazy. Obrazy Otchłanii. Z godziny na godzinę jest ich coraz więcej.",
+        "m;spirit;To ty jesteś Otchłanią.",
+        "m;rascal;Ale jak to możliwe?",
+        "m;spirit;Wkrótce się dowiesz. A teraz żegnaj, Mścicielu."
+    ]
+}

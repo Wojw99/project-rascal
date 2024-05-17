@@ -1,0 +1,9 @@
+{
+    "rascal" : { "name" : "Upiór", "face" : "rascal" },
+    "bandit" : { "name" : "Bandyta", "face" : "bandit" },
+    "villager" : { "name" : "Mężczyzna", "face" : "villager" },
+    "villager2" : { "name" : "Kobieta", "face" : "villager2" },
+    "spirit" : { "name" : "Duch", "face" : "spirit" },
+    "grond" : { "name" : "Grond", "face" : "grond" },
+    "hektor" : { "name" : "Hektor", "face" : "hektor" }
+}
