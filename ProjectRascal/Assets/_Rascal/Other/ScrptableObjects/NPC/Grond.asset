@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab901322a458b0c439872567e66ec190, type: 3}
+  m_Name: Grond
+  m_EditorClassIdentifier: 
+  npcVisual: {fileID: 8601156974489751395, guid: 90a9d231172d40e4a850bb9d17b2677b,
+    type: 3}
+  nameTextKey: grond
+  actionTextKey: talk
+  dialogKey: grond
+  showDialogAfter: 0
+  dialogAfterKey: 
+  spawnEnemyAfter: 1
+  enemyPrefab: {fileID: 8262461782541617668, guid: b67bba89526fb814cbd8495cc9c64fdc,
+    type: 3}

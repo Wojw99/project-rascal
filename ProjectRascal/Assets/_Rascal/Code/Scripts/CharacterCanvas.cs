@@ -6,7 +6,7 @@ using TMPro;
 
 public class CharacterCanvas : MapCanvas
 {
-    [SerializeField] private string nameText;
+    [SerializeField] private string actorKey;
     [SerializeField] private Image healthBarSprite;
     [SerializeField] private Image healthBarBackgroundSprite;
     [SerializeField] private TextMeshProUGUI nameTextMesh;
@@ -16,7 +16,7 @@ public class CharacterCanvas : MapCanvas
         // mainCamera = Camera.main;
         ParentStart();
         healthBarSprite.fillAmount = 1;
-        nameTextMesh.text = nameText;
+        nameTextMesh.text = StringsWizard.Instance.GetActorName(actorKey);
     }
 
     private void Update() {

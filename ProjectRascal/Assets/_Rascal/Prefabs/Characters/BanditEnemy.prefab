@@ -4616,7 +4616,7 @@ Transform:
   - {fileID: 4749829372212047916}
   - {fileID: 1140427939423797916}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &356852573945112837
 Animator:
@@ -4719,6 +4719,7 @@ MonoBehaviour:
   maxMana: 20
   attack: 5
   magic: 10
+  isAgressive: 1
 --- !u!114 &5939276148901374555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5454,6 +5455,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5958458536144823275}
     m_Modifications:
+    - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
+        type: 3}
+      propertyPath: actorKey
+      value: bandit
+      objectReference: {fileID: 0}
     - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
         type: 3}
       propertyPath: nameText

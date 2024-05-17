@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NPC : Interactible
 {
@@ -8,25 +9,27 @@ public class NPC : Interactible
 
     [Header("Content")]
     [SerializeField] private NpcSO npcSO;
+    [SerializeField] private UnityEvent onDialogEnd;
 
     private bool dialogShowed = false;
-    private bool isInteracting = false;
 
     private void Start() {
         ParentStart();
         SetupModel();
         nameTextMesh.text = StringsWizard.Instance.GetActorName(npcSO.nameTextKey);
         actionTextMesh.text = StringsWizard.Instance.GetText(npcSO.actionTextKey);
-        
     }
 
     private void OnDialogEnd() {
         EventWizard.instance.DialogEnd -= OnDialogEnd;
+        
         dialogShowed = true;
         if(npcSO.spawnEnemyAfter) {
             Instantiate(npcSO.enemyPrefab, transform.position, transform.rotation);
-            Destroy(transform.gameObject);
+            Destroy(gameObject);
         }
+
+        onDialogEnd.Invoke();
     }
 
     private void SetupModel() {

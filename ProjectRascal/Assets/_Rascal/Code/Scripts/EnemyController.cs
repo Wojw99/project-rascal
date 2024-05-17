@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
     [SerializeField] private float attackDistance;
     private CharacterCanvas characterCanvas;
     private HumanAnimator humanAnimator;
-    private GameCharacter gameCharacter;
+    private EnemyCharacter enemyCharacter;
     private NavMeshAgent navMeshAgent;
     private CharacterState characterState = CharacterState.Idle;
     private GameObject chasingTarget;
@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
 
     private void Start() {
         humanAnimator = GetComponent<HumanAnimator>();
-        gameCharacter = GetComponent<GameCharacter>();
+        enemyCharacter = GetComponent<EnemyCharacter>();
         characterCanvas = GetComponentInChildren<CharacterCanvas>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         weaponDD = GetComponentInChildren<WeaponDD>();
@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
     }
 
     private bool HandleDeath() {
-        if(gameCharacter.IsDead()) {
+        if(enemyCharacter.IsDead()) {
             characterState = CharacterState.Death;
             humanAnimator.AnimateDeath();
             if(TryGetComponent<BoxCollider>(out BoxCollider boxCollider)) {
@@ -49,6 +49,8 @@ public class EnemyController : MonoBehaviour, IDamagaController
     }
 
     private void HandleChasing() {
+        if(!enemyCharacter.IsAgressive) return;
+
         if(characterState != CharacterState.Casting && chasingTarget != null) {
             var distanceToTarget = Vector3.Distance(transform.position, chasingTarget.transform.position);
             if(distanceToTarget <= attackDistance) {
@@ -89,7 +91,7 @@ public class EnemyController : MonoBehaviour, IDamagaController
     {
         if(characterState != CharacterState.Death) {
             characterState = CharacterState.Idle;
-            weaponDD.FeedAndDealDamage(ownerCharacter: gameCharacter, damageDuration: 0.8f);
+            weaponDD.FeedAndDealDamage(ownerCharacter: enemyCharacter, damageDuration: 0.8f);
         }
     }
 
@@ -98,12 +100,12 @@ public class EnemyController : MonoBehaviour, IDamagaController
             var bloodSpillPosition = new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z);
             VfxWizard.instance.SummonBloodSpillEffect(bloodSpillPosition, Quaternion.LookRotation(hitDirection));
         }
-        if (gameCharacter.IsDead()) {
+        if (enemyCharacter.IsDead()) {
             humanAnimator.AnimateDeath();
             characterCanvas.DisableHealthBarAndName();
         } else {
             // humanAnimator.AnimateGetHit();
-            characterCanvas.UpdateHealthBar(gameCharacter.CurrentHealth, gameCharacter.MaxHealth);
+            characterCanvas.UpdateHealthBar(enemyCharacter.CurrentHealth, enemyCharacter.MaxHealth);
         }
     }
 

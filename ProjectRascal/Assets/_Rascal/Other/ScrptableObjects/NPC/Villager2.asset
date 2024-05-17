@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab901322a458b0c439872567e66ec190, type: 3}
+  m_Name: Villager2
+  m_EditorClassIdentifier: 
+  npcVisual: {fileID: 6813661756974195136, guid: a417616f9294d164d9dbdba4bd395d4e,
+    type: 3}
+  nameTextKey: villager2
+  actionTextKey: talk
+  dialogKey: villager2
+  showDialogAfter: 1
+  dialogAfterKey: villager2After
+  spawnEnemyAfter: 0
+  enemyPrefab: {fileID: 0}

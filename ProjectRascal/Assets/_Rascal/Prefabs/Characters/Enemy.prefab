@@ -1586,7 +1586,7 @@ Transform:
   - {fileID: 304722490526945030}
   - {fileID: 3922317728870024047}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6441744375664984486
 Animator:
@@ -1689,8 +1689,7 @@ MonoBehaviour:
   maxMana: 20
   attack: 5
   magic: 10
-  dummyVisual: {fileID: 5320121005666325475}
-  enemyData: {fileID: 11400000, guid: fb60e00ea4daf094bb9e576a4735bc77, type: 2}
+  isAgressive: 1
 --- !u!114 &8303495783570354550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5611,6 +5610,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4431129047546407465}
     m_Modifications:
+    - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
+        type: 3}
+      propertyPath: actorKey
+      value: rascal
+      objectReference: {fileID: 0}
     - target: {fileID: 107965036869492673, guid: d5e77c6adf7176a46ab18ab32157618f,
         type: 3}
       propertyPath: nameText

@@ -3110,6 +3110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7068747136219662881}
   - component: {fileID: 7394113946892830919}
+  - component: {fileID: 1532600575642532562}
   - component: {fileID: 5286899325862371962}
   m_Layer: 0
   m_Name: NPC
@@ -3133,7 +3134,7 @@ Transform:
   - {fileID: 4989372288228763945}
   - {fileID: 4074559835639588105}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 183.473, z: 0}
 --- !u!65 &7394113946892830919
 BoxCollider:
@@ -3156,6 +3157,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.6151748, y: 2.72118, z: 0.6835942}
   m_Center: {x: 0.020382404, y: 0.8605902, z: -0.011871517}
+--- !u!136 &1532600575642532562
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4899989739816525836}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.29
+  m_Height: 2.04
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.88, z: 0}
 --- !u!114 &5286899325862371962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3171,7 +3195,7 @@ MonoBehaviour:
   nameTextMesh: {fileID: 8804578300569612921}
   actionTextMesh: {fileID: 5951523748400525984}
   dummyVisual: {fileID: 4275483702970449334}
-  npcSO: {fileID: 11400000, guid: 57d97b4c86e6c8547929156d811a44d4, type: 2}
+  npcSO: {fileID: 0}
 --- !u!1 &4906271535415735926
 GameObject:
   m_ObjectHideFlags: 0
