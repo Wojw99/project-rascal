@@ -17,7 +17,7 @@ public class GameVariablesWizard : MonoBehaviour
 {
     private List<GameVariable> gameVariables = new();
 
-    public event Action GameVariablesChanged;
+    public event Action<GvKey> GameVariableChanged;
 
     private void Start() {
         foreach (GvKey key in Enum.GetValues(typeof(GvKey))) {
@@ -29,7 +29,7 @@ public class GameVariablesWizard : MonoBehaviour
         var gameVariable = gameVariables.Find(x => x.key == key);
         if(gameVariable != null) {
             gameVariable.value = true;
-            GameVariablesChanged?.Invoke();
+            GameVariableChanged?.Invoke(key);
         }
     }
 
@@ -46,7 +46,7 @@ public class GameVariablesWizard : MonoBehaviour
     }
 
     private void OnDestroy() {
-        GameVariablesChanged = null;
+        GameVariableChanged = null;
     }
 
     #region Singleton

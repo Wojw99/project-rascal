@@ -134,6 +134,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
+     <Compile Include="Assets\_Rascal\Code\Scripts\StoryProgressManager.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
      <Compile Include="Assets\_Rascal\Code\Scripts\DamageDealers\NecroSlashDD.cs" />
      <Compile Include="Assets\_Rascal\Code\Scripts\GameVariablesWizard.cs" />
@@ -176,7 +177,6 @@
      <Compile Include="Assets\_Rascal\Code\Scripts\Interactibles\InteractibleCanvas.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
-     <Compile Include="Assets\_Rascal\Code\Scripts\AbyssSource.cs" />
      <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Core\BSPTree.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
@@ -196,6 +196,7 @@
      <Compile Include="Assets\_Rascal\Code\Scripts\DamageDealers\WeaponDD.cs" />
      <Compile Include="Assets\_Rascal\Code\Scripts\Interactibles\Door.cs" />
      <Compile Include="Assets\_Rascal\Code\Scripts\DamageDealers\DamagableFire.cs" />
+     <Compile Include="Assets\_Rascal\Code\Scripts\Source.cs" />
      <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Code\Examples\SimpleStateMachine.cs" />
      <Compile Include="Assets\_Rascal\Code\Scripts\Interactibles\NPC.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />

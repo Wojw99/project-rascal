@@ -12,7 +12,7 @@ public class Gold : Interactible
 
     public override void Interact(GameObject other) {
         if(other.TryGetComponent(out PlayerCharacter gameCharacter)) {
-            gameCharacter.AddGold(amount);
+            // gameCharacter.AddGold(amount);
             Destroy(transform.gameObject);
         }
     }

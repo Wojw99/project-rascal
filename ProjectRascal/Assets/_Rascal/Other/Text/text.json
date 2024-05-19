@@ -6,6 +6,16 @@
     "letter" : "List",
     "object" : "Obiekt",
     "draw" : "Zaczerpnij",
+    "investigate" : "Zbadaj",
     "corpse" : "Zwłoki",
-    "skeleton" : "Szkielet"
+    "skeleton" : "Szkielet",
+    "obj1" : "Porozmawiaj z nieznajomym",
+    "obj2" : "Przeczytaj list",
+    "obj3" : "Poszukaj w wiosce informacji o Ronie",
+    "obj4" : "Znajdź chatę na bagnach",
+    "obj5" : "Porozmawiaj z duchem",
+    "obj6" : "Znajdź starożytne ruiny",
+    "obj7" : "Pokonaj Gronda",
+    "obj8" : "Porozmawiaj z Hektorem",
+    "obj9" : "Porozmawiaj z duchem"
 }

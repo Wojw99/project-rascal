@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class EnemyController : MonoBehaviour, IDamagaController
     private CharacterState characterState = CharacterState.Idle;
     private GameObject chasingTarget;
     private WeaponDD weaponDD;
+
+    public static event Action<int, int> EnemyDeath;
 
     private void Start() {
         humanAnimator = GetComponent<HumanAnimator>();
@@ -104,10 +107,17 @@ public class EnemyController : MonoBehaviour, IDamagaController
             humanAnimator.AnimateDeath();
             characterCanvas.DisableHealthBarAndName();
             GetComponent<VisibilityHandler>()?.OnInteractionEnd();
+            HandleReward();
         } else {
             // humanAnimator.AnimateGetHit();
             characterCanvas.UpdateHealthBar(enemyCharacter.CurrentHealth, enemyCharacter.MaxHealth);
         }
+    }
+
+    private void HandleReward() {
+        var abyssEnergyReward = enemyCharacter.AbyssEnergyReward;
+        var abyssKnowledgeReward = enemyCharacter.AbyssKnowledgeReward;
+        EnemyDeath?.Invoke(abyssEnergyReward, abyssKnowledgeReward);
     }
 
     public enum CharacterState

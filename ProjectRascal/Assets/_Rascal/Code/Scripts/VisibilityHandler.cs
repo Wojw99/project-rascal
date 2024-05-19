@@ -11,14 +11,14 @@ public class VisibilityHandler : MonoBehaviour
 
     private void Start() {
         HandleActivision();
-        GameVariablesWizard.instance.GameVariablesChanged += OnGameVariablesChanged;
+        GameVariablesWizard.instance.GameVariableChanged += OnGameVariableChanged;
     }
 
     public void OnInteractionEnd() {
         GameVariablesWizard.instance.ActivateGameVariable(activatedGameVariable);
     }
 
-    private void OnGameVariablesChanged() {
+    private void OnGameVariableChanged(GvKey gvKey) {
         HandleActivision();
     }
 
@@ -28,6 +28,6 @@ public class VisibilityHandler : MonoBehaviour
     }
 
     private void OnDestroy() {
-        GameVariablesWizard.instance.GameVariablesChanged -= OnGameVariablesChanged;
+        GameVariablesWizard.instance.GameVariableChanged -= OnGameVariableChanged;
     }
 }
