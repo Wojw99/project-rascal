@@ -4651,7 +4651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adba188f5ee2812488a91a06c63a29ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionDistance: 10
+  detectionDistance: 15
   attackDistance: 1.5
 --- !u!54 &2530465964726835734
 Rigidbody:
@@ -4720,6 +4720,8 @@ MonoBehaviour:
   attack: 5
   magic: 10
   isAgressive: 1
+  abyssEnergyReward: 10
+  abyssKnowledgeReward: 10
 --- !u!114 &5939276148901374555
 MonoBehaviour:
   m_ObjectHideFlags: 0

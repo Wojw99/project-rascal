@@ -5015,9 +5015,7 @@ MonoBehaviour:
   currentMana: 20
   maxMana: 20
   attack: 5
-  magic: 10
-  _abyssKnowledge: 0
-  _abyssEnergy: 50
+  magic: 50
 --- !u!114 &3367581328632534238
 MonoBehaviour:
   m_ObjectHideFlags: 0

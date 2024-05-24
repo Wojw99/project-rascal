@@ -221,7 +221,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8762892873298638128, guid: 0d09ba3728454da43b422bdac6296d68,
         type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762892873298638128, guid: 0d09ba3728454da43b422bdac6296d68,
+        type: 3}
       propertyPath: m_Intensity
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762892873298638128, guid: 0d09ba3728454da43b422bdac6296d68,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762892873298638128, guid: 0d09ba3728454da43b422bdac6296d68,
+        type: 3}
+      propertyPath: m_BounceIntensity
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
