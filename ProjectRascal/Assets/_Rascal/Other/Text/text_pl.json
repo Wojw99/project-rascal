@@ -1,0 +1,21 @@
+{
+    "letterHektorContent" : "Grond,\n\nWracaj do wioski i każ tym swoim zwiadowcom zrobić to samo. Koniec poszukiwań. Znalazłem położenie Szczeliny. To w ruinach na północny wschód stąd, ale dokładną lokalizację podam ci, gdy już się spotkamy. Pozostaje kwestia naszego wspólnika. Teraz Ron nie jest już nam do niczego potrzebny. Zamknąłem go w naszej chacie, na razie śpi i niczego nie podejrzewa. Przyślij tu jednego z tych swoich zabójców, aby załatwił sprawę.\n\nDo rychłego zobaczenia,\nH.",
+    "letterGrondContent" : "Tobias,\n\nNic mnie nie obchodzą ci archeolodzy i ich miłosne perypetie. Jeśli się ich pozbędziemy, nagroda za odnalezienie Szczeliny przypadnie tylko nam. Zabij Rona. Ja zajmę się Hektorem, jak już doprowadzi mnie do Szczeliny.\n\nGrond.",
+    "talk" : "[E] Rozmawiaj",
+    "read" : "[E] Czytaj",
+    "letter" : "List",
+    "object" : "Obiekt",
+    "draw" : "Zaczerpnij",
+    "investigate" : "Zbadaj",
+    "corpse" : "Zwłoki",
+    "skeleton" : "Szkielet",
+    "obj1" : "Porozmawiaj z nieznajomym",
+    "obj2" : "Przeczytaj list",
+    "obj3" : "Poszukaj w wiosce informacji o Ronie",
+    "obj4" : "Znajdź chatę na bagnach",
+    "obj5" : "Porozmawiaj z duchem",
+    "obj6" : "Znajdź starożytne ruiny",
+    "obj7" : "Pokonaj Gronda",
+    "obj8" : "Porozmawiaj z Hektorem",
+    "obj9" : "Porozmawiaj z duchem"
+}

@@ -21,7 +21,7 @@ public class Writing : Interactible
     }
 
     private void OnHideWriting() {
-        UIWizard.instance.WrittingHide -= OnHideWriting;
+        UIWizard.instance.WritingHide -= OnHideWriting;
 
         if(dialogAfterReading) {
             EventWizard.instance.PlayDialog(dialogKey);
@@ -34,7 +34,7 @@ public class Writing : Interactible
         if(other.TryGetComponent(out PlayerController playerController)) {
             var writing = StringsWizard.Instance.GetText(writingContentKey);
             UIWizard.instance.ShowWriting(writing);
-            UIWizard.instance.WrittingHide += OnHideWriting;
+            UIWizard.instance.WritingHide += OnHideWriting;
         }
     }
 }

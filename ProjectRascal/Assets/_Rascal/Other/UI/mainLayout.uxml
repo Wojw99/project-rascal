@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Rascal/Other/UI/Style.uss?fileID=7433441132597879392&amp;guid=2024681e489c6454ba74206fe812ce6e&amp;type=3#Style" />
+    <ui:VisualElement name="CharacterLayout" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: flex-start; flex-direction: column; align-items: center; display: flex;">
+        <ui:VisualElement name="TopLayout" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; height: 50%;">
+            <ui:Label tabindex="-1" text="Goal:" display-tooltip-when-elided="true" name="Goal" class="goalLabel" style="font-size: 16px; height: auto; margin-bottom: 0; padding-bottom: 0; color: rgb(255, 255, 255); -unity-font: url(&apos;project://database/Assets/_Rascal/Other/Fonts/Kurale-Regular.ttf?fileID=12800000&amp;guid=0c15a328b8bf9e04ab8f956726f1ee19&amp;type=3#Kurale-Regular&apos;); -unity-font-definition: initial; -unity-font-style: normal;" />
+            <ui:Label tabindex="-1" text="Travel to the village" display-tooltip-when-elided="true" name="GoalContent" class="goalLabel" style="max-height: none; padding-top: 0; margin-top: 0; color: rgb(255, 227, 17); -unity-font: url(&apos;project://database/Assets/_Rascal/Other/Fonts/Kurale-Regular.ttf?fileID=12800000&amp;guid=0c15a328b8bf9e04ab8f956726f1ee19&amp;type=3#Kurale-Regular&apos;); -unity-font-definition: initial; font-size: 18px; -unity-font-style: normal;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="BottomLayout" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; flex-direction: column-reverse; align-items: center; height: 50%;">
+            <ui:VisualElement name="AkBarContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20px; width: 15%; min-height: auto; max-height: 20px; justify-content: center; align-items: center;">
+                <ui:ProgressBar value="22" name="AkBar" class="akBar" style="background-color: rgba(255, 255, 255, 0); opacity: 1; width: 100%; justify-content: flex-start; height: auto;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="AeBarContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 20px; width: 30%; max-height: 20px; flex-wrap: wrap; align-items: center; justify-content: center;">
+                <ui:ProgressBar value="100" name="AeBar" class="aeBar aeBarRight" style="background-color: rgba(255, 255, 255, 0); opacity: 1; width: 100%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

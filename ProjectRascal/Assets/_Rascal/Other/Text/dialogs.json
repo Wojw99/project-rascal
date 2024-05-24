@@ -1,90 +1,90 @@
 {
     "rascal1" : [
-        "m;rascal;Gdzie ja jestem...?",
-        "m;rascal;Nic nie pamiętam.",
-        "m;rascal;Tam stoi jakiś człowiek. Może on będzie coś wiedział."
+        "m;rascal;Where am I...?",
+        "m;rascal;I don't remember anything.",
+        "m;rascal;There's a man standing there. Maybe he'll know something."
     ],
     "bandit" : [
-        "m;bandit;Kim... czym ty do cholery jesteś?",
-        "m;rascal;Jeśli mam być szczery, to sam nie wiem.",
-        "m;bandit;Giń, pieprzony upiorze!"
+        "m;bandit;Who... what the hell are you?",
+        "m;rascal;To be honest, I don't know.",
+        "m;bandit;Die, you damn phantom!"
     ],
     "banditAfter" : [
-        "m;rascal;\"Upiór\", powiadasz? Może być."
+        "m;rascal;\"Phantom\", you say? I like it."
     ],
     "rascal2" : [
-        "m;rascal;Kimkolwiek jest ten Ron, czekają go kłopoty. Pójdę do tej wioski i na wszelki wypadek go ostrzegę. Może przy okazji ktoś mi to wszystko wytłumaczy."
+        "m;rascal;Whoever this Ron is, there's trouble waiting for him. I'll go to that village and warn him just in case. Maybe someone will explain all this to me."
     ],
     "villager" : [
-        "m;villager;Kim jesteś?",
-        "m;rascal;Po prostu nazywaj mnie Upiorem, jeśli chcesz. Możesz mi wyjaśnić, co tu się stało?",
-        "m;villager;Bandyci! Mówili, że są jakąś ekspedycją. Zatrzymali się tu na kilka dni, aby zbadać znaleźć jakąś Szczelinę czy coś takiego. A kiedy już ją znaleźli... wtedy... wtedy...",
-        "m;rascal;Spokojnie. Nie musisz mówić, jeśli nie chcesz.",
-        "m;villager;Zaczęli mordować. Tak po prostu. Na wszystkich bogów... dlaczego nas to spotkało...?",
-        "m;rascal;Co to za Szczelina, której szukali?",
-        "m;villager;Ci dwaj archeolodzy mówili, że to przejście do świata umarłych. Do Otchłanii.",
-        "m;rascal;Świat umarłych, powiadasz? I co, ci archeolodzy chcieli tam wejść? Po co?",
-        "m;villager;Nie wiem. Nie powiedzieli.",
-        "m;rascal;Jeden z nich miał na imię Ron, tak? Podobno zatrzymali się w jakieś chacie, tu w wiosce. Gdzie to?",
-        "m;villager;Na północ stąd, na skraju bagien. Dawniej mieszkał tam nasz stary znachor, ale odkąd umarł, chata stała pusta.",
-        "m;rascal;Dziękuję za informacje. Bywaj.",
-        "m;villager;Panie... widziałem, jak walczysz z tymi bandytami? Powiedz... przysłał cię król? Jesteś tu, aby wymierzyć sprawiedliwość?",
-        "m;rascal;Sam chciałbym wiedzieć, skąd się tu wziąłem."
+        "m;villager;Who are you?",
+        "m;rascal;Just call me Phantom if you want. Can you explain to me what happened here?",
+        "m;villager;Bandits! They said they were some kind of expedition. They stopped here for a few days to investigate, find some Rift or something. And when they found it... then... then...",
+        "m;rascal;Relax. You don't have to talk if you don't want to.",
+        "m;villager;They started murdering. Just like that. By all the gods... why did this happen to us...?",
+        "m;rascal;What is this Rift they were looking for?",
+        "m;villager;Those two archaeologists said it was a passage to the world of the dead. To the Abyss.",
+        "m;rascal;The world of the dead, you say? Why the archaeologists want to go there?",
+        "m;villager;I don't know. They didn't say.",
+        "m;rascal;One of them was called Ron, right? Apparently they were staying in some cottage here in the village. Where is it?",
+        "m;villager;North of here, at the edge of the swamp. Our old healer used to live there, but since he died the cottage has been empty.",
+        "m;rascal;Thank you for the information.",
+        "m;villager;Sir... I saw you fighting these bandits. Tell me... did the king sent you? Are you here to bring justice?",
+        "m;rascal;I'd like to know too."
     ],
     "villagerAfter" : [
-        "m;villager;O, bogowie... co za czasy."
+        "m;villager;Oh, gods... what a time."
     ],
     "villager2" : [
         "m;villager2;Randa Thynmuato!",
-        "m;rascal;Co? Możesz powtórzyć?",
-        "m;villager2;Randa Thynmuato. Stary znachor mówił, że przybędziesz, aby ochronić Otchłań, gdy nadejdzie taka potrzeba. Tak powiadają legendy. Dziś mało kto pamięta.",
-        "m;rascal;Rozumiem... Nie, właściwie to nic tu nie rozumiem. Powiedz mi więcej o tym Randa Thynmuato.",
-        "m;villager2;Mściciel. Obrońca. \"Narodzi się, gdy przedwieczna ciemność stanie w szranki z ogniem ludzkiej pychy\", tak mówi legenda. \"Ten, który żyje, ale nie może umrzeć. Ten, który jest, ale nie może być. Ten, który patrzy.\""
+        "m;rascal;What? Can you repeat that?",
+        "m;villager2;Randa Thynmuato. The old medicine man said that you would come to protect the Abyss when the need arises. That's what the legends say. Hardly anyone remembers today.",
+        "m;rascal;I see... No, actually I don't understand anything here. Tell me more about it Randa Thynmuato.",
+        "m;villager2;Avenger. Defender. \"He will be born when the eternal darkness confronts the fire of human pride,\" so the legend says. \"He who lives but cannot die. The one who is but cannot be. The one who watches.\""
     ],
     "villager2After" : [
-        "m;villager2;Nie zwracajcie na mnie uwagi, panie. Jestem tylko prostym farmerem."
+        "m;villager2;Don't pay any attention to me, sir. I'm just a simple farmer."
     ],
     "rascalIsabela" : [
-        "m;rascal;Nie... to... to niemożliwe... NIE! IZABELO, NIE!!! NIEEE!!!",
-        "m;spirit;Podejdź, Ron. Musimy porozmawiać."
+        "m;rascal;No... it's... it's impossible... NO! IZABELA, NO!!! NOEE!!!",
+        "m;spirit;Come over, Ron. We need to talk."
     ],
     "spirit" : [
-        "m;rascal;Wszystko stracone...",
-        "m;spirit;Teraz już rozumiesz. Wspomnienia wróciły. Prawda, Ron?",
-        "m;rascal;Dlaczego mnie zdradził?! Był moim przyjacielem! Miał mi pomóc uratować Izabelę!",
-        "m;spirit;Dobrze wiesz, że już za późno, aby ją uratować.",
-        "m;rascal;To nieprawda. Otchłań! Wciąż mogę tam wejść i sprowadzić Izabelę.",
-        "m;spirit;Teraz już oboje nie żyjecie, Ron. A nawet gdybyś żył... to by nie zadziałało.",
-        "m;rascal;Dlaczego Hektor mnie zdradził?!",
-        "m;spirit;W tej chwili istotne jest tylko to, że Otchłań jest w zagrożeniu. Żaden człowiek nie ma prawa otworzyć jej bram. Znajdź Hektora i wszystkich innych, którzy pragną ją zbezcześcić. I zabij ich. Nie oszczędzaj nikogo.",
-        "m;rascal;Z przyjemnością.",
-        "m;spirit;Zdobądź wiedzę, uwolnij swój potencjał. Opanuj moce Otchłanii.",
-        "m;rascal;Kim ty właściwie jesteś? Czym ja się stałem? NIE, zaczekaj!"
+        "m;rascal;All is lost...",
+        "m;spirit;Now you understand. The memories came back. Right, Ron?",
+        "m;rascal;Why did he betray me?! He was my friend! He was supposed to help me save Isabella!",
+        "m;spirit;You know very well that it's too late to save her.",
+        "m;rascal;That's not true. The Abyss! I can still go there and bring Isabella back.",
+        "m;spirit;Now you're both dead, Ron. And even if you were... it wouldn't work.",
+        "m;rascal;Why did Hector betray me?!",
+        "m;spirit;Right now, the only thing that matters is that the Abyss is in danger. No human has the right to open its gates. Find Hector and all the others who wish to desecrate it. And kill them. Spare no one.",
+        "m;rascal;With pleasure.",
+        "m;spirit;Gain knowledge, unleash your potential. Master the powers of the Abyss.",
+        "m;rascal;Who are you exactly? What have I become? NO, wait!"
     ],
     "grond" : [
-        "m;grond;Zatem jesteś. Doniesiono mi, że coś, jakiś stwór, zabija moich ludzi.",
-        "m;rascal;Zdrajca!",
-        "m;grond;Nie wiem, czym jesteś, ani dlaczego uważasz mnie za zdrajcę. Ale dzięki, że pozbyłeś się moich ludzi. Zaoszczędziłeś mi problemu z podziałem łupów.",
-        "m;rascal;Giń!"
+        "m;grond;So you are. I have been informed that something, some creature, is killing my people.",
+        "m;rascal;Traitor!",
+        "m;grond;I don't know who you are or why you think I'm a traitor. But thanks for getting rid of my people. You saved me the trouble of dividing up the loot.",
+        "m;rascal;Die!"
     ],
-    "hektor" : [
-        "m;hektor;Kim jesteś?",
-        "m;rascal;Najwyraźniej stałem się tym, co chcieliśmy okiełznać.",
-        "m;hektor;Znam ten głos... Ron? To ty?",
-        "m;rascal;Dlaczego? Dlaczego to zrobiłeś...? Liczyłeś na nagrodę za odnalezienie Szczeliny? Chciałeś tych pieniędzy tylko dla siebie?! Pluję na to, Hektor! Mówiłem ci, robię to tylko dla Izabeli!",
-        "m;hektor;Ja...",
-        "m;rascal;DLACZEGO?!",
-        "m;hektor;Ja ją kocham, Ron. Tak samo jak ty. Zawsze ją kochałem.",
-        "m;rascal;Więc... ty... ty chciałeś mnie zabić, aby móc być z nią...",
-        "m;hektor;Wszystko ci wyjaśnię! NIE! Zostaw ten miecz!"
+    "hector" : [
+        "m;hektor;Who are you?",
+        "m;rascal;Apparently I have become what we wanted to tame.",
+        "m;hektor;I know that voice... Ron? Is that you?",
+        "m;rascal;Why? Why did you do it...? Were you hoping for a reward for finding the Rift? Did you want the money just for yourself?! I spit on it, Hektor! I told you, I'm only doing it for Isabella!",
+        "m;hektor;I...",
+        "m;rascal;WHY?!",
+        "m;hector;I love her, Ron. Just like you. I've always loved her.",
+        "m;rascal;So... you... you wanted to kill me so you could be with her...",
+        "m;hektor;I will explain everything to you! NO! Leave that sword!"
     ],
     "spirit2" : [
-        "m;spirit;Wypełniłeś swoje zadanie.",
-        "m;rascal;I co mi po tym...? I tak nic już mi nie pozostało. To koniec.",
-        "m;spirit;Więc zrozumiałeś.",
-        "m;rascal;W głowie cały czas pojawiają mi się nowe obrazy. Obrazy Otchłanii. Z godziny na godzinę jest ich coraz więcej.",
-        "m;spirit;To ty jesteś Otchłanią.",
-        "m;rascal;Ale jak to możliwe?",
-        "m;spirit;Wkrótce się dowiesz. A teraz żegnaj, Mścicielu."
+        "m;spirit;You have completed your task.",
+        "m;rascal;And what's the point of this...? There's nothing left for me anyway. It's over.",
+        "m;spirit;So you understood.",
+        "m;rascal;New images appear in my head all the time. Images of the Abyss. There are more and more of them every hour.",
+        "m;spirit;You are the Abyss.",
+        "m;rascal;But how is that possible?",
+        "m;spirit;You will soon know. Now, farewell, Avenger."
     ]
 }

@@ -7,6 +7,58 @@ using System;
 
 public class UIWizard : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI writingTextMesh;
+    [SerializeField] private GameObject writingContainer;
+
+    [SerializeField] private TextMeshProUGUI messageTextMesh;
+    [SerializeField] private TextMeshProUGUI nameTextMesh;
+    [SerializeField] private Image faceImage;
+    [SerializeField] private GameObject messageContainer;
+
+    public event Action WritingHide;
+    public event Action WritingShowed;
+    public event Action MessageShowed;
+    public event Action MessageHide;
+
+    private void Start() {
+        HideWriting();
+        HideMessage();
+    }
+
+    public void ShowMessage(string name, Sprite faceSprite, string text) {
+        nameTextMesh.text = name;
+        messageTextMesh.text = text;
+        faceImage.sprite = faceSprite;
+        messageContainer.SetActive(true);
+        MessageShowed?.Invoke();
+        UIHandler.HideCharacterUi = true;
+    }
+
+    public void HideMessage() {
+        nameTextMesh.text = string.Empty;
+        messageTextMesh.text = string.Empty;
+        messageContainer.SetActive(false);
+        MessageHide?.Invoke();
+        UIHandler.HideCharacterUi = false;
+    }
+
+    public void ShowWriting(string text) {
+        writingTextMesh.text = text;
+        writingContainer.SetActive(true);
+        WritingShowed?.Invoke();
+        UIHandler.HideCharacterUi = true;
+    }
+
+    public void HideWriting() {
+        writingContainer.SetActive(false);
+        WritingHide?.Invoke();
+        UIHandler.HideCharacterUi = false;
+    }
+
+    private void OnDestroy() {
+        WritingHide = null;
+    }
+
     #region Singleton
 
     public static UIWizard instance;
@@ -20,68 +72,4 @@ public class UIWizard : MonoBehaviour
     }
 
     #endregion
-
-    [SerializeField] private Image hpBarSprite;
-    [SerializeField] private Image hpBarBackgroundSprite;
-    [SerializeField] private Image mpBarSprite;
-    [SerializeField] private Image mpBarBackgroundSprite;
-
-    [SerializeField] private TextMeshProUGUI goldTextMesh;
-
-    [SerializeField] private TextMeshProUGUI writingTextMesh;
-    [SerializeField] private GameObject writingContainer;
-
-    [SerializeField] private TextMeshProUGUI messageTextMesh;
-    [SerializeField] private TextMeshProUGUI nameTextMesh;
-    [SerializeField] private Image faceImage;
-    [SerializeField] private GameObject messageContainer;
-
-    public event Action WrittingHide;
-
-    private void Start() {
-        hpBarSprite.fillAmount = 1;
-        mpBarSprite.fillAmount = 1;
-        goldTextMesh.text = "0";
-        HideWriting();
-        HideMessage();
-    }
-
-    public void ShowMessage(string name, Sprite faceSprite, string text) {
-        nameTextMesh.text = name;
-        messageTextMesh.text = text;
-        faceImage.sprite = faceSprite;
-        messageContainer.SetActive(true);
-    }
-
-    public void HideMessage() {
-        nameTextMesh.text = string.Empty;
-        messageTextMesh.text = string.Empty;
-        messageContainer.SetActive(false);
-    }
-
-    public void ShowWriting(string text) {
-        writingTextMesh.text = text;
-        writingContainer.SetActive(true);
-    }
-
-    public void HideWriting() {
-        writingContainer.SetActive(false);
-        WrittingHide?.Invoke();
-    }
-
-    public void UpdateHpBar(float current, float max) {
-        hpBarSprite.fillAmount = current / max;
-    }
-
-    public void UpdateMpBar(float current, float max) {
-        mpBarSprite.fillAmount = current / max;
-    }
-
-    public void UpdateGold(string current) {
-        goldTextMesh.text = current;
-    }
-
-    private void OnDestroy() {
-        WrittingHide = null;
-    }
 }
