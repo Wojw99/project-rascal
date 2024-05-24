@@ -20,6 +20,10 @@ public class GameVariablesWizard : MonoBehaviour
     public event Action<GvKey> GameVariableChanged;
 
     private void Start() {
+        InitGameVariablesBasedOnKeys();
+    }
+
+    private void InitGameVariablesBasedOnKeys() {
         foreach (GvKey key in Enum.GetValues(typeof(GvKey))) {
             gameVariables.Add(new GameVariable { key = key, value = false });
         }

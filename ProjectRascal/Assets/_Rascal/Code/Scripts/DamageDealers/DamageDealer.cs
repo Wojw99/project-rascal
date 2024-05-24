@@ -50,9 +50,12 @@ public class DamageDealer : MonoBehaviour
     protected void EndDamage() => damageAreaCollider.enabled = false;
 
     protected void OnTriggerEnter(Collider other) {
+        TryToDealDamage(other);
+    }
+
+    private void TryToDealDamage(Collider other) {
         if(!injured.Contains(other.gameObject)) {
             var character = other.GetComponent<GameCharacter>();
-
             if(IsValidDamageTarget(character)) {
                 injured.Add(other.gameObject);
                 character.TakeDamage(finalDamage);
@@ -61,7 +64,7 @@ public class DamageDealer : MonoBehaviour
                 if(controller != null) {
                     controller.VisualizeDamage(transform.position, isBloodSpillVisible);
                 }
-
+                
                 OnDamageEnd();
             } else {
                 OnInvalidDamageTarget();
